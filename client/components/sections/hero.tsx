@@ -18,9 +18,10 @@ const Hero: React.FC = () => {
           Kişisel planlama ve analiz platformu."
         />
         <p className="font-normal text-dark-600 dark:text-light-600 md:text-xl">
-          Edutrack, kişisel ve iş planlarınızı yapay zeka ile destekli olarak
-          oluşturmanıza ve analiz etmenize olanak sağlar. Hedeflerinizi
-          belirleyin, planlarınızı oluşturun ve analizlerinizi yapın.
+          Yapay zekanın gücüyle kişiselleştirilmiş öğrenme deneyimi sunan
+          Edutrack, sınav stresini ortadan kaldırıp başarıya ulaşmanız için
+          ihtiyacınız olan her şeyi size sunar. Hemen denemeye başlayın ve farkı
+          hissedin!
         </p>
         <Link href={"/register"}>
           <Button size={"lg"}>Hemen Başla</Button>
