@@ -10,32 +10,45 @@ import {
 
 const questions = [
   {
+    question: "Hangi Öğrenciler TanjantPro'dan  Faydalanabilir?",
+    answer:
+    "Uygulamamız tüm öğrencilere hizmet verebilmek amacı ile geliştirilmiştir. İlkokul, Ortaokul, Lise ve Üniversite öğrencileri uygulamamızı kullanabilirler. Sace ek olarak sınav öğrencilerine özel özellikler var."
+  },
+  {
+    question: "Sınav Öğrencileri İçin Özel olarak Neler Var?",
+    answer:
+      "Sınav öğrencileri için özel net hesaplama aracı bulunmaktadır. Öğrenciler dilerlerse girdikleri denemeyi kaydedebilirler ve uygulamamızın zengin analiz algoritmaları eşliğinde çeşitli veri grafikleri ile hazırlık süreçleri en iyi şekilde takip edebilirler.",
+  },
+  {
     question: "TanjantPro platformlarda kullanılabilir?",
     answer:
-      "Şuanda sadece web uygulamamız mevcut. Çok yakında mobilde de olacağız.",
-  },
-  {
-    question: "TanjantPro'nun temel özellikleri nelerdir?",
-    answer:
-      "Kullanıcı dostu olması dikkat edilerek tasarlanmış TanjantPro; alışkanlık oluşturma ve takibi, zaman ve çalışma yönetimi, sınav konularını öğrenme ilerlemesi takibi, takvim üzerinden çalışma programı yapma, not alma ve düzenleme, net hesaplama ve netleri kaydedip grafiğe dökme gibi bir sınav öğrencisinin teknik açıdan en büyük ihtiyaçlarını karşılamaya yönelik işlevler sunar.",
-  },
-  {
-    question: "Bu yazılımın ücretli veya ücretsiz sürümleri var mı?",
-    answer:
-      "TanjantPro'yu 1 haftalık ücretsiz deneme sürümü ile deneyebilirsiniz! Ardından aylık, dönemlik ve yıllık paketlerimizi satın alabilirsiniz.",
+      "Uygulamamız web üzerinden Chrome, Safari, Firefox, MicrosoftEdge üzerinden hizmet vermektedir. Çok yakında mobil uygulamamız ile de hizmet vermeye başlayacağız!",
   },
   {
     question:
-      "Kullanıcılar hangi tür destek ve yardım hizmetlerinden yararlanabilir?",
+      "Kaydedilen denemeler nasıl analiz ediliyor?",
     answer:
-      "Resmi discord sunucumuza katılarak veya sosyal medya hesaplarımızdan bizimle iletişime geçebilirsiniz.",
+      "Kaydedilen denemeler, çeşitli tablo ve çizgi grafikleri ile analiz edilmektedir. Bu grafikler sayesinde performansınızı görsel olarak takip edebilirsiniz.",
   },
   {
     question:
-      "Yazılımın gelecekteki güncellemeleri veya ek özellikleri hakkında bilgi var mı?",
+      "Veri güvenliği nasıl sağlanıyor?",
     answer:
-      "Gerekli bilgilendirmeler discord sunucumuzda ve sosyal medya hesaplarımızda yayınlanmaktadır.",
+      "Kullanıcı verilerinizin güvenliği bizim için çok önemlidir. Verileriniz güvenli sunucularda saklanmakta ve üçüncü şahıslarla paylaşılmamaktadır. Veri güvenliği sözleşmemizi okuyabilirsiniz.",
   },
+  {
+    question:
+      "TanjantPro'ya Nasıl Üye Olabilirim?",
+    answer:
+      " 'Fiyatlar' sayfasından uygun paketi seçerek üye olabilirsiniz. Üyelik işlemleri oldukça basit ve hızlıdır.",
+  },
+  {
+    question:
+      "Teknik destek nasıl alabilirim?",
+    answer:
+      "Herhangi bir sorun yaşadığınızda veya yardıma ihtiyacınız olduğunda, uygulama içindeki 'Destek' bölümünden bize ulaşabilirsiniz. Mümkün olan en kısa sürede size geri döneceğiz."
+    },
+
 ];
 
 const Faq = () => {
