@@ -3,8 +3,11 @@ import tokenService from "../services/token.service";
 import catchAsync from "../utils/catchAsync";
 import httpStatus from "http-status";
 import ApiError from "../utils/ApiError";
+interface AuthenticatedRequest extends Request {
+    userId?: string;
+}
 
-const authenticateToken = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const authenticateToken = catchAsync(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
     //bu adam token uertiyor.
     const authenticatedToken = tokenService.verifyToken(token);
