@@ -19,12 +19,25 @@ const login = catchAsync(async (req: Request, res: Response) => {
     res.status(httpStatus.CREATED).send({ user, tokens });
 })
 
-const logout = catchAsync(async (req:Request, res:Response) => {});
-const refreshTokens = catchAsync(async (req:Request, res:Response) => {});
-const forgotPassword = catchAsync(async (req:Request, res:Response) => {});
-const resetPassword = catchAsync(async (req:Request, res:Response) => {});
-const sendVerificationEmail = catchAsync(async (req:Request, res:Response) => {});
-const verifyEmail = catchAsync(async (req:Request, res:Response) => {});
+const logout = catchAsync(async (req: Request, res: Response) => { 
+    res.clearCookie("token");
+    res.clearCookie("refreshToken");
+    res.redirect("/login");
+});
+const refreshTokens = catchAsync(async (req: Request, res: Response) => {
+    const refreshToken = req.cookies.refreshToken;
+    const result = await AuthService.refreshAuth(refreshToken);
+
+    if (typeof result === "string") {
+        res.cookie("token", result, { httpOnly: true });
+        return res.status(httpStatus.CREATED).send({ accessToken: result });
+    }
+    res.redirect(result.redirect);
+});
+const forgotPassword = catchAsync(async (req: Request, res: Response) => { });
+const resetPassword = catchAsync(async (req: Request, res: Response) => { });
+const sendVerificationEmail = catchAsync(async (req: Request, res: Response) => { });
+const verifyEmail = catchAsync(async (req: Request, res: Response) => { });
 
 
 
