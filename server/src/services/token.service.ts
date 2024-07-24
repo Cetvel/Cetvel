@@ -1,17 +1,25 @@
 import jwt from "jsonwebtoken";
 import moment from "moment";
 
-
 interface IDecodedToken {
-    id: string;
+    sub: string;
     iat: number;
     exp: number;
 }
 
+interface VerifyResult {
+    valid: boolean;
+    decoded?: IDecodedToken;
+    error?: {
+        type: 'expired' | 'invalid';
+        message: string;
+    };
+}
+
 interface ITokenService {
-    generateToken(userId: string): object;
-    verifyToken(token: string): string | object;
-    generateAuthTokens(user: any): object
+    generateToken(userId: string): { accessToken: string; refreshToken: string };
+    verifyToken(token: string): VerifyResult;
+    generateAuthTokens(user: any): { accessToken: string; refreshToken: string };
 }
 
 class TokenServiceClass implements ITokenService {
@@ -21,34 +29,58 @@ class TokenServiceClass implements ITokenService {
             iat: moment().unix(),
             exp: moment().add(10, "minutes").unix(), // Access token süresi 10 dakika
         };
-
         const refreshTokenPayload = {
             sub: userId,
             iat: moment().unix(),
             exp: moment().add(1, "week").unix(), // Refresh token süresi 1 hafta
         };
-
         return {
-            accessToken: jwt.sign(accessTokenPayload, process.env.ACCESS_TOKEN_SECRET!),
-            refreshToken: jwt.sign(refreshTokenPayload, process.env.REFRESH_TOKEN_SECRET!)
+            accessToken: jwt.sign(accessTokenPayload, process.env.TOKEN_SECRET!),
+            refreshToken: jwt.sign(refreshTokenPayload, process.env.TOKEN_SECRET!)
         }
     };
-    verifyToken = (token: string) => {
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as IDecodedToken;
-        return {
-            valid: true,
-            decoded
+
+    verifyToken = (token: string): VerifyResult => {
+        
+        try {
+            const decoded = jwt.verify(token, process.env.TOKEN_SECRET!) as IDecodedToken;
+            return {
+                valid: true,
+                decoded
+            };
+        } catch (error) {
+            if (error instanceof jwt.TokenExpiredError) {
+                return {
+                    valid: false,
+                    error: {
+                        type: 'expired',
+                        message: `token süresi dolmuş.`
+                    }
+                };
+            } else if (error instanceof jwt.JsonWebTokenError) {
+                return {
+                    valid: false,
+                    error: {
+                        type: 'invalid',
+                        message: `GECERSIZ token.`
+                    }
+                };
+            } else {
+                return {
+                    valid: false,
+                    error: {
+                        type: 'invalid',
+                        message: ` token doğrulama hatası.`
+                    }
+                };
+            }
         }
     }
-    
+   
     generateAuthTokens = (user: any) => {
-        console.log(user);
-        const {accessToken , refreshToken}= this.generateToken(user._id);// user._id nasil calisiyor bir fikrim yok.
-        return { accessToken , refreshToken};
+        return this.generateToken(user._id);
     };
 }
 
 const TokenService: ITokenService = new TokenServiceClass();
-
-
 export default TokenService;

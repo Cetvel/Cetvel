@@ -22,19 +22,25 @@ class AuthServiceClass implements IAuthService {
         }
         return user;
     }
-    async logout(refreshToken: string): Promise<void> { }
+    async logout(refreshToken: string): Promise<void> {/** Refresh tokenlari blackliste alma yapilabilir.  */}
     async refreshAuth(refreshToken: string): Promise<any> {
         //!Bu kisma saglam bir ayar lazim. Geri gelinecek
         
-        const refreshTokenDoc = TokenService.verifyToken(refreshToken);
-        if (typeof refreshTokenDoc === "object") {
-            const userId = ((refreshTokenDoc as { decoded: any }).decoded.id);
-            const user = await userService.getUserById(userId);
-            if (!user) {
-                throw new Error();
-            }
-            return TokenService.generateAuthTokens(user);
-        }
+        const authenticatedTRefreshToken = TokenService.verifyToken(refreshToken);
+
+        if (authenticatedTRefreshToken.error) {
+            return { redirect: "/login" };
+            // throw new ApiError(httpStatus.UNAUTHORIZED, authenticatedTRefreshToken.error?.message || "Unauthorized");
+        }  
+        
+        const userId = authenticatedTRefreshToken.decoded?.sub
+        if(userId == undefined) return { redirect: "/login" };
+
+        const user = await userService.getUserById(userId);
+        if (!user) return { redirect: "/login" };
+        const tokens = TokenService.generateAuthTokens(user)
+        return tokens.accessToken
+        ;
     }
     async resetPassword(resetPasswordToken: string, newPassword: string): Promise<void> { }
     async verifyEmail(verifyEmailToken: string): Promise<void> { }
