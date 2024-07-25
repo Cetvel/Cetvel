@@ -18,19 +18,14 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 
-import User from './models/user.model';
-app.get('/essay',async (req, res) => {
-	const  user = await User.findById('669f721e7f0a639f126ddd3a');
-	const userId = user?.getStringId();
-	console.log(userId);
-	res.send('Hello World');
-}) 
 
 //Import Routes
+import todoRouther from './routes/todo.route';
 import authRouter from './routes/auth.route';
 import userRouter from './routes/user.route';
 
-//API's Implementation
+//API's Implementations
+app.use('/todo', todoRouther);
 app.use('/auth', authRouter);
 app.use('/user', userRouter);
 
