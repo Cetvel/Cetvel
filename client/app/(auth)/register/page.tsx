@@ -1,5 +1,5 @@
 import RegisterForm from "@/components/forms/auth/register-form";
-import { CardContent, CardHeader } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import React from "react";
 
 const Register = () => {

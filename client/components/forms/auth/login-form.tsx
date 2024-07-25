@@ -11,7 +11,7 @@ import FormSuccess from "../ui/form-success";
 import { z } from "zod";
 import { Form } from "../../ui/form";
 import CustomFormField, { FormFieldType } from "../../ui/custom-form-field";
-import { redirect } from "next/navigation";
+import axios from "axios";
 
 const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -29,21 +29,17 @@ const LoginForm = () => {
     setError(null);
     setSuccess(null);
 
-    try {
-      const res = await fetch("http://localhost:3000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
+    await axios
+      .post("http://localhost:3000/auth/login", {
+        values,
+      })
+      .then((res) => {
+        setSuccess("Başarılı");
+      })
+      .catch((error) => {
+        setError("Hata");
+        console.error(error);
       });
-
-      if (res.ok) setSuccess("Başarıyla giriş yapıldı!");
-      redirect("/dashboard");
-    } catch (error: any) {
-      setError("Giriş yapılırken bir sorun oluştu. Lütfen tekrar dene.");
-      console.error(error);
-    }
   }
 
   return (
