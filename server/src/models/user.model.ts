@@ -1,18 +1,12 @@
-import mongoose, { Document, Schema, Model, plugin } from "mongoose";
-import { userPlugins,  IUserMethods, userMethods, IUserStaticMethods, userStaticMethods } from "./plugins/user.plugins";
+import mongoose, { Document, Schema, Model } from "mongoose";
+import { userPlugins, IUserMethods, userMethods, IUserStaticMethods, userStaticMethods } from "./plugins/user.plugins";
 
-
-enum studyField {
-    LGS = "LGS",
-    YKS = "YKS",
-    KPSS = "KPSS",
-}
 
 interface IUser {
     name: string;
     email: string;
     password: string;
-    studyField: studyField
+    studyField: "LGS" | "YKS" | "KPSS";
     tag: string[];
     pictures: {
         profilePicture: string;
@@ -57,7 +51,7 @@ export const userSchema = new Schema<IUserDocument, UserModel>({
     studyField: {
         type: String,
         required: true,
-        enum: Object.values(studyField),
+        enum: ["LGS", "YKS", "KPSS"]
     }
 }, {
     timestamps: true,

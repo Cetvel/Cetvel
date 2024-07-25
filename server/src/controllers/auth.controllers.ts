@@ -27,7 +27,6 @@ const logout = catchAsync(async (req: Request, res: Response) => {
 const refreshTokens = catchAsync(async (req: Request, res: Response) => {
     const refreshToken = req.cookies.refreshToken;
     const result = await AuthService.refreshAuth(refreshToken);
-
     if (typeof result === "string") {
         res.cookie("token", result, { httpOnly: true });
         return res.status(httpStatus.CREATED).send({ accessToken: result });
