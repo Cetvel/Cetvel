@@ -73,7 +73,7 @@ h6 {
   }
 
   .shad-select-trigger {
-    @apply bg-white placeholder:text-dark-700 border-neutral-200 dark:bg-dark-500 dark:border-neutral-500 dark:placeholder:text-light-600 h-11 focus:ring-0 focus:ring-offset-0 !important;
+    @apply bg-white placeholder:text-dark-700 rounded-xl border-neutral-200 dark:bg-dark-500 dark:border-neutral-500 dark:placeholder:text-light-600 h-11 focus:ring-0 focus:ring-offset-0 !important;
   }
 
   .shad-select-content {

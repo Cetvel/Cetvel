@@ -45,3 +45,5 @@ export const menuLinks = [
     icon: <IoSettingsOutline className="w-5 h-5" />,
   },
 ];
+
+export const StudyFieldOptions = ["YKS", "LGS", "KPSS"];

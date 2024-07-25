@@ -17,6 +17,7 @@ import { Textarea } from "./textarea";
 
 export enum FormFieldType {
   INPUT = "input",
+  PASSWORD = "password",
   TEXTAREA = "textarea",
   CHECKBOX = "checkbox",
   DATE_PICKER = "datePicker",
@@ -43,7 +44,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
   switch (props.fieldType) {
     case FormFieldType.INPUT:
       return (
-        <div className="flex rounded-xl border border-dark-500 bg-dark-400">
+        <div className="flex rounded-xl border border-neutral-200 bg-white dark:border-neutral-500 dark:bg-dark-500">
           {props.iconSrc && (
             <Image
               src={props.iconSrc}
@@ -55,6 +56,28 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
           )}
           <FormControl>
             <Input
+              placeholder={props.placeholder}
+              {...field}
+              className="shad-input border-0"
+            />
+          </FormControl>
+        </div>
+      );
+    case FormFieldType.PASSWORD:
+      return (
+        <div className="flex rounded-xl border border-neutral-200 dark:border-neutral-500 bg-dark-400">
+          {props.iconSrc && (
+            <Image
+              src={props.iconSrc}
+              height={24}
+              width={24}
+              alt={props.iconAlt || "icon"}
+              className="ml-2"
+            />
+          )}
+          <FormControl>
+            <Input
+              type="password"
               placeholder={props.placeholder}
               {...field}
               className="shad-input border-0"
@@ -90,7 +113,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
       );
     case FormFieldType.DATE_PICKER:
       return (
-        <div className="flex rounded-xl border border-dark-500 bg-dark-400">
+        <div className="flex rounded-xl border border-neutral-200 dark:border-neutral-500 bg-dark-400">
           <Image
             src="/assets/icons/calendar.svg"
             height={24}

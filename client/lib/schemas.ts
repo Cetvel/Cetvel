@@ -9,18 +9,6 @@ export const RegisterSchema = z
       .min(2, { message: "İsim en az 2 karakter uzunluğunda olmalı." })
       .regex(/^[a-zA-ZğüşıöçĞÜŞİÖÇ]+$/, {
         message: "İsim sadece harf içermeli",
-      })
-      .max(50, { message: "İsim en fazla 50 karakter uzunluğunda olabilir" }),
-    surname: z
-      .string({
-        required_error: "Soyisim girmek zorunludur",
-      })
-      .min(2, { message: "Soyisim en az 2 karakter uzunluğunda olmalı." })
-      .regex(/^[a-zA-ZğüşıöçĞÜŞİÖÇ]+$/, {
-        message: "Soyisim sadece harf içermeli",
-      })
-      .max(50, {
-        message: "Soyisim en fazla 50 karakter uzunluğunda olabilir",
       }),
     email: z
       .string({
