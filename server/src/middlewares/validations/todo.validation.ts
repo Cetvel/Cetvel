@@ -1,4 +1,5 @@
-import { body, ValidationChain } from 'express-validator';
+import { deleteExam } from '@src/controllers/exam.controllers';
+import { body,param, ValidationChain } from 'express-validator';
 
 
 const createTodo: ValidationChain[] = [
@@ -8,15 +9,20 @@ const createTodo: ValidationChain[] = [
 ]
 
 const updateTodo: ValidationChain[] = [
+    param('id').isMongoId().withMessage("Geçerli bir sınav ID'si gerekli"),
     body('title').optional().isString().isLength({ min: 3, max: 255 }),
     body('description').optional().isString().isLength({ min: 3, max: 255 }),
     body('tag').optional().isString().isLength({ min: 3, max: 255 }),
     body('status').optional().isString().isIn(['incomplete', 'in-progress', 'completed']),
 ]
 
+const deleteTodo  : ValidationChain[] = [
+    param('id').isMongoId().withMessage("Geçerli bir sınav ID'si gerekli"),
+]
 
 
 export default {
     createTodo,
-    updateTodo
+    updateTodo,
+    deleteTodo
 }
