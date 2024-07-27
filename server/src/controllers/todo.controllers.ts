@@ -23,13 +23,13 @@ const getTodos = catchAsync(async (req: AuthenticatedRequest, res: Response) => 
 });
 
 const updateTodo = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
-    const todo = await TodoService.updateTodo( req.body);
+    const todo = await TodoService.updateTodo( req.params.todoId ,req.body);
     if (!todo) throw new ApiError(httpStatus.BAD_REQUEST, 'Todo not updated');
     res.send(todo);
 })
 
 const deleteTodo = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
-    await TodoService.deleteTodo(req.body.todoId);
+    await TodoService.deleteTodo(req.params.todoId );
     res.status(httpStatus.NO_CONTENT).redirect('/');
 })
 

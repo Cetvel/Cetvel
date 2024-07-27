@@ -5,7 +5,7 @@ import { ITodoDocument } from '../models/todo.model';
 interface ITodoService {
     createTodo(userId: string ,todoData: any ): Promise<ITodoDocument>;
     getTodosByUserId(userId: string): Promise<[ITodoDocument]>;
-    updateTodo(todoData: ITodoDocument): Promise<ITodoDocument>;
+    updateTodo(todoId : string ,todoData: ITodoDocument): Promise<ITodoDocument>;
     deleteTodo(todoId: string): Promise<void>;}
 
 class TodoServiceCLass implements ITodoService { 
@@ -16,8 +16,7 @@ class TodoServiceCLass implements ITodoService {
     async getTodosByUserId (userId: string): Promise<[ITodoDocument]> {
         return await Todo.find({ userId }) as [ITodoDocument];
     }
-    async updateTodo( todoData: any): Promise<ITodoDocument> {
-        const todoId = todoData.todoId;
+    async updateTodo( todoId : string ,todoData: any): Promise<ITodoDocument> {
         return await Todo.findByIdAndUpdate(todoId, todoData, { new: true });
     }
     async deleteTodo(todoId: string): Promise<void> {
