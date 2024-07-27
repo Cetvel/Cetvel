@@ -3,11 +3,17 @@ import express from 'express';
 import connectDB from './config/config';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-
+import cors from 'cors';
 
 //
 const app = express();
 dotenv.config();
+
+const corsOptions = {
+	origin: 'http://localhost:3000',
+	credentials: true,
+	optionsSuccessStatus: 200
+}
 
 //Connect to MongoDB
 connectDB();
@@ -15,6 +21,7 @@ connectDB();
 //Middlewares
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 
 
@@ -25,11 +32,11 @@ import authRouter from './routes/auth.route';
 import userRouter from './routes/user.route';
 
 //API's Implementations
-app.use('/todo', todoRouther);
-app.use('/auth', authRouter);
-app.use('/user', userRouter);
+app.use('/api/todo', todoRouther);
+app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 //PORT
-app.listen(3000, () => {
-	console.log('Server is running on http://localhost:3000');
+app.listen(5000, () => {
+	console.log('Server is running on http://localhost:5000');
 })
