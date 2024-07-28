@@ -2,9 +2,6 @@ import mongoose, { Schema, model, Document } from 'mongoose'
 import Exam from '../exam.model'
 
 interface Tyt {
-    solvingTime?: {
-        type: number
-    },
     math: {
         true: number,
         false: number,
@@ -39,12 +36,6 @@ interface TytDocument extends Tyt, Document {
 }
 
 const TytSchema: Schema<TytDocument> = new Schema({
-    solvingTime: {
-        type: Number,
-        required: false,
-        max: 135
-    },
-
     math: {
         true: {
             type: Number,
@@ -93,22 +84,22 @@ const TytSchema: Schema<TytDocument> = new Schema({
         true: {
             type: Number,
             required: true,
-            max: 20
+            max: 40
         },
         false: {
             type: Number,
             required: true,
-            max: 20
+            max: 40
         },
         emptyAnswers: {
             type: Number,
             required: true,
-            max: 20
+            max: 40
         },
         totalNet: {
             type: Number,
             required: true,
-            max: 20
+            max: 40
         }
     },
     social: {
