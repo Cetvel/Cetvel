@@ -10,8 +10,8 @@ import examValidation from '../middlewares/validations/exam.validation';
 router.post("/create/tyt", authenticateToken, validate(examValidation.tytValidition), examController.createExam); 
 router.post("/create/ayt/say", authenticateToken, validate(examValidation.aytSayValidation), examController.createExam);
 router.post("/create/ayt/ea", authenticateToken, validate(examValidation.aytEaValidation), examController.createExam);
-// router.post("/create/ayt/soz", authenticateToken, validate(examValidation.createAytExam), examController.createExam);
-// router.post("/create/lgs", authenticateToken, validate(examValidation.createLgs), examController.createExam);
+router.post("/create/ayt/soz", authenticateToken, validate(examValidation.aytSozValidation), examController.createExam);
+router.post("/create/lgs", authenticateToken, validate(examValidation.lgsValidation), examController.createExam);
 // router.post("/create/kpss", authenticateToken, validate(examValidation.createKpss), examController.createExam);
 
 
@@ -19,7 +19,8 @@ router.post("/create/ayt/ea", authenticateToken, validate(examValidation.aytEaVa
 router.put('/update/tyt/:examId', authenticateToken, validate(examValidation.tytValidition), examController.updateExam);
 router.put('/update/ayt/say/:examId', authenticateToken, validate(examValidation.aytSayValidation), examController.updateExam);
 router.put('/update/ayt/ea/:examId', authenticateToken, validate(examValidation.aytEaValidation), examController.updateExam);
-// router.put('/update/lgs/:examId', authenticateToken, validate(examValidation.updateLgs), examController.updateExam);
+router.put('/update/ayt/soz/:examId', authenticateToken, validate(examValidation.aytSozValidation), examController.updateExam);
+router.put('/update/lgs/:examId', authenticateToken, validate(examValidation.lgsValidation), examController.updateExam);
 // router.put('/update/kpss/:examId', authenticateToken, validate(examValidation.updateKpss), examController.updateExam);
 
 
