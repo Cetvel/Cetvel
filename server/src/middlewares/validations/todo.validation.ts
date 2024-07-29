@@ -1,4 +1,3 @@
-import { deleteExam } from '@src/controllers/exam.controllers';
 import { body,param, ValidationChain } from 'express-validator';
 
 
