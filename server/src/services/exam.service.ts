@@ -1,9 +1,9 @@
 import Exam, { ExamDocument } from '../models/exam.model';
 import Tyt from '../models/exam-models/tyt.model';
 import Ayt from '../models/exam-models/ayt.model';
+import Lgs from '../models/exam-models/lgs.model';
 // import Ayt from './models/ayt.model';
 // import Kpss from './models/kpss.model';
-// import Lgs from './models/lgs.model';
 
 interface IExamService {
     createExam(userId: string, examData: any, examType: string): Promise<ExamDocument>;
@@ -17,9 +17,10 @@ interface IExamService {
     compareUserExams(userId: string, examId1: string, examId2: string): Promise<void>;
 }
 
-class ExamServiceClass implements IExamService{
+class ExamServiceClass implements IExamService {
     // Genel sınav oluşturma metodu
     async createExam(userId: string, examData: any, examType: string) {
+        console.log(examType);
         let ExamModel: any;
         switch (examType) {
             case 'tyt':
@@ -28,26 +29,26 @@ class ExamServiceClass implements IExamService{
             case 'say':
                 ExamModel = Ayt;
                 break;
-             case 'ea':
-                 ExamModel = Ayt;
-                 break;
+            case 'ea':
+                ExamModel = Ayt;
+                break;
             case 'soz':
                 ExamModel = Ayt;
                 break;
-            // case 'kpss':
-            //     ExamModel = Kpss;
-            //     break;
-            // case 'lgs':
-            //     ExamModel = Lgs;
-            //     break;
-            default:
+            case 'lgs':
+                ExamModel = Lgs;
+                break;
+                // case 'kpss':
+                //     ExamModel = Kpss;
+                //     break;
+                default:
                 throw new Error('Geçersiz sınav türü');
         }
 
         console.log(examData);
         const exam = new ExamModel(examData);
         if (!exam) throw new Error('Sınav oluşturulamadı');
-        
+
         exam.userId = userId;
 
         return await exam.save();
@@ -62,11 +63,11 @@ class ExamServiceClass implements IExamService{
     async getUserExams(userId: string) {
         return await Exam.find({ userId }) as ExamDocument[];
     }
-    
+
     // Sınav silme
     async deleteExam(examId: string) {
         return await Exam.findByIdAndDelete(examId);
-        
+
     }
 
     // Belirli bir türdeki sınavları getirme
