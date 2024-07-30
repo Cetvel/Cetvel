@@ -16,7 +16,7 @@ const createExam = catchAsync(async (req: AuthenticatedRequest, res: Response) =
 });
 
 const getExam = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
-    const exam = await examService.getExamById(req.params.id);
+    const exam = await examService.getExamById(req.params.examId);
     if (!exam) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Sınav bulunamadı');
     }

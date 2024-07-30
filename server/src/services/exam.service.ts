@@ -20,7 +20,6 @@ interface IExamService {
 class ExamServiceClass implements IExamService {
     // Genel sınav oluşturma metodu
     async createExam(userId: string, examData: any, examType: string) {
-        console.log(examType);
         let ExamModel: any;
         switch (examType) {
             case 'tyt':
@@ -45,7 +44,6 @@ class ExamServiceClass implements IExamService {
                 throw new Error('Geçersiz sınav türü');
         }
 
-        console.log(examData);
         const exam = new ExamModel(examData);
         if (!exam) throw new Error('Sınav oluşturulamadı');
 

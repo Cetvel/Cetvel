@@ -28,9 +28,9 @@ router.delete('/delete/:examId', authenticateToken, validate(examValidation.dele
 
 
 
-router.get('/getExams', authenticateToken, examController.getExam)
-router.get('/getTodosByType', authenticateToken, examController.getUserExamsByType);
-router.get('/getUserTodos', authenticateToken, examController.getUserExams);
+router.get('/getExam/:examId', authenticateToken, examController.getExam)
+router.get('/getExamsByType', authenticateToken, examController.getUserExamsByType);
+router.get('/getUserExams', authenticateToken, examController.getUserExams);
 router.get('/getUserTodosByDateRange', authenticateToken, examController.getUserExamsByDateRange);
 router.get('/getUserExamStatistics', authenticateToken, examController.getUserExamStatistics);
 
