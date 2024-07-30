@@ -1,4 +1,3 @@
-import BgBlob from "@/components/ui/bg-blobs";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
@@ -9,7 +8,6 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
       className="w-full min-h-screen flex flex-col items-center justify-center py-20"
       data-theme="dark"
     >
-      <BgBlob />
       <div className="flex space-x-4 items-center mb-10">
         <Image
           src="image/logo.svg"

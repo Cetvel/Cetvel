@@ -1,6 +1,5 @@
 import React from "react";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
-import BgBlob from "@/components/ui/bg-blobs";
 import Navigation from "../ui/navigation";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -10,7 +9,6 @@ const Hero: React.FC = () => {
     <section
       className={`py-32 md:h-screen bg-dark-200 relative flex md:items-center justify-center flex-col md:py-4 bg-grid-white/[0.02]`}
     >
-      <BgBlob />
       <Navigation />
       <div className="flex flex-col gap-8 max-w-3xl md:items-center px-4 z-10 md:-mt-52 text-center">
         <TextGenerateEffect

@@ -1,9 +1,23 @@
+import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const instance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  timeout: 1000,
+  headers: {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,DELETE,PATCH,POST,PUT",
+    "Access-Control-Allow-Headers":
+      "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
+  },
+});
 
 export const colors = {
   primary: "#7747ff",

@@ -5,45 +5,28 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SubmitButton from "../ui/submit-button";
-import { LoginSchema } from "@/lib/schemas";
+import { ResetSchema } from "@/lib/schemas";
 import FormError from "../ui/form-error";
 import FormSuccess from "../ui/form-success";
 import { z } from "zod";
 import { Form } from "../../ui/form";
 import CustomFormField, { FormFieldType } from "../../ui/custom-form-field";
 import axios from "axios";
-import { instance } from "@/lib/utils";
 
-const LoginForm = () => {
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+const ResetForm = () => {
+  const form = useForm<z.infer<typeof ResetSchema>>({
+    resolver: zodResolver(ResetSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
 
-  async function onSubmit(values: z.infer<typeof LoginSchema>) {
+  async function onSubmit(values: z.infer<typeof ResetSchema>) {
     setError(null);
     setSuccess(null);
-    setLoading(true);
-
-    instance
-      .post("/auth/login", values)
-      .then((res) => {
-        setSuccess("Giriş başarılı, yönlendiriliyorsunuz...");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1000);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
   }
 
   return (
@@ -57,31 +40,22 @@ const LoginForm = () => {
           placeholder="E posta adresinizi girin"
         />
 
-        <CustomFormField
-          fieldType={FormFieldType.PASSWORD}
-          control={form.control}
-          name="password"
-          label="Şifre"
-          placeholder="Şifrenizi girin"
-        />
-
         <FormError title={"Hata"} description={error} />
         <FormSuccess title={"Başarılı"} description={success} />
         <SubmitButton
-          text="Giriş Yap"
+          text="Sıfırlama e-postası gönder"
           size={"lg"}
           className="w-full"
-          loading={loading}
         />
-        <p className="text-sm text-center mt-2">
-          Hesabın yok mu?{" "}
-          <Link className="text-primary-500 hover:underline" href={"/register"}>
-            Kayıt Ol
-          </Link>
-        </p>
+        <Link
+          className="text-primary-500 hover:underline text-center mt-2 text-sm block"
+          href={"/login"}
+        >
+          Giriş Yap
+        </Link>
       </form>
     </Form>
   );
 };
 
-export default LoginForm;
+export default ResetForm;

@@ -1,8 +1,10 @@
 import { Button, ButtonProps } from "@/components/ui/button";
+import Image from "next/image";
 import React from "react";
 import { useFormStatus } from "react-dom";
 
 interface SubmitButtonProps extends ButtonProps {
+  loading: boolean;
   text?: string;
   icon?: React.ReactNode;
   disabled?: boolean;
@@ -11,6 +13,7 @@ interface SubmitButtonProps extends ButtonProps {
 }
 
 const SubmitButton = ({
+  loading,
   text,
   disabled,
   icon,
@@ -18,19 +21,25 @@ const SubmitButton = ({
   button,
   ...props
 }: SubmitButtonProps) => {
-  const { pending } = useFormStatus();
-
   return (
     <div className="flex items-center gap-2">
       {button && button}
       <Button
         /* @ts-ignore */
         type="submit"
-        disabled={pending || disabled}
+        disabled={loading || disabled}
         onClick={onClick}
         {...props}
       >
-        {pending && <span className="loading loading-bars loading-xs mr-2" />}
+        {loading && (
+          <Image
+            src="/image/spinner.svg"
+            alt="Loading"
+            width={24}
+            height={24}
+            className="animate-spin"
+          />
+        )}
         {text}
         {icon}
       </Button>
