@@ -40,6 +40,18 @@ app.use('/api/todo', todoRouther);
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 
+// Import the ApiError class
+import  ApiError  from './utils/ApiError';
+
+// Error Handling
+app.use((err, req, res, next) => {
+	if (err instanceof ApiError) {
+	  res.status(err.statusCode).json({ message: err.message });
+	} else {
+	  res.status(500).json({ message: "Internal Server Error" });
+	}
+})
+
 //PORT
 app.listen(5000, () => {
 	console.log('Server is running on http://localhost:5000');
