@@ -5,7 +5,7 @@ const register: ValidationChain[] = [
   body('email').isEmail().withMessage('Geçerli bir e-posta adresi girin'),
   body('password').isLength({ min: 4 }).withMessage('Şifre en az 4 karakter olmalıdır'),
   body('name').notEmpty().withMessage('İsim gereklidir'),
-  body('studyField').notEmpty().withMessage('Rol gereklidir').matches(/(YKS|KPSS|LGS)/)
+  // body('studyField').notEmpty().withMessage('Rol gereklidir').matches(/(YKS|KPSS|LGS)/)
 ];
 
 const login: ValidationChain[] = [

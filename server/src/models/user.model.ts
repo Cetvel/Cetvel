@@ -6,7 +6,7 @@ interface IUser {
     name: string;
     email: string;
     password: string;
-    studyField: "LGS" | "YKS" | "KPSS";
+    // studyField: "LGS" | "YKS" | "KPSS";
     tag: string[];
     pictures: {
         profilePicture: string;
@@ -47,12 +47,13 @@ export const userSchema = new Schema<IUserDocument, UserModel>({
     tag: {
         type: [String],
         default: ["school", "work", "study"]
-    },
-    studyField: {
-        type: String,
-        required: true,
-        enum: ["LGS", "YKS", "KPSS"]
     }
+    // ,
+    // studyField: {
+    //     type: String,
+    //     required: true,
+    //     enum: ["LGS", "YKS", "KPSS"]
+    // }
 }, {
     timestamps: true,
 });

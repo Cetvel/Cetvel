@@ -16,6 +16,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
     const user = await AuthService.loginUserWithEmailAndPassword(email, password);
     const tokens = tokenService.generateAuthTokens(user) as { accessToken: string, refreshToken: string };
     AuthService.setCookies(res, tokens);
+    console.log(tokens);
     res.status(httpStatus.CREATED).send({ user, tokens });
 })
 

@@ -24,7 +24,7 @@ class UserServiceClass implements IUserService {
 	}
 	async getUserByEmail(email: string): Promise<IUserDocument> {
 		if (! await User.isEmailTaken(email)) {
-			throw new ApiError(httpStatus.NOT_FOUND, '/*user service*/ User not found');
+			throw new ApiError(httpStatus.NOT_FOUND, 'Bu email adresine ait kullanıcı bulunamadı');
 		}
 		const user = await User.findOne({ email }) as IUserDocument;
 		return user;
