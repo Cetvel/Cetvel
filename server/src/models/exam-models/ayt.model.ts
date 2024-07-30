@@ -7,104 +7,87 @@ import Exam from "../exam.model";
     ea = math +  literature + history1 + geography1 
     soz = literature + history2 + geography2 + philosophy + religion
 */
+export interface Section {
+    math?: {
+        solvingTime?: number,
+        correct: number,
+        false: number,
+        empty: number,
+    },
+    physics?: {
+        solvingTime?: number
+        correct: number,
+        false: number,
+        empty: number,
+    },
+    chemistry?: {
+        solvingTime?: number
+        correct: number,
+        false: number,
+        empty: number,
+    },
+    biology?: {
+        solvingTime?: number
+        correct: number,
+        false: number,
+        empty: number,
+    },
+    literature?: {
+        solvingTime?: number
+        correct: number,
+        false: number,
+        empty: number,
+    },
+    history1?: {
+        solvingTime?: number
+        correct: number,
+        false: number,
+        empty: number,
+    },
+    geography1?: {
+        solvingTime?: number
+        correct: number,
+        false: number,
+        empty: number,
+    },
+    history2?: {
+        solvingTime?: number
+        correct: number,
+        false: number,
+        empty: number,
+    },
+    geography2?: {
+        solvingTime?: number
+        correct: number,
+        false: number,
+        empty: number,
+    },
+    philosophy?: {
+        solvingTime?: number
+        correct: number,
+        false: number,
+        empty: number,
+    },
+    religion?: {
+        solvingTime?: number
+        correct: number,
+        false: number,
+        empty: number,
+    }
+}
 
 interface Ayt {
     aytField: {
         type: string,
         enum: ['say', 'ea', `soz`],
-    },
-
-    // Say ve Ea icin ortak alanlar
-    math?: {
-        solvingTime?: number,
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
-    },
-
-    //Say icin alanlar
-    physics?: {
-        solvingTime?: number
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
-    },
-    chemistry?: {
-        solvingTime?: number
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
-    },
-    biology?: {
-        solvingTime?: number
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
-    },
-
-
-    //EA ve Soz icin alanlar
-    literature?: {
-        solvingTime?: number
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
-    },
-
-    history1?: {
-        solvingTime?: number
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
-    },
-    geography1?: {
-        solvingTime?: number
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
-    },
-
-    //Soz icin Alanlar
-    history2?: {
-        solvingTime?: number
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
-    },
-    geography2?: {
-        solvingTime?: number
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
-    },
-    philosophy?: {
-        solvingTime?: number
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
-    },
-    religion?: {
-        solvingTime?: number
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
-    },
+    }
 }
 
-interface AytDocument extends Ayt, Document {
+interface AytDocument extends Ayt, Document , Section{
     _id: Schema.Types.ObjectId;
 }
+
+
 
 const AytSchema: Schema<AytDocument> = new Schema({
     aytField: {
@@ -126,7 +109,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 40
         },
-        emptyAnswers: {
+        empty: {
             type: Number,
             max: 40
         },
@@ -148,7 +131,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 14
         },
-        emptyAnswers: {
+        empty: {
             type: Number,
             max: 14
         },
@@ -169,7 +152,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 13
         },
-        emptyAnswers: {
+        empty: {
             type: Number,
             max: 13
         },
@@ -190,7 +173,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 13
         },
-        emptyAnswers: {
+        empty: {
             type: Number,
             max: 13
         },
@@ -213,7 +196,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 24
         },
-        emptyAnswers: {
+        empty: {
             type: Number,
             max: 24
         },
@@ -235,7 +218,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 10
         },
-        emptyAnswers: {
+        empty: {
             type: Number,
             max: 10
         },
@@ -256,7 +239,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 6
         },
-        emptyAnswers: {
+        empty: {
             type: Number,
             max: 6
         },
@@ -280,7 +263,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 12
         },
-        emptyAnswers: {
+        empty: {
             type: Number,
             max: 12
         },
@@ -301,7 +284,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 6
         },
-        emptyAnswers: {
+        empty: {
             type: Number,
             max: 6
         },
@@ -322,7 +305,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 11
         },
-        emptyAnswers: {
+        empty: {
             type: Number,
             max: 11
         },
@@ -343,7 +326,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 11
         },
-        emptyAnswers: {
+        empty: {
             type: Number,
             max: 11
         },
