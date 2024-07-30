@@ -5,15 +5,6 @@ interface Exam {
     examField: "lgs" | "tyt" | "ayt" | "kpss",
     examName: string,
     examDate?: Date,
-
-    //Total Kisimlar icin
-    correctAnswers: number,
-    wrongAnswers: number,
-    emptyAnswers: number,
-    totalNet: number,
-    createdAt: Date,
-    updatedAt: Date
-
 }
 
 export interface ExamDocument extends Exam, Document {
@@ -32,10 +23,6 @@ const examSchema = new mongoose.Schema<ExamDocument, ExamModel>({
         enum: ['lgs', 'tyt', 'ayt', 'kpss']
     },
     examName: { type: String, required: true },
-    correctAnswers: { type: Number, required: true },
-    wrongAnswers: { type: Number, required: true },
-    emptyAnswers: { type: Number, required: true },
-    totalNet: { type: Number, required: true }
 },
     {
         discriminatorKey: 'examField',
