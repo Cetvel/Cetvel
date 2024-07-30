@@ -11,6 +11,7 @@ import FormSuccess from "../ui/form-success";
 import { z } from "zod";
 import { Form } from "../../ui/form";
 import CustomFormField, { FormFieldType } from "../../ui/custom-form-field";
+import { instance } from "@/lib/utils"
 
 const RegisterForm = () => {
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -25,10 +26,23 @@ const RegisterForm = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  
 
-  function onSubmit(values: z.infer<typeof RegisterSchema>) {
+  async function onSubmit(values: z.infer<typeof RegisterSchema>) {
     setError(null);
     setSuccess(null);
+    
+    instance
+      .post("http://localhost:5000/api/auth/register", values)
+      .then((res) => {
+        setSuccess("Giriş başarılı, yönlendiriliyorsunuz...");
+        setTimeout(() => {
+          window.location.href = "http://localhost:3000/login";
+        }, 1000);
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      });
   }
 
   return (
@@ -70,7 +84,7 @@ const RegisterForm = () => {
 
         <FormError title={"Hata"} description={error} />
         <FormSuccess title={"Başarılı"} description={success} />
-        <SubmitButton text="Kayıt Ol" size={"lg"} className="w-full" />
+        <SubmitButton text="Kayıt Ol" size={"lg"} className="w-full" loading={false} />
         <p className="text-sm text-center mt-2">
           Zaten hesabın var mı?{" "}
           <Link className="text-primary-500 hover:underline" href={"/login"}>

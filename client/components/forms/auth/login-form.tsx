@@ -33,15 +33,15 @@ const LoginForm = () => {
     setLoading(true);
 
     instance
-      .post("/auth/login", values)
+      .post("http://localhost:5000/api/auth/login", values,{withCredentials: true})
       .then((res) => {
         setSuccess("Giriş başarılı, yönlendiriliyorsunuz...");
         setTimeout(() => {
-          window.location.href = "/";
+          window.location.href = "http://localhost:3000/dashboard";
         }, 1000);
       })
       .catch((err) => {
-        setError(err.message);
+        setError(err.response.data.message);
         setLoading(false);
       });
   }
