@@ -27,12 +27,14 @@ app.use(express.urlencoded({ extended: true }));
 
 
 //Import Routes
+import pomodoroRouter from './routes/pomodoro.route';
 import examRouter from './routes/exam.route';
 import todoRouther from './routes/todo.route';
 import authRouter from './routes/auth.route';
 import userRouter from './routes/user.route';
 
 //API's Implementations
+app.use('/api/pomodoro', pomodoroRouter);
 app.use('/api/exam', examRouter);
 app.use('/api/todo', todoRouther);
 app.use('/api/auth', authRouter);
