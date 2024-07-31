@@ -39,7 +39,7 @@ const RegisterForm = () => {
         setSuccess("Kayıt başarılı, yönlendiriliyorsunuz...");
         setLoading(false);
         setTimeout(() => {
-          window.location.href = "/login";
+          window.location.href = "/dashboard";
         }, 1000);
       })
       .catch((err) => {
