@@ -6,12 +6,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const catchError = (error: any) => {
+  if (error.response) {
+    return error.response.data.message;
+  } else if (error.request) {
+    return error.request;
+  } else {
+    return error.message;
+  }
+};
+
 export const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 1000,
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 export const colors = {

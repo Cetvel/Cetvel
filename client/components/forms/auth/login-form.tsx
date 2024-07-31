@@ -12,7 +12,7 @@ import { z } from "zod";
 import { Form } from "../../ui/form";
 import CustomFormField, { FormFieldType } from "../../ui/custom-form-field";
 import axios from "axios";
-import { instance } from "@/lib/utils";
+import { catchError, instance } from "@/lib/utils";
 
 const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -33,17 +33,16 @@ const LoginForm = () => {
     setLoading(true);
 
     instance
-      .post("http://localhost:5000/api/auth/login", values, {
-        withCredentials: true,
-      })
+      .post("/auth/login", values)
       .then((res) => {
         setSuccess("Giriş başarılı, yönlendiriliyorsunuz...");
         setTimeout(() => {
-          window.location.href = "http://localhost:3000/dashboard";
+          window.location.href = "/dashboard";
         }, 1000);
       })
       .catch((err) => {
-        setError(err.response.data.message);
+        setError(catchError(err));
+        console.error(catchError(err));
         setLoading(false);
       });
   }
