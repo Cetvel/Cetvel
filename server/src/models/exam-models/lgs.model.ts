@@ -1,89 +1,88 @@
-import {Schema, Document} from "mongoose";
+import { Schema, Document } from "mongoose";
 import Exam from "../exam.model";
 
-interface Lgs { 
+export interface Section {
     math: {
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
+        correct: number,
+        wrong: number,
+        empty: number,
     },
     turkish: {
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
+        correct: number,
+        wrong: number,
+        empty: number,
     },
     social: {
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
+        correct: number,
+        wrong: number,
+        empty: number,
     },
     science: {
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
+        correct: number,
+        wrong: number,
+        empty: number,
     },
     english?: {
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
+        correct: number,
+        wrong: number,
+        empty: number,
     },
     religion?: {
-        true: number,
-        false: number,
-        emptyAnswers: number,
-        totalNet: number,
+        correct: number,
+        wrong: number,
+        empty: number,
+    }
+}
+
+interface Lgs {
+    sozSolvingTime ?: {
+        type:  number ,
+        max : 75
+    },
+    saySolvingTime ?: {
+        type:  number ,
+        max: 80
     },
 }
 
-interface LgsDocument extends Lgs, Document {
+interface LgsDocument extends Lgs, Document, Section {
     _id: Schema.Types.ObjectId;
 }
 
 
 const LgsSchema = new Schema<LgsDocument>({
     math: {
-        true: { type: Number, required: true, max: 20 },
-        false: { type: Number, required: true, max: 20 },
-        emptyAnswers: { type: Number, required: true, max: 10 },
-        totalNet: { type: Number, required: true, max: 10 },
+        correct: { type: Number, required: true, max: 20 },
+        wrong: { type: Number, required: true, max: 20 },
+        empty: { type: Number, required: true, max: 10 },
     },
     turkish: {
-        true: { type: Number, required: true, max: 20 },
-        false: { type: Number, required: true, max: 20 },
-        emptyAnswers: { type: Number, required: true, max: 10 },
-        totalNet: { type: Number, required: true, max: 10 },
+        correct: { type: Number, required: true, max: 20 },
+        wrong: { type: Number, required: true, max: 20 },
+        empty: { type: Number, required: true, max: 10 },
     },
     social: {
-        true: { type: Number, required: true, max: 10 },
-        false: { type: Number, required: true, max: 10 },
-        emptyAnswers: { type: Number, required: true, max: 10 },
-        totalNet: { type: Number, required: true, max: 10 },
+        correct: { type: Number, required: true, max: 10 },
+        wrong: { type: Number, required: true, max: 10 },
+        empty: { type: Number, required: true, max: 10 },
     },
     science: {
-        true: { type: Number, required: true, max: 20 },
-        false: { type: Number, required: true, max: 20 },
-        emptyAnswers: { type: Number, required: true, max: 20 },
-        totalNet: { type: Number, required: true, max: 20 },
+        correct: { type: Number, required: true, max: 20 },
+        wrong: { type: Number, required: true, max: 20 },
+        empty: { type: Number, required: true, max: 20 },
     },
     english: {
-        true: { type: Number, max: 10 },
-        false: { type: Number, max: 10 },
-        emptyAnswers: { type: Number, max: 10 },
-        totalNet: { type: Number, max: 10 },
+        correct: { type: Number, max: 10 },
+        wrong: { type: Number, max: 10 },
+        empty: { type: Number, max: 10 },
     },
     religion: {
-        true: { type: Number, max: 10 },
-        false: { type: Number, max: 10 },
-        emptyAnswers: { type: Number, max: 10 },
-        totalNet: { type: Number, max: 10 },
+        correct: { type: Number, max: 10 },
+        wrong: { type: Number, max: 10 },
+        empty: { type: Number, max: 10 },
     },
 })
 
-const  Lgs  = Exam.discriminator<LgsDocument>('lgs', LgsSchema)
+const Lgs = Exam.discriminator<LgsDocument>('lgs', LgsSchema)
 
 export default Lgs

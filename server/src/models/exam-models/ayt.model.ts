@@ -11,67 +11,67 @@ export interface Section {
     math?: {
         solvingTime?: number,
         correct: number,
-        false: number,
+        wrong: number,
         empty: number,
     },
     physics?: {
         solvingTime?: number
         correct: number,
-        false: number,
+        wrong: number,
         empty: number,
     },
     chemistry?: {
         solvingTime?: number
         correct: number,
-        false: number,
+        wrong: number,
         empty: number,
     },
     biology?: {
         solvingTime?: number
         correct: number,
-        false: number,
+        wrong: number,
         empty: number,
     },
     literature?: {
         solvingTime?: number
         correct: number,
-        false: number,
+        wrong: number,
         empty: number,
     },
     history1?: {
         solvingTime?: number
         correct: number,
-        false: number,
+        wrong: number,
         empty: number,
     },
     geography1?: {
         solvingTime?: number
         correct: number,
-        false: number,
+        wrong: number,
         empty: number,
     },
     history2?: {
         solvingTime?: number
         correct: number,
-        false: number,
+        wrong: number,
         empty: number,
     },
     geography2?: {
         solvingTime?: number
         correct: number,
-        false: number,
+        wrong: number,
         empty: number,
     },
     philosophy?: {
         solvingTime?: number
         correct: number,
-        false: number,
+        wrong: number,
         empty: number,
     },
     religion?: {
         solvingTime?: number
         correct: number,
-        false: number,
+        wrong: number,
         empty: number,
     }
 }
@@ -80,10 +80,14 @@ interface Ayt {
     aytField: {
         type: string,
         enum: ['say', 'ea', `soz`],
+    },
+    solvingTime ? : {
+        type: number
+        max: 180
     }
 }
 
-interface AytDocument extends Ayt, Document , Section{
+interface AytDocument extends Ayt, Document, Section {
     _id: Schema.Types.ObjectId;
 }
 
@@ -95,25 +99,26 @@ const AytSchema: Schema<AytDocument> = new Schema({
         enum: ['say', 'ea', 'soz'],
         required: true
     },
+    solvingTime: {
+        type: Number,
+        required: false,
+    },
     // Say ve Ea icin ortak alanlar
+
     math: {
         solvingTime: {
             type: Number,
+            required: false
         },
-
-        true: {
+        correct: {
             type: Number,
             max: 40
         },
-        false: {
+        wrong: {
             type: Number,
             max: 40
         },
         empty: {
-            type: Number,
-            max: 40
-        },
-        totalNet: {
             type: Number,
             max: 40
         }
@@ -122,12 +127,13 @@ const AytSchema: Schema<AytDocument> = new Schema({
     physics: {
         solvingTime: {
             type: Number,
+            required: false
         },
-        true: {
+        correct: {
             type: Number,
             max: 14
         },
-        false: {
+        wrong: {
             type: Number,
             max: 14
         },
@@ -135,20 +141,18 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 14
         },
-        totalNet: {
-            type: Number,
-            max: 14
-        }
+        totalNet: {}
     },
     chemistry: {
         solvingTime: {
             type: Number,
+            required: false
         },
-        true: {
+        correct: {
             type: Number,
             max: 13
         },
-        false: {
+        wrong: {
             type: Number,
             max: 13
         },
@@ -156,20 +160,18 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 13
         },
-        totalNet: {
-            type: Number,
-            max: 13
-        }
+
     },
     biology: {
         solvingTime: {
             type: Number,
+            required: false
         },
-        true: {
+        correct: {
             type: Number,
             max: 13
         },
-        false: {
+        wrong: {
             type: Number,
             max: 13
         },
@@ -177,22 +179,20 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 13
         },
-        totalNet: {
-            type: Number,
-            max: 13
-        }
+
     },
 
     //EA ve Soz icin alanlar
     literature: {
         solvingTime: {
             type: Number,
+            required: false
         },
-        true: {
+        correct: {
             type: Number,
             max: 24
         },
-        false: {
+        wrong: {
             type: Number,
             max: 24
         },
@@ -200,21 +200,19 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 24
         },
-        totalNet: {
-            type: Number,
-            max: 24
-        }
+
     },
 
     history1: {
         solvingTime: {
             type: Number,
+            required: false
         },
-        true: {
+        correct: {
             type: Number,
             max: 10
         },
-        false: {
+        wrong: {
             type: Number,
             max: 10
         },
@@ -222,20 +220,18 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 10
         },
-        totalNet: {
-            type: Number,
-            max: 10
-        }
+
     },
     geography1: {
         solvingTime: {
             type: Number,
+            required: false
         },
-        true: {
+        correct: {
             type: Number,
             max: 6
         },
-        false: {
+        wrong: {
             type: Number,
             max: 6
         },
@@ -243,10 +239,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 6
         },
-        totalNet: {
-            type: Number,
-            max: 6
-        }
+
     },
 
 
@@ -254,12 +247,13 @@ const AytSchema: Schema<AytDocument> = new Schema({
     philosophy: {
         solvingTime: {
             type: Number,
+            required: false
         },
-        true: {
+        correct: {
             type: Number,
             max: 12
         },
-        false: {
+        wrong: {
             type: Number,
             max: 12
         },
@@ -267,20 +261,18 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 12
         },
-        totalNet: {
-            type: Number,
-            max: 12
-        }
+
     },
     religion: {
         solvingTime: {
             type: Number,
+            required: false
         },
-        true: {
+        correct: {
             type: Number,
             max: 6
         },
-        false: {
+        wrong: {
             type: Number,
             max: 6
         },
@@ -288,20 +280,18 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 6
         },
-        totalNet: {
-            type: Number,
-            max: 6
-        }
+
     },
     history2: {
         solvingTime: {
             type: Number,
+            required: false
         },
-        true: {
+        correct: {
             type: Number,
             max: 11
         },
-        false: {
+        wrong: {
             type: Number,
             max: 11
         },
@@ -309,20 +299,18 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 11
         },
-        totalNet: {
-            type: Number,
-            max: 11
-        }
+
     },
     geography2: {
         solvingTime: {
             type: Number,
+            required: false
         },
-        true: {
+        correct: {
             type: Number,
             max: 11
         },
-        false: {
+        wrong: {
             type: Number,
             max: 11
         },
@@ -330,10 +318,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 11
         },
-        totalNet: {
-            type: Number,
-            max: 11
-        }
+
     }
 })
 
