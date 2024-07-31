@@ -8,7 +8,7 @@ import tokenService from "../services/token.service";
 
 const register = catchAsync(async (req: Request, res: Response) => {
     const createdUser = await userService.createUser(req.body);
-    const user =await AuthService.loginUserWithEmailAndPassword(createdUser.email, createdUser.password);
+    const user =await AuthService.loginUserWithEmailAndPassword(createdUser.email, req.body.password);
     const tokens = tokenService.generateAuthTokens(user) as { accessToken: string, refreshToken: string };
     AuthService.setCookies(res, tokens);
     res.status(httpStatus.CREATED).send( user );
