@@ -35,9 +35,9 @@ const SubmitButton = ({
           <Image
             src="/image/spinner.svg"
             alt="Loading"
-            width={24}
-            height={24}
-            className="animate-spin"
+            width={20}
+            height={20}
+            className="animate-spin mr-2"
           />
         )}
         {text}

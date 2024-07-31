@@ -33,7 +33,9 @@ const LoginForm = () => {
     setLoading(true);
 
     instance
-      .post("http://localhost:5000/api/auth/login", values,{withCredentials: true})
+      .post("http://localhost:5000/api/auth/login", values, {
+        withCredentials: true,
+      })
       .then((res) => {
         setSuccess("Giriş başarılı, yönlendiriliyorsunuz...");
         setTimeout(() => {

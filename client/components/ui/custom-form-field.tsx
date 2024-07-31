@@ -28,7 +28,7 @@ export enum FormFieldType {
 interface CustomProps {
   control: Control<any>;
   name: string;
-  label?: string;
+  label?: React.ReactNode;
   placeholder?: string;
   iconSrc?: string;
   iconAlt?: string;

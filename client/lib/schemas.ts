@@ -4,11 +4,10 @@ export const RegisterSchema = z
   .object({
     name: z
       .string({
-        required_error: "İsim girmek zorunludur",
+        required_error: "Kullanıcı adı girmek zorunludur",
       })
-      .min(2, { message: "İsim en az 2 karakter uzunluğunda olmalı." })
-      .regex(/^[a-zA-ZğüşıöçĞÜŞİÖÇ]+$/, {
-        message: "İsim sadece harf içermeli",
+      .min(2, {
+        message: "Kullanıcı adı en az 2 karakter uzunluğunda olmalı.",
       }),
     email: z
       .string({
@@ -25,6 +24,7 @@ export const RegisterSchema = z
       .min(6, { message: "Şifre en az 6 karakter uzunluğunda olabilir" })
       .max(50, { message: "Şifre en fazla 50 karakter uzunluğunda olabilir" }),
     confirmPassword: z.string(),
+    terms: z.boolean({ message: "Kullanıcı sözleşmesini kabul etmelisiniz" }),
   })
   .required()
   .superRefine(({ confirmPassword, password }, ctx) => {

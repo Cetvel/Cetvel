@@ -53,7 +53,7 @@ h6 {
   }
 
   .shad-input {
-    @apply bg-white placeholder:text-dark-700 border-neutral-200 dark:bg-dark-500 dark:border-neutral-500 dark:placeholder:text-light-600 shadow-sm h-11 focus-visible:ring-0 focus-visible:ring-offset-0 !important;
+    @apply bg-white placeholder:text-dark-700 border-neutral-200 dark:bg-dark-500 dark:border-neutral-500 dark:placeholder:text-light-600 shadow-sm h-11 focus-visible:ring-0 outline-none focus-visible:ring-offset-0 !important;
   }
 
   .shad-input-icon {
@@ -90,5 +90,9 @@ h6 {
 
   .shad-error {
     @apply text-red-400 !important;
+  }
+
+  .checkbox-label {
+    @apply text-sm !important;
   }
 }

@@ -11,7 +11,7 @@ import FormSuccess from "../ui/form-success";
 import { z } from "zod";
 import { Form } from "../../ui/form";
 import CustomFormField, { FormFieldType } from "../../ui/custom-form-field";
-import { instance } from "@/lib/utils"
+import { instance } from "@/lib/utils";
 
 const RegisterForm = () => {
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -26,22 +26,25 @@ const RegisterForm = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  
+  const [loading, setLoading] = useState<boolean>(false);
 
   async function onSubmit(values: z.infer<typeof RegisterSchema>) {
     setError(null);
     setSuccess(null);
-    
+    setLoading(true);
+
     instance
       .post("http://localhost:5000/api/auth/register", values)
       .then((res) => {
-        setSuccess("Giriş başarılı, yönlendiriliyorsunuz...");
+        setSuccess("Kayıt başarılı, yönlendiriliyorsunuz...");
+        setLoading(false);
         setTimeout(() => {
           window.location.href = "http://localhost:3000/login";
         }, 1000);
       })
       .catch((err) => {
         setError(err.response.data.message);
+        setLoading(false);
       });
   }
 
@@ -82,9 +85,52 @@ const RegisterForm = () => {
           />
         </div>
 
+        <div className="flex items-center">
+          <CustomFormField
+            fieldType={FormFieldType.CHECKBOX}
+            control={form.control}
+            name="terms"
+            label={
+              <p className="text-sm">
+                Uygulamayı kullanmak için{" "}
+                <Link
+                  href="cookies"
+                  className="hover:underline text-primary-500"
+                >
+                  çerezler
+                </Link>{" "}
+                ve{" "}
+                <Link
+                  href="/terms"
+                  className="hover:underline text-primary-500"
+                >
+                  kullanım koşullarını
+                </Link>{" "}
+                kabul etmelisin. Detaylar için{" "}
+                <Link
+                  href="/information"
+                  className="hover:underline text-primary-500"
+                >
+                  Aydınlatma
+                </Link>{" "}
+                ve{" "}
+                <Link href="/kvkk" className="hover:underline text-primary-500">
+                  KVKK
+                </Link>{" "}
+                metinlerine bakın.
+              </p>
+            }
+          />
+        </div>
+
         <FormError title={"Hata"} description={error} />
         <FormSuccess title={"Başarılı"} description={success} />
-        <SubmitButton text="Kayıt Ol" size={"lg"} className="w-full" loading={false} />
+        <SubmitButton
+          text="Kayıt Ol"
+          size={"lg"}
+          className="w-full"
+          loading={loading}
+        />
         <p className="text-sm text-center mt-2">
           Zaten hesabın var mı?{" "}
           <Link className="text-primary-500 hover:underline" href={"/login"}>
