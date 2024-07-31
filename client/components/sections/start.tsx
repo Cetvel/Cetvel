@@ -1,5 +1,5 @@
 import React from "react";
-import { Meteors } from "@/components/ui/meteors";
+import { Meteors } from "@/components/global/meteors";
 import Link from "next/link";
 import { Button } from "../ui/button";
 

@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import FormError from "../ui/form-error";
 import FormSuccess from "../ui/form-success";
+import Image from "next/image";
 
 const NewVerificationForm = () => {
   const [error, setError] = useState<string | null>(null);
@@ -30,11 +31,20 @@ const NewVerificationForm = () => {
     <div className="flex flex-col gap-4 items-center py-2">
       <p className="text-lg">Doğrulamanız teyit ediliyor</p>
       {!error && !success && (
-        <span className="loading loading-bars loading-lg text-primary my-4"></span>
+        <Image
+          src="/image/spinner.svg"
+          alt="Loading"
+          width={28}
+          height={28}
+          className="animate-spin"
+        />
       )}
       <FormSuccess title={"Başarılı"} description={success} />
       {!success && <FormError title={"Hata"} description={error} />}
-      <Link href="/login" className="text-primary text-sm hover:underline">
+      <Link
+        className="text-primary-500 hover:underline text-center mt-2 text-sm block"
+        href={"/login"}
+      >
         Giriş Yap
       </Link>
     </div>

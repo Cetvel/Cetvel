@@ -3,7 +3,7 @@ import Banner from "./_components/banner";
 import DatePicker from "./_components/date-picker";
 import TaskList from "./_components/task-list";
 import Timer from "./_components/timer";
-import PageHeader from "@/components/ui/page-header";
+import PageHeader from "@/components/global/page-header";
 
 const page = async () => {
   return (

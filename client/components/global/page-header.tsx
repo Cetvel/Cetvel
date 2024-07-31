@@ -3,12 +3,24 @@
 import Link from "next/link";
 import React from "react";
 import {
+  IoBrushOutline,
   IoNotificationsOutline,
+  IoPersonOutline,
+  IoRocketOutline,
   IoScanOutline,
   IoSettingsOutline,
 } from "react-icons/io5";
 import { Button } from "../ui/button";
 import { useModal } from "@/providers/modal-provider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 type Props = {
   title: string;
@@ -31,7 +43,38 @@ const PageHeader = ({ title }: Props) => {
         >
           <IoNotificationsOutline size={18} />
         </Button>
-        <div className="dropdown dropdown-end">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant={"ghost"} size={"icon"}>
+              <IoSettingsOutline size={18} />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-36">
+            <DropdownMenuLabel>Ayarlar</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <Link href="/dashboard/settings">
+                <DropdownMenuItem>
+                  <IoPersonOutline size={18} />
+                  Hesap
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem>
+                <Link href="/dashboard/settings/preferences">
+                  <IoBrushOutline size={18} />
+                  Tercihler
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href="/dashboard/settings/billing">
+                  <IoRocketOutline size={18} />
+                  Abonelik
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        {/* <div className="dropdown dropdown-end">
           <Button tabIndex={0} role="button" variant={"ghost"} size={"icon"}>
             <IoSettingsOutline size={18} />
           </Button>
@@ -49,7 +92,7 @@ const PageHeader = ({ title }: Props) => {
               <Link href="/dashboard/settings/billing">Abonelik</Link>
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );

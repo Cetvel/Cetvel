@@ -64,8 +64,8 @@ const Banner = () => {
         </h2>
       </div>
       <div className="flex w-full justify-end">
-        <div className="card card-glass !p-4 flex flex-col gap-4 !w-max overflow-hidden">
-          <h3 className="md:text-lg text-accent-content">Yaklaşanlar</h3>
+        <div className="rounded-xl border border-neutral-200 dark:border-neutral-500 bg-white dark:bg-dark-500 !bg-opacity-85 backdrop-blur-xl p-4 flex flex-col gap-4 !w-max overflow-hidden">
+          <h3 className="md:text-lg">Yaklaşanlar</h3>
           {tasks &&
             (tasks.length > 0 ? (
               tasks.slice(0, 2).map((task, i) => {
@@ -76,12 +76,10 @@ const Banner = () => {
                     animate="visible"
                     initial="hidden"
                     key={task.id}
-                    className="pl-4 pr-8 border-l-4 border-primary"
+                    className="pl-4 pr-8 border-l-4 border-primary-500"
                   >
-                    <h4 className="font-medium text-accent-content">
-                      {task.title}
-                    </h4>
-                    <p className="text-secondary-content text-sm">
+                    <h4 className="font-medium">{task.title}</h4>
+                    <p className="text-dark-700 dark:text-light-600 text-sm">
                       {padTo2Digits(task.startsAt.getHours()) +
                         ":" +
                         padTo2Digits(task.startsAt.getMinutes())}{" "}

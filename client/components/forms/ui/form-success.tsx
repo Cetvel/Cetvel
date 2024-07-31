@@ -7,7 +7,7 @@ type Props = {
   description?: string | null;
 };
 
-const FormError = ({ title, description }: Props) => {
+const FormSuccess = ({ title, description }: Props) => {
   if (!description) return null;
 
   return (
@@ -19,4 +19,4 @@ const FormError = ({ title, description }: Props) => {
   );
 };
 
-export default FormError;
+export default FormSuccess;

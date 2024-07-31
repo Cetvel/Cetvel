@@ -1,4 +1,5 @@
-import Sidebar from "@/components/ui/sidebar";
+import Sidebar from "@/components/global/sidebar";
+import axios from "axios";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

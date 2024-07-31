@@ -23,6 +23,7 @@ const ResetForm = () => {
 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   async function onSubmit(values: z.infer<typeof ResetSchema>) {
     setError(null);
@@ -36,7 +37,7 @@ const ResetForm = () => {
           fieldType={FormFieldType.INPUT}
           control={form.control}
           name="email"
-          label="E Posta"
+          label="E-Posta"
           placeholder="E posta adresinizi girin"
         />
 
@@ -46,6 +47,7 @@ const ResetForm = () => {
           text="Sıfırlama e-postası gönder"
           size={"lg"}
           className="w-full"
+          loading={loading}
         />
         <Link
           className="text-primary-500 hover:underline text-center mt-2 text-sm block"

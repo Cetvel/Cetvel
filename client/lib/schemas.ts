@@ -89,10 +89,6 @@ export const TaskSchema = z.object({
       required_error: "Başlık girmek zorunludur",
     })
     .min(2, { message: "Başlık en az 2 karakter uzunluğunda olmalı" }),
-  description: z
-    .string()
-    .max(500, { message: "Açıklama en fazla 500 karakter uzunluğunda olmalı" })
-    .optional(),
   list: z.string({
     required_error: "Liste seçmek zorunludur",
   }),

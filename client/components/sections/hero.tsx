@@ -1,5 +1,5 @@
 import React from "react";
-import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { TextGenerateEffect } from "@/components/global/text-generate-effect";
 import Navigation from "../ui/navigation";
 import Link from "next/link";
 import { Button } from "../ui/button";

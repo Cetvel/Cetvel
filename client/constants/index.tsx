@@ -12,37 +12,37 @@ export const menuLinks = [
   {
     label: "Panel",
     href: "/dashboard",
-    icon: <IoGridOutline className="w-5 h-5" />,
+    icon: <IoGridOutline size={18} />,
   },
   {
     label: "Planlama",
     href: "/dashboard/planning",
-    icon: <IoCalendarOutline className="w-5 h-5" />,
+    icon: <IoCalendarOutline size={18} />,
   },
   {
     label: "Zamanlama",
     href: "/dashboard/timing",
-    icon: <IoTimeOutline className="w-5 h-5" />,
+    icon: <IoTimeOutline size={18} />,
   },
   {
     label: "Dersler",
     href: "/dashboard/courses",
-    icon: <IoBookOutline className="w-5 h-5" />,
+    icon: <IoBookOutline size={18} />,
   },
   {
     label: "Hesaplama",
     href: "/dashboard/calculation",
-    icon: <IoRocketOutline className="w-5 h-5" />,
+    icon: <IoRocketOutline size={18} />,
   },
   {
     label: "İstatistik",
     href: "/dashboard/stats",
-    icon: <IoBarChartOutline className="w-5 h-5" />,
+    icon: <IoBarChartOutline size={18} />,
   },
   {
     label: "Ayarlar",
     href: "/dashboard/settings",
-    icon: <IoSettingsOutline className="w-5 h-5" />,
+    icon: <IoSettingsOutline size={18} />,
   },
 ];
 

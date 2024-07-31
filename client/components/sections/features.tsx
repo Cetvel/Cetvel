@@ -2,8 +2,8 @@
 
 import React, { useContext } from "react";
 import Image from "next/image";
-import { ContainerScroll } from "@/components/ui/container-scroll-animation";
-import { HoverEffect } from "@/components/ui/card-hover-effect";
+import { ContainerScroll } from "@/components/global/container-scroll-animation";
+import { HoverEffect } from "@/components/global/card-hover-effect";
 import { IoFlashOutline, IoTimeOutline } from "react-icons/io5";
 
 const features = [
