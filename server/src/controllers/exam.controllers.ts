@@ -20,11 +20,12 @@ const getExam = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
     if (!exam) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Deneme bulunamadı');
     }
+    
     res.send(exam);
 });
 
 const getUserExams = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
-    const exams = await examService.getUserExams(req.userId);
+    const exams = await examService.getUserExams(req.userId, req.path.split('/').pop());
     res.send(exams);
 });
 

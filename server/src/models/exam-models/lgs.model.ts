@@ -51,7 +51,7 @@ interface Lgs {
     },
 }
 
-interface LgsDocument extends Lgs, Document, Section {
+export interface LgsDocument extends Lgs, Document, Section {
     _id: Schema.Types.ObjectId;
 }
 

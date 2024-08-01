@@ -1,15 +1,24 @@
 import Exam, { ExamDocument } from '../models/exam.model';
+import ExamModelFilter from '../utils/examModelFilter';
 import Tyt from '../models/exam-models/tyt.model';
 import Ayt from '../models/exam-models/ayt.model';
 import Lgs from '../models/exam-models/lgs.model';
 // import Ayt from './models/ayt.model';
 // import Kpss from './models/kpss.model';
+import { TytDocument } from '../models/exam-models/tyt.model';
+import { AytDocument } from '../models/exam-models/ayt.model';
+import { LgsDocument } from '../models/exam-models/lgs.model';
+
+interface ExamReturns<T> {
+    type: T
+}
+
 
 interface IExamService {
     createExam(userId: string, examData: any, examType: string): Promise<ExamDocument>;
-    getExamById(examId: string): Promise<ExamDocument>;
-    getUserExams(userId: string): Promise<ExamDocument[]>;
-    getUserExamsByType(userId: string, examType: string): Promise<ExamDocument[]>;
+    getExamById(examId: string): Promise<ExamReturns<AytDocument | TytDocument | LgsDocument>>;
+    getUserExams(userId: string, examType: string): Promise<ExamDocument[]>;
+    // getUserExamsByType(userId: string, examType: string): Promise<ExamDocument[]>;
     updateExam(examId: string, updateData: any): Promise<ExamDocument>;
     deleteExam(examId: string): Promise<ExamDocument>;
     getUserExamsByDateRange(userId: string, startDate: Date, endDate: Date): Promise<ExamDocument[]>;
@@ -20,30 +29,7 @@ interface IExamService {
 class ExamServiceClass implements IExamService {
     // Genel sınav oluşturma metodu
     async createExam(userId: string, examData: any, examType: string) {
-        let ExamModel: any;
-        switch (examType) {
-            case 'tyt':
-                ExamModel = Tyt;
-                break;
-            case 'say':
-                ExamModel = Ayt;
-                break;
-            case 'ea':
-                ExamModel = Ayt;
-                break;
-            case 'soz':
-                ExamModel = Ayt;
-                break;
-            case 'lgs':
-                ExamModel = Lgs;
-                break;
-                // case 'kpss':
-                //     ExamModel = Kpss;
-                //     break;
-                default:
-                throw new Error('Geçersiz sınav türü');
-        }
-
+        const ExamModel = ExamModelFilter(examType)
         const exam = new ExamModel(examData);
         if (!exam) throw new Error('Sınav oluşturulamadı');
 
@@ -52,15 +38,16 @@ class ExamServiceClass implements IExamService {
         return await exam.save();
     }
 
-    // Belirli bir sınavı getirme
-    async getExamById(examId: string) {
-        return await Exam.findById(examId) as ExamDocument;
+    // Kullanıcının tüm sınavlarını getirme
+    async getUserExams(userId: string, examType: string) {
+        const ExamModel = ExamModelFilter(examType)
+
+        return await ExamModel.find({ userId }) as ExamDocument[];
     }
 
-    // Kullanıcının tüm sınavlarını getirme
-    async getUserExams(userId: string) {
-        return await Exam.find({ userId }) as ExamDocument[];
-    }
+
+
+
 
     // Sınav silme
     async deleteExam(examId: string) {
@@ -69,8 +56,27 @@ class ExamServiceClass implements IExamService {
     }
 
     // Belirli bir türdeki sınavları getirme
-    async getUserExamsByType(userId: string, examType: string) {
-        return await Exam.find({ userId }, { examField: examType });
+    async getExamById(examId: string): Promise<ExamReturns<AytDocument | TytDocument | LgsDocument>> {
+        const exam = await Exam.findById(examId) as AytDocument | TytDocument | LgsDocument;
+
+        if (!exam) throw new Error('Exam not found');
+
+        if ('__t' in exam) {
+            if (exam.__t === 'Ayt') {
+                // Ayt özelliklerine erişim
+                return { type: exam as AytDocument };
+            } else if (exam.__t === 'Tyt') {
+                // Tyt özelliklerine erişim
+                return { type: exam as TytDocument };
+            } else if (exam.__t === 'Lgs') {
+                // Lgs özelliklerine erişim
+                return { type: exam as LgsDocument };
+            } else {
+                throw new Error('Invalid exam type');
+            }
+        } else {
+            throw new Error('Invalid exam type');
+        }
     }
 
     // Sınav güncelleme
@@ -86,7 +92,9 @@ class ExamServiceClass implements IExamService {
             examDate: { $gte: startDate, $lte: endDate }
         });
     }
-
+    async getUserExamsByType(userId: string, examType: string) {
+        return await Exam.find({ userId })
+    }
     // İstatistiksel analizler
     async getUserExamStatistics(userId: string) {
         const exams = await Exam.find({ userId });

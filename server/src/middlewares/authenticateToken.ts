@@ -9,7 +9,7 @@ interface AuthenticatedRequest extends Request {
 
 const authenticateToken = catchAsync(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const token = req.cookies.token;
-    //bu adam token uertiyor.
+
     const authenticatedToken = tokenService.verifyToken(token);
     
     if (authenticatedToken.error?.type === "expired") {

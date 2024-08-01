@@ -87,7 +87,7 @@ interface Ayt {
     }
 }
 
-interface AytDocument extends Ayt, Document, Section {
+export interface AytDocument extends Ayt, Document, Section {
     _id: Schema.Types.ObjectId;
 }
 
