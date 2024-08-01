@@ -42,7 +42,7 @@ const LoginForm = () => {
       })
       .catch((err) => {
         setError(catchError(err));
-        console.error(catchError(err));
+        console.error(err);
         setLoading(false);
       });
   }

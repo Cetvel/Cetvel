@@ -33,8 +33,14 @@ const RegisterForm = () => {
     setSuccess(null);
     setLoading(true);
 
+    const data = {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+    };
+
     instance
-      .post("/auth/register", values)
+      .post("/auth/register", data)
       .then((res) => {
         setSuccess("Kayıt başarılı, yönlendiriliyorsunuz...");
         setLoading(false);
@@ -44,7 +50,7 @@ const RegisterForm = () => {
       })
       .catch((err) => {
         setError(catchError(err));
-        console.error(catchError(err));
+        console.error(err);
         setLoading(false);
       });
   }
