@@ -18,9 +18,13 @@ interface IUserService {
 class UserServiceClass implements IUserService {
 	async createUser(userBody: any): Promise<IUserDocument> {
 		if (await User.isEmailTaken(userBody.email!)) {
-			throw new ApiError(httpStatus.BAD_REQUEST, 'qEmail already taken');
+			throw new ApiError(httpStatus.BAD_REQUEST, 'Bu email adresi zaten alınmış');
 		}
-		return User.create(userBody);
+		const user = new User(userBody);
+		await user.hashPassword()
+		await user.save();
+		return await user.save();
+
 	}
 	async getUserByEmail(email: string): Promise<IUserDocument> {
 		if (! await User.isEmailTaken(email)) {
@@ -31,7 +35,7 @@ class UserServiceClass implements IUserService {
 	}
 	async getUserById(userId: string): Promise<IUserDocument> {
 		if (! await User.findById(userId)) {
-			throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+			throw new ApiError(httpStatus.NOT_FOUND, 'Kullanıcı Bulunamadı');
 		}
 		const user = await User.findById(userId) as IUserDocument;
 		return user;
@@ -42,49 +46,40 @@ class UserServiceClass implements IUserService {
 			{ $set: updatedBody },
 			{ new: true, runValidators: true, context: 'query' }
 		);
-		if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+		if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'Kullanıcı Bulunamadı');
 		return user!
 	}
 	async updateUserEmail(userId: string, email: string, password: string): Promise<IUserDocument> {
 		const user = await User.findById(userId)
-		if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+		if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'Kullanıcı Bulunamadı');
 		const isMatch = await bcrypt.compare(password, user.password);
-		if (!isMatch) throw new ApiError(httpStatus.BAD_REQUEST, 'Password is incorrect');
+		if (!isMatch) throw new ApiError(httpStatus.BAD_REQUEST, 'Şifre Yanlış');
 		if (await User.isEmailTaken(email)) {
-			throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+			throw new ApiError(httpStatus.BAD_REQUEST, 'Bu email adresi zaten alınmış');
 		}
 		user.email = email;
 		return await user.save();
 	}
 	async updateUserPassword(userId: string, currentPassword: string, newPassword: string): Promise<IUserDocument> {
 		const user = await User.findById(userId)
-		if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-		console.log("currentPassword",currentPassword )
-		console.log("currentPassword",newPassword )
+		if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'Kullanıcı Bulunamadı');
+		
 		if (currentPassword) {
 			const isMatch = await bcrypt.compare(currentPassword, user.password);
 			if (!isMatch) throw new ApiError(httpStatus.BAD_REQUEST, 'Mevcut şifre yanlış');
-			console.log("eski sifreyi dogru girdin.")
 		} else if (newPassword) {
 			throw new ApiError(httpStatus.BAD_REQUEST, 'Şifre değişikliği için mevcut şifre gereklidir');
 		}
 
-		if (newPassword) {
-			const salt = await bcrypt.genSalt(10);
-			console.log("salt",salt);
-			user.password = await bcrypt.hash(newPassword, salt);
-			console.log("newPassword",user.password);
-			console.log("yeni sifreyi dogru girdin. artik atanmis oldu.");
-		}
+		const salt = await bcrypt.genSalt(10);
+		user.password = await bcrypt.hash(newPassword, salt);
 		
-		const deneme = await bcrypt.compare(newPassword, user.password);
-		console.log("deneme",deneme);
-		return await user.save();
+		return await user.save()
 	}
 
 	async deleteUserById(userId: string): Promise<void> {
 		const user = await User.findByIdAndDelete(userId)
-		if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+		if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'Kullanıcı Bulunamadı');
 	}
 }
 
