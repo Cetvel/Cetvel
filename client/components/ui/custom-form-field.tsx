@@ -44,7 +44,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
   switch (props.fieldType) {
     case FormFieldType.INPUT:
       return (
-        <div className="flex rounded-xl border border-neutral-200 bg-white dark:border-neutral-500 dark:bg-dark-500">
+        <div className="flex rounded-xl border border-card">
           {props.iconSrc && (
             <Image
               src={props.iconSrc}
@@ -65,7 +65,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
       );
     case FormFieldType.PASSWORD:
       return (
-        <div className="flex rounded-xl border border-neutral-200 dark:border-neutral-500 bg-dark-400">
+        <div className="flex rounded-xl border-card">
           {props.iconSrc && (
             <Image
               src={props.iconSrc}

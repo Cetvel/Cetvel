@@ -20,7 +20,7 @@ const Modal = ({ children, defaultOpen, subheading, title }: Props) => {
   const { isOpen, setClose } = useModal();
   return (
     <Dialog open={isOpen || defaultOpen} onOpenChange={setClose}>
-      <DialogContent className="overflow-y-auto md:max-h-[1000px] md:h-fit h-screen bg-card">
+      <DialogContent className="overflow-y-auto md:max-h-[1000px] md:h-fit h-screen shad-dialog">
         <DialogHeader className="text-left">
           <DialogTitle className="text-lg font-bold">{title}</DialogTitle>
           <DialogDescription>{subheading}</DialogDescription>

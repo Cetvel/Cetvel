@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from "react";
 import {} from "react-icons/io5";
-import ListManager from "./list-manager";
+import TagManager from "./tag-manager";
 import Task from "./task";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Reorder } from "framer-motion";
@@ -65,7 +65,7 @@ const TaskList = () => {
             </h2>
             <div className="flex gap-2">
               <ListFilter onChange={setSelectedList} />
-              <ListManager />
+              <TagManager />
             </div>
           </div>
 

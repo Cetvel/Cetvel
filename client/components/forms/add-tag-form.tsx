@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TaskSchema } from "@/lib/schemas";
+import { ListSchema } from "@/lib/schemas";
 import { z } from "zod";
 import { instance } from "@/lib/utils";
 import { Form } from "../ui/form";
@@ -15,14 +15,13 @@ import SubmitButton from "./ui/submit-button";
 import { useTags } from "@/hooks/use-tags";
 import { SelectItem } from "../ui/select";
 
-const AddTaskForm = () => {
+const AddTagForm = () => {
   const { tags } = useTags();
 
-  const form = useForm<z.infer<typeof TaskSchema>>({
-    resolver: zodResolver(TaskSchema),
+  const form = useForm<z.infer<typeof ListSchema>>({
+    resolver: zodResolver(ListSchema),
     defaultValues: {
       title: "",
-      list: "",
     },
   });
 
@@ -30,7 +29,7 @@ const AddTaskForm = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  async function onSubmit(values: z.infer<typeof TaskSchema>) {
+  async function onSubmit(values: z.infer<typeof ListSchema>) {
     setError(null);
     setSuccess(null);
     setLoading(true);
@@ -38,31 +37,21 @@ const AddTaskForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex items-center space-x-2 flex-col sm:flex-row"
+      >
         <CustomFormField
           fieldType={FormFieldType.INPUT}
           control={form.control}
           name="title"
-          placeholder="Başlık ekleyin"
+          placeholder="Etiket adı"
         />
 
-        <CustomFormField
-          fieldType={FormFieldType.SELECT}
-          control={form.control}
-          name="tag"
-          placeholder="Etiket seçin"
-        >
-          {tags.map((tag: any, i: number) => (
-            <SelectItem key={i} value={tag.value}>
-              {tag.label}
-            </SelectItem>
-          ))}
-        </CustomFormField>
-
-        <SubmitButton text="Görev ekle" className="ml-auto" loading={loading} />
+        <SubmitButton text="Ekle" className="ml-auto" loading={loading} />
       </form>
     </Form>
   );
 };
 
-export default AddTaskForm;
+export default AddTagForm;
