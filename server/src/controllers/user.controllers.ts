@@ -19,15 +19,15 @@ const createUser = catchAsync(
 const getUser = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
   const user = await UserService.getUserById(req.userId!);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    throw new ApiError(httpStatus.NOT_FOUND, "Kullanıcı bulunamadı");
   }
-  console.log("Hello fucking world");
   res.status(httpStatus.OK).send(user);
 });
 
 const updateUser = catchAsync(
   async (req: AuthenticatedRequest, res: Response) => {
     const user = await UserService.updateUserById(req.userId!, req.body);
+    if (!user) throw new  ApiError(httpStatus.BAD_REQUEST, "Kullanıcı güncellenemedi");
     res.send(user);
   }
 );
@@ -35,10 +35,11 @@ const updateUser = catchAsync(
 const updateUserPassword = catchAsync(
   async (req: AuthenticatedRequest, res: Response) => {
     const user = await UserService.updateUserPassword(
-      req.userId!,
+      req.userId,
       req.body.currentPassword,
       req.body.newPassword
     );
+    if (!user) throw new ApiError(httpStatus.BAD_REQUEST, "Şifre değiştirilemedi");
     res.send(user);
   }
 );

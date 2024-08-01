@@ -18,7 +18,7 @@ const createExam = catchAsync(async (req: AuthenticatedRequest, res: Response) =
 const getExam = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
     const exam = await examService.getExamById(req.params.examId);
     if (!exam) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Sınav bulunamadı');
+        throw new ApiError(httpStatus.NOT_FOUND, 'Deneme bulunamadı');
     }
     res.send(exam);
 });
@@ -36,15 +36,15 @@ const getUserExamsByType = catchAsync(async (req: AuthenticatedRequest, res: Res
 const updateExam = catchAsync(async (req: Request, res: Response) => {
     const exam = await examService.updateExam(req.params.examId, req.body);
     if (!exam) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Sınav bulunamadı');
+        throw new ApiError(httpStatus.NOT_FOUND, 'Deneme bulunamadı');
     }
     res.send(exam);
 });
 
 const deleteExam = catchAsync(async (req: Request, res: Response) => {
     const result = await examService.deleteExam(req.params.examId);
-    if(result) return res.status(httpStatus.OK).send("deneme basari ile silindi");
-    return res.status(httpStatus.NOT_FOUND).send("deneme silinemedi");
+    if(result) return res.status(httpStatus.OK).send("Deneme silindi");
+    return res.status(httpStatus.NOT_FOUND).send("Deneme silinemedi");
 });
 
 const getUserExamsByDateRange = catchAsync(async (req: Request, res: Response) => {

@@ -23,7 +23,7 @@ const getPomodoros = catchAsync(async (req: AuthenticadedRequest, res: Response)
 const getPomodoroById = catchAsync(async (req: Request, res: Response) => {
     const pomodoro = await pomodoroService.getPomodoroById(req.params.pomodoroId);
     if (!pomodoro) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Pomodoro not found');
+        throw new ApiError(httpStatus.NOT_FOUND, 'Pomodoro bulunamadı');
     }
     res.json(pomodoro);
 });
@@ -36,7 +36,7 @@ const updatePomodoro = catchAsync(async (req: Request, res: Response) => {
 const deletePomodoro = catchAsync(async (req: Request, res: Response) => {
     const pomodoro = await pomodoroService.deletePomodoro(req.params.pomodoroId);
     if (!pomodoro) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Pomodoro not found');
+        throw new ApiError(httpStatus.NOT_FOUND, 'Pomodoro bulunamadı');
     }
     return res.json("Pomodoro deleted");
 });

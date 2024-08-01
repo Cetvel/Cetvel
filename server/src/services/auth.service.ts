@@ -17,9 +17,11 @@ interface IAuthService {
 class AuthServiceClass implements IAuthService {
     async loginUserWithEmailAndPassword(email: string, password: string): Promise<any> {
         const user = await userService.getUserByEmail(email);
-        const result = await user.isPasswordMatch(password)
-        if (!user || !(await user.isPasswordMatch(password))) {
-            throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+        if (!user ) {
+            throw new ApiError(httpStatus.UNAUTHORIZED, 'Bu email adresi ile kayıtlı bir kullanıcı bulunamadı');
+        }
+        if (!await user.isPasswordMatch(password)) {
+            throw new ApiError(httpStatus.UNAUTHORIZED, '');
         }
         return user;
     }
@@ -30,8 +32,8 @@ class AuthServiceClass implements IAuthService {
         const authenticatedTRefreshToken = TokenService.verifyToken(refreshToken);
 
         if (authenticatedTRefreshToken.error) {
-            return { redirect: "/login" };
-            // throw new ApiError(httpStatus.UNAUTHORIZED, authenticatedTRefreshToken.error?.message || "Unauthorized");
+            throw new ApiError(httpStatus.UNAUTHORIZED, authenticatedTRefreshToken.error?.message || "Unauthorized");
+            // return { redirect: "/login" };B
         }
 
         const userId = authenticatedTRefreshToken.decoded?.sub

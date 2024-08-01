@@ -4,6 +4,7 @@ import connectDB from './config/config';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import errorHandler from './middlewares/errorHandler';
 
 //
 const app = express();
@@ -40,17 +41,9 @@ app.use('/api/todo', todoRouther);
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 
-// Import the ApiError class
-import  ApiError  from './utils/ApiError';
 
-// Error Handling
-app.use((err, req, res, next) => {
-	if (err instanceof ApiError) {
-	  res.status(err.statusCode).json({ message: err.message });
-	} else {
-	  res.status(500).json(err.message);
-	}
-})
+// Error handler middleware
+app.use(errorHandler);
 
 //PORT
 app.listen(5000, () => {
