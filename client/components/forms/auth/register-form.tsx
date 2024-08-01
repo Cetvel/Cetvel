@@ -12,6 +12,10 @@ import { z } from "zod";
 import { Form } from "../../ui/form";
 import CustomFormField, { FormFieldType } from "../../ui/custom-form-field";
 import { catchError, instance } from "@/lib/utils";
+import { signIn } from "@/lib/auth";
+import { useRouter } from "next/navigation";
+import { DEFAULT_LOGIN_REDIRECT } from "@/lib/routes";
+import { register } from "@/actions/user";
 
 const RegisterForm = () => {
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -27,30 +31,21 @@ const RegisterForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof RegisterSchema>) {
     setError(null);
     setSuccess(null);
     setLoading(true);
 
-    const data = {
-      name: values.name,
-      email: values.email,
-      password: values.password,
-    };
-
-    instance
-      .post("/auth/register", data)
-      .then((res) => {
-        setSuccess("Kayıt başarılı, yönlendiriliyorsunuz...");
-        setLoading(false);
-        setTimeout(() => {
-          window.location.href = "/dashboard";
-        }, 1000);
+    await register(values)
+      .then((res: any) => {
+        setSuccess(res.success);
       })
-      .catch((err) => {
-        setError(catchError(err));
-        console.error(err);
+      .catch((error) => {
+        setError(error.message);
+      })
+      .finally(() => {
         setLoading(false);
       });
   }

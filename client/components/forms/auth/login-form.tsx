@@ -11,8 +11,11 @@ import FormSuccess from "../ui/form-success";
 import { z } from "zod";
 import { Form } from "../../ui/form";
 import CustomFormField, { FormFieldType } from "../../ui/custom-form-field";
-import axios from "axios";
-import { catchError, instance } from "@/lib/utils";
+import { signIn } from "@/lib/auth";
+import { DEFAULT_LOGIN_REDIRECT } from "@/lib/routes";
+import { catchError } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { signin } from "@/actions/user";
 
 const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -26,23 +29,26 @@ const LoginForm = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof LoginSchema>) {
     setError(null);
     setSuccess(null);
     setLoading(true);
 
-    instance
-      .post("/auth/login", values)
-      .then((res) => {
-        setSuccess("Giriş başarılı, yönlendiriliyorsunuz...");
-        setTimeout(() => {
-          window.location.href = "/dashboard";
-        }, 1000);
+    const data = {
+      email: values.email,
+      password: values.password,
+    };
+
+    await signin(data)
+      .then((res: any) => {
+        setSuccess(res.success);
       })
-      .catch((err) => {
-        setError(catchError(err));
-        console.error(err);
+      .catch((error) => {
+        setError(error.message);
+      })
+      .finally(() => {
         setLoading(false);
       });
   }

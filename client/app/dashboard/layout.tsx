@@ -12,11 +12,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await axios
-    .get("/user/info")
-    .then((res) => console.log(res.data))
-    .catch(() => console.error("User not found"));
-
   return (
     <main className="min-h-screen">
       <Sidebar />
