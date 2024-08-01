@@ -17,6 +17,9 @@ export const catchError = (error: any) => {
       case "CredentialsSignin":
         console.error("CredentialsSignin error:", error);
         return "Kullanıcı adı veya şifre hatalı.";
+      case "CallbackRouteError":
+        console.error("CallbackRouteError:", error);
+        return error.message;
       default:
         console.error("AuthError:", error);
         return "Bir hata oluştu. Lütfen tekrar dene";

@@ -15,7 +15,7 @@ import { signIn } from "@/lib/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/lib/routes";
 import { catchError } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { signin } from "@/actions/user";
+import { login } from "@/actions/user";
 
 const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -41,7 +41,7 @@ const LoginForm = () => {
       password: values.password,
     };
 
-    await signin(data)
+    await login(data)
       .then((res: any) => {
         setSuccess(res.success);
       })

@@ -1,16 +1,14 @@
-import { NextResponse } from "next/server";
 import authConfig from "@/lib/auth/auth.config";
 import NextAuth from "next-auth";
+export const { auth } = NextAuth(authConfig);
 import {
+  DEFAULT_LOGIN_REDIRECT,
   apiAuthPrefix,
   authRoutes,
-  DEFAULT_LOGIN_REDIRECT,
   publicRoutes,
-} from "./lib/routes";
+} from "@/lib/routes";
 
-const { auth } = NextAuth(authConfig);
-
-export default auth(async (req) => {
+export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
@@ -22,20 +20,20 @@ export default auth(async (req) => {
     return undefined;
   }
 
-  if (isAuthRoute && isLoggedIn) {
-    return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+  if (isAuthRoute) {
+    if (isLoggedIn) {
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    }
+    return undefined;
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/login", nextUrl));
+    return Response.redirect(new URL(authRoutes[0], nextUrl));
   }
 
-  return NextResponse.next();
+  return undefined;
 });
 
 export const config = {
-  matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
-  ],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };

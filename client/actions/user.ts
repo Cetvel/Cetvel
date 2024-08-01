@@ -6,11 +6,15 @@ import { LoginSchema, RegisterSchema } from "@/lib/schemas";
 import { catchError, instance } from "@/lib/utils";
 import { z } from "zod";
 
-export const signin = async (values: z.infer<typeof LoginSchema>) => {
+export const login = async (values: z.infer<typeof LoginSchema>) => {
   const data = {
     email: values.email,
     password: values.password,
   };
+
+  await instance.post("/auth/login", data).catch((error) => {
+    throw new Error(catchError(error));
+  });
 
   try {
     signIn("credentials", {

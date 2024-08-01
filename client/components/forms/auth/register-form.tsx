@@ -14,7 +14,6 @@ import CustomFormField, { FormFieldType } from "../../ui/custom-form-field";
 import { catchError, instance } from "@/lib/utils";
 import { signIn } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { DEFAULT_LOGIN_REDIRECT } from "@/lib/routes";
 import { register } from "@/actions/user";
 
 const RegisterForm = () => {
