@@ -21,7 +21,7 @@ class AuthServiceClass implements IAuthService {
             throw new ApiError(httpStatus.UNAUTHORIZED, 'Bu email adresi ile kayıtlı bir kullanıcı bulunamadı');
         }
         if (!await user.isPasswordMatch(password)) {
-            throw new ApiError(httpStatus.UNAUTHORIZED, '');
+            throw new ApiError(httpStatus.UNAUTHORIZED, 'Şifre Yanlış');
         }
         return user;
     }

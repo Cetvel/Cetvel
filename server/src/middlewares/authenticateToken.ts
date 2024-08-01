@@ -13,7 +13,7 @@ const authenticateToken = catchAsync(async (req: AuthenticatedRequest, res: Resp
     const authenticatedToken = tokenService.verifyToken(token);
     
     if (authenticatedToken.error?.type === "expired") {
-        return res.redirect("/auth/refresh-token");
+        return res.redirect("/api/auth/refresh-token");
         // throw new ApiError(httpStatus.UNAUTHORIZED, authenticatedToken.error?.message || "Unauthorized");
     } else if (authenticatedToken.error?.type === "invalid") {
         return res.redirect("/login");
