@@ -10,7 +10,7 @@ export const catchError = (error: any) => {
   if (error.response) {
     return error.response.data.message;
   } else if (error.request) {
-    return error.request;
+    return "Sunucuya bağlanırken bir hata oluştu.";
   } else {
     return error.message;
   }
