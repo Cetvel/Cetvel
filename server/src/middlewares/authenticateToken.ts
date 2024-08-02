@@ -1,26 +1,24 @@
-import { Request, Response, NextFunction } from "express";
-import tokenService from "../services/token.service";
-import catchAsync from "../utils/catchAsync";
-import httpStatus from "http-status";
-import ApiError from "../utils/ApiError";
-interface AuthenticatedRequest extends Request {
-    userId?: string;
-}
+import { getToken } from "next-auth/jwt";
 
-const authenticateToken = catchAsync(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const token = req.cookies.token;
+const authenticateToken = async (req: any, res: any, next: any) => {
+    try {
+        // Dinamik import ile next-auth/jwt modülünü yükle
 
-    const authenticatedToken = tokenService.verifyToken(token);
-    
-    if (authenticatedToken.error?.type === "expired") {
-        return res.redirect("/api/auth/refresh-token");
-        // throw new ApiError(httpStatus.UNAUTHORIZED, authenticatedToken.error?.message || "Unauthorized");
-    } else if (authenticatedToken.error?.type === "invalid") {
-        return res.redirect("/login");
+        const secret = process.env.NEXTAUTH_SECRET;
+
+        // Token'ı doğrulamak için secret ve salt ile getToken fonksiyonunu çağırın
+        const token = await getToken({ req, secret });
+        console.log("Token:", token);
+        if (!token) {
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        req.userId = token.id;
+        next();
+    } catch (error) {
+        console.error("Token doğrulama hatası:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
-
-    req.userId = authenticatedToken.decoded?.sub; 
-     next();
-});
+};
 
 export default authenticateToken;
