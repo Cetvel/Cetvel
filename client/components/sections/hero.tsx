@@ -17,7 +17,7 @@ const Hero: React.FC = () => {
         />
         <p className="font-normal text-dark-600 dark:text-light-600 md:text-xl">
           Yapay zekanın gücüyle kişiselleştirilmiş öğrenme deneyimi sunan
-          Edutrack, sınav stresini ortadan kaldırıp başarıya ulaşmanız için
+          Cetvel, sınav stresini ortadan kaldırıp başarıya ulaşmanız için
           ihtiyacınız olan her şeyi size sunar. Hemen denemeye başlayın ve farkı
           hissedin!
         </p>

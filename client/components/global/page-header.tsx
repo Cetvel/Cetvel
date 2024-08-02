@@ -55,22 +55,22 @@ const PageHeader = ({ title }: Props) => {
             <DropdownMenuGroup>
               <Link href="/dashboard/settings">
                 <DropdownMenuItem>
-                  <IoPersonOutline size={18} />
+                  <IoPersonOutline size={16} />
                   Hesap
                 </DropdownMenuItem>
               </Link>
-              <DropdownMenuItem>
-                <Link href="/dashboard/settings/preferences">
-                  <IoBrushOutline size={18} />
+              <Link href="/dashboard/preferences">
+                <DropdownMenuItem>
+                  <IoBrushOutline size={16} />
                   Tercihler
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link href="/dashboard/settings/billing">
-                  <IoRocketOutline size={18} />
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/dashboard/subscription">
+                <DropdownMenuItem>
+                  <IoRocketOutline size={16} />
                   Abonelik
-                </Link>
-              </DropdownMenuItem>
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -7,9 +7,9 @@ import ModalProvider from "@/providers/modal-provider";
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Edutrack - Zamanı yönet, başarıyı yakala!",
+  title: "Cetvel - Zamanı yönet, başarıyı yakala!",
   description:
-    "Edutrack, Ders çalışma sürecinizi kolaylaştıran ve akademik başarınızı optimize eden güçlü bir yardımcıdır.",
+    "Cetvel, Ders çalışma sürecinizi kolaylaştıran ve akademik başarınızı optimize eden güçlü bir yardımcıdır.",
 };
 
 export default function RootLayout({

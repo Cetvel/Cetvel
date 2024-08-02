@@ -38,10 +38,10 @@ const Features = () => {
         />
       </ContainerScroll>
 
-      <h2 className="text-4xl font-bold mb-6">TanjantPro Nedir</h2>
+      <h2 className="text-4xl font-bold mb-6">Cetvel Nedir</h2>
       <p className="text-lg text-secondary-content max-w-4xl mb-10">
-        TanjantPro, görevlerinizi planlamanıza ve organize etmenize yardımcı
-        olan bir uygulamadır. Saniyeler içinde görevlerinizi oluşturabilir,
+        Cetvel, görevlerinizi planlamanıza ve organize etmenize yardımcı olan
+        bir uygulamadır. Saniyeler içinde görevlerinizi oluşturabilir,
         takviminize ekleyebilir ve önceliklerini belirleyebilirsiniz. Ayrıca
         Pomodoro tekniği ile daha verimli çalışmanızı sağlar. Uygulama,
         kullanıcı dostu arayüzü ve etkileyici özellikleriyle işlerinizi daha

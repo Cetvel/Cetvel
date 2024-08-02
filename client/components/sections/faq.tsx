@@ -10,7 +10,7 @@ import {
 
 const questions = [
   {
-    question: "Hangi Öğrenciler Edutrack'tan  Faydalanabilir?",
+    question: "Hangi Öğrenciler Cetvel'tan  Faydalanabilir?",
     answer:
       "Uygulamamız tüm öğrencilere hizmet verebilmek amacı ile geliştirilmiştir. İlkokul, Ortaokul, Lise ve Üniversite öğrencileri uygulamamızı kullanabilirler.",
   },
@@ -20,7 +20,7 @@ const questions = [
       "Sınav öğrencileri için özel net hesaplama aracı bulunmaktadır. Öğrenciler dilerlerse girdikleri denemeyi kaydedebilirler ve uygulamamızın zengin analiz algoritmaları eşliğinde çeşitli veri grafikleri ile hazırlık süreçleri en iyi şekilde takip edebilirler.",
   },
   {
-    question: "Edutrack platformlarda kullanılabilir?",
+    question: "Cetvel platformlarda kullanılabilir?",
     answer:
       "Uygulamamız web üzerinden hizmet vermektedir. Çok yakında mobil uygulamamız ile de hizmet vermeye başlayacağız!",
   },
@@ -35,7 +35,7 @@ const questions = [
       "Kullanıcı verilerinizin güvenliği bizim için çok önemlidir. Verileriniz güvenli sunucularda saklanmakta ve üçüncü şahıslarla paylaşılmamaktadır. Veri güvenliği sözleşmemizi okuyabilirsiniz.",
   },
   {
-    question: "Edutrack'a Nasıl Üye Olabilirim?",
+    question: "Cetvel'a Nasıl Üye Olabilirim?",
     answer:
       " 'Fiyatlar' kısmından uygun paketi seçerek üye olabilirsiniz. Üyelik işlemleri oldukça basit ve hızlıdır.",
   },

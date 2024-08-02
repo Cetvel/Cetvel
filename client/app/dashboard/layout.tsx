@@ -4,7 +4,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Panel",
-  description: "TanjantPro",
+  description: "Cetvel",
 };
 
 export default async function RootLayout({

@@ -43,11 +43,19 @@ h6 {
     @apply bg-white text-dark-100 dark:text-light-300 dark:bg-dark-200 min-h-screen w-full;
   }
   .nav-link {
-    @apply dark:text-light-600 dark:hover:text-white text-lg;
+    @apply dark:text-light-600 dark:hover:text-white;
   }
 
   .bg-card {
     @apply bg-white dark:bg-dark-500;
+  }
+
+  .bg-secondary {
+    @apply bg-light-200 dark:bg-dark-600;
+  }
+
+  .bg-base-100 {
+    @apply bg-white dark:bg-dark-400;
   }
 
   .border-card {

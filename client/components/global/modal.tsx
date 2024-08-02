@@ -14,9 +14,16 @@ type Props = {
   subheading?: string;
   children: React.ReactNode;
   defaultOpen?: boolean;
+  buttons?: React.ReactNode;
 };
 
-const Modal = ({ children, defaultOpen, subheading, title }: Props) => {
+const Modal = ({
+  children,
+  defaultOpen,
+  subheading,
+  title,
+  buttons,
+}: Props) => {
   const { isOpen, setClose } = useModal();
   return (
     <Dialog open={isOpen || defaultOpen} onOpenChange={setClose}>
@@ -24,8 +31,9 @@ const Modal = ({ children, defaultOpen, subheading, title }: Props) => {
         <DialogHeader className="text-left">
           <DialogTitle className="text-lg font-bold">{title}</DialogTitle>
           <DialogDescription>{subheading}</DialogDescription>
-          {children}
+          {buttons}
         </DialogHeader>
+        {children}
       </DialogContent>
     </Dialog>
   );

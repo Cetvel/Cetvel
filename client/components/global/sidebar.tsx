@@ -21,7 +21,7 @@ const Sidebar = () => {
         <div className="flex gap-3 items-center">
           <Image src={logo} alt="Vektör" width={32} height={32} />
           <h2 className="text-2xl font-semibold text-accent-content select-none">
-            TanjantPro
+            Cetvel
           </h2>
         </div>
 
@@ -75,7 +75,7 @@ const Sidebar = () => {
             <div className="flex gap-2 items-center mb-8">
               <Image src={logo} alt="Vektör" width={26} height={26} />
               <h2 className="text-xl font-semibold text-accent-content">
-                TanjantPro
+                Cetvel
               </h2>
             </div>
             {menuLinks.map(

@@ -5,6 +5,7 @@ import { AnimatePresence, Reorder, motion } from "framer-motion";
 import { IoChevronForwardOutline } from "react-icons/io5";
 import { format } from "date-fns";
 import { useModal } from "@/providers/modal-provider";
+import TaskModal from "@/components/modals/task-modal";
 
 type Props = {
   task: any;
@@ -30,7 +31,7 @@ const Task = ({ task }: Props) => {
         <motion.button
           className="flex w-full text-sm md:text-base items-center gap-2 px-4 lg:px-6 py-4 justify-between border border-card rounded-xl hover:bg-secondary transition-colors"
           onClick={() => {
-            /* if (!isDragging) setOpen(<TaskModal task={task} />); */
+            if (!isDragging) setOpen(<TaskModal task={task} />);
           }}
         >
           <h3 className="text-start">{task.title}</h3>
