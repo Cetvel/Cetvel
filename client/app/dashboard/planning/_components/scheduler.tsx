@@ -1,5 +1,6 @@
 "use client";
 
+import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import { Calendar, Views, momentLocalizer } from "react-big-calendar";
 import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
@@ -7,11 +8,11 @@ import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/tr";
 
-import { VIEW_OPTIONS } from "@/helpers/constants";
-import AddTask from "@/components/ui/add-task";
 import { useModal } from "@/providers/modal-provider";
 import TaskModal from "@/components/modals/task-modal";
 import { Button } from "@/components/ui/button";
+import AddTask from "@/components/global/add-task";
+import { VIEW_OPTIONS } from "@/constants";
 
 const DndCalendar = Calendar;
 
@@ -68,26 +69,26 @@ const Scheduler = ({ tags, events }: { tags: any; events: any }) => {
 
   return (
     <>
-      <div className="container card">
+      <div className="container bg-card p-4 rounded-xl border-card">
         <div className="flex flex-col md:flex-row gap-6 md:gap-0 w-full pb-6 items-center justify-between relative">
           <div className="flex gap-2">
-            <Button variant="outline" onClick={onTodayClick}>
+            <Button variant="outline" onClick={onTodayClick} size={"sm"}>
               Bugün
             </Button>
             <AddTask />
           </div>
           <div className="flex gap-4 items-center md:absolute md:left-1/2 md:-translate-x-1/2">
-            <Button variant={"outline"} size={"icon"} onClick={onPrevClick}>
+            <Button variant={"outline"} size={"icon-sm"} onClick={onPrevClick}>
               <IoChevronBackOutline size={16} />
             </Button>
             <span className="text-2xl font-bold text-accent-content">
               {dateText}
             </span>
-            <Button variant={"outline"} size="icon" onClick={onNextClick}>
+            <Button variant={"outline"} size="icon-sm" onClick={onNextClick}>
               <IoChevronForwardOutline size={16} />
             </Button>
           </div>
-          <div className="join">
+          <div className="flex gap-2">
             {VIEW_OPTIONS.map(({ id, label }) => (
               <Button
                 key={id}

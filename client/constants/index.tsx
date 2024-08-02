@@ -1,3 +1,5 @@
+import { Views } from "react-big-calendar";
+
 import {
   IoBarChartOutline,
   IoBookOutline,
@@ -44,6 +46,12 @@ export const menuLinks = [
     href: "/dashboard/settings",
     icon: <IoSettingsOutline size={18} />,
   },
+];
+
+export const VIEW_OPTIONS = [
+  { id: Views.DAY, label: "Day" },
+  { id: Views.WEEK, label: "Week" },
+  { id: Views.MONTH, label: "Month" },
 ];
 
 export const StudyFieldOptions = ["YKS", "LGS", "KPSS"];
