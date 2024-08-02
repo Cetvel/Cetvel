@@ -25,7 +25,19 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 
+import authenticateToken from './middlewares/authenticateToken';
 
+app.get("/api/deneme" , (req,res)=>{
+	res.send("acik yer")
+})
+
+app.get("/api/auth-deneme", (req,res,next)=>{
+	console.log("auth-deneme")
+	console.log(req.cookies)
+	next()
+} ,authenticateToken , (req,res)=>{
+	res.send("korunmus yer")
+})
 
 //Import Routes
 import pomodoroRouter from './routes/pomodoro.route';

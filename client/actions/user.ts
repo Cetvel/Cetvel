@@ -28,7 +28,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
     };
   } catch (error) {
     return {
-      error: catchError(error) || "Giriş sırasında bir hata oluştu"
+      error: catchError(error) || "Giriş sırasında bir hata oluşti."
   }
 }}
 
@@ -57,4 +57,4 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       error: catchError(error) || "Kayıt sırasında bir hata oluştu",
     };
   }
-};
+}
