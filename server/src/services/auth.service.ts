@@ -17,11 +17,8 @@ interface IAuthService {
 class AuthServiceClass implements IAuthService {
     async loginUserWithEmailAndPassword(email: string, password: string): Promise<any> {
         const user = await userService.getUserByEmail(email);
-        if (!user ) {
-            throw new ApiError(httpStatus.UNAUTHORIZED, 'Bu email adresi ile kayıtlı bir kullanıcı bulunamadı');
-        }
-        if (!await user.isPasswordMatch(password)) {
-            throw new ApiError(httpStatus.UNAUTHORIZED, 'Şifre Yanlış');
+        if (!user || !(await user.isPasswordMatch(password))) {
+            throw new ApiError(httpStatus.UNAUTHORIZED, 'Hatalı e-posta veya şifre');
         }
         return user;
     }

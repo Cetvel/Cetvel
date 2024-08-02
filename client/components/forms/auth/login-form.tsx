@@ -11,7 +11,7 @@ import FormSuccess from "../ui/form-success";
 import { z } from "zod";
 import { Form } from "../../ui/form";
 import CustomFormField, { FormFieldType } from "../../ui/custom-form-field";
-import { signIn } from "@/lib/auth";
+import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/lib/routes";
 import { catchError } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -36,21 +36,29 @@ const LoginForm = () => {
     setSuccess(null);
     setLoading(true);
 
-    const data = {
-      email: values.email,
-      password: values.password,
-    };
-
-    await login(data)
-      .then((res: any) => {
-        setSuccess(res.success);
-      })
-      .catch((error) => {
-        setError(error.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const result = await login(values);
+      if(result.success){
+        const signInResult = await signIn('credentials', {
+          redirect: true,
+          email: values.email,
+          password: values.password,
+        })
+        setSuccess(result.success)
+        if (signInResult?.error) {
+          setError('Giriş yapılırken bir hata oluştu');
+        } else {
+          // Redirect or update UI as needed
+          console.log('Kayıt ve giriş başarılı');
+        }
+      }else{
+        setError(result.error || 'Giriş sırasında bir hata oluştu');
+      }
+    } catch (error:any) {
+      setError(error.message || 'Bir hata oluştu');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

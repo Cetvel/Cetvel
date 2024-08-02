@@ -12,9 +12,10 @@ import { z } from "zod";
 import { Form } from "../../ui/form";
 import CustomFormField, { FormFieldType } from "../../ui/custom-form-field";
 import { catchError, instance } from "@/lib/utils";
-import { signIn } from "@/lib/auth";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { register } from "@/actions/user";
+import { set } from "mongoose";
 
 const RegisterForm = () => {
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -36,17 +37,30 @@ const RegisterForm = () => {
     setError(null);
     setSuccess(null);
     setLoading(true);
-
-    await register(values)
-      .then((res: any) => {
-        setSuccess(res.success);
+    
+    
+    try{
+        const result = await register(values)
+        if(result.success){
+          const signInResult = await signIn('credentials', {
+            redirect: true,
+            email: values.email,
+            password: values.password,
       })
-      .catch((error) => {
-        setError(error.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      setSuccess(result.success)
+         if (signInResult?.error) {
+        setError('Giriş yapılırken bir hata oluştu');
+      } else {
+        // Redirect or update UI as needed
+        console.log('Kayıt ve giriş başarılı');
+      }
+    } else {
+      setError(result.error || 'Kayıt sırasında bir hata oluştu');
+    }} catch (error : any) {
+      setError(error.message || 'Bir hata oluştu')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

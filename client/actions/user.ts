@@ -1,58 +1,60 @@
 "use server";
 
-import { signIn } from "@/lib/auth";
+import { AuthError } from "next-auth";
+import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/lib/routes";
 import { LoginSchema, RegisterSchema } from "@/lib/schemas";
 import { catchError, instance } from "@/lib/utils";
 import { z } from "zod";
 
 export const login = async (values: z.infer<typeof LoginSchema>) => {
-  const data = {
-    email: values.email,
-    password: values.password,
-  };
+  const validatedFields = LoginSchema.safeParse(values);
 
-  await instance.post("/auth/login", data).catch((error) => {
-    throw new Error(catchError(error));
-  });
-
-  try {
-    signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
-    });
-  } catch (error) {
-    throw new Error(catchError(error));
+  if (!validatedFields.success) {
+    return { error: "Geçersiz alanlar" };
   }
 
-  return {
-    success: "Başarıyla giriş yapıldı. Yönlendiriliyorsunuz...",
-  };
-};
+  const { email, password } = validatedFields.data;
+
+  try {
+    const result = await instance.post("/auth/login", {
+      email,
+      password,
+    })
+
+    return { 
+      success: "Başarıyla giriş yapıldı.",
+      data : result.data
+    };
+  } catch (error) {
+    return {
+      error: catchError(error) || "Giriş sırasında bir hata oluştu"
+  }
+}}
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
-  const data = {
-    email: values.email,
-    password: values.password,
-    name: values.name,
-  };
+  const validatedFields = RegisterSchema.safeParse(values);
 
-  await instance.post("/auth/register", data).catch((error) => {
-    throw new Error(catchError(error));
-  });
-
-  try {
-    await signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
-    });
-  } catch (error) {
-    throw new Error(catchError(error));
+  if (!validatedFields.success) {
+    return { error: "Geçersiz alanlar" };
   }
 
-  return {
-    success: "Başarıyla kayıt oldunuz.",
-  };
+  const { name, email, password } = validatedFields.data;
+
+  try {
+    const result = await instance.post("/auth/register", {
+      name,
+      email,
+      password,
+    });
+
+    return {
+      success: "Başarıyla kayıt oldunuz.",
+      data: result.data
+    };
+  } catch (error) {
+    return {
+      error: catchError(error) || "Kayıt sırasında bir hata oluştu",
+    };
+  }
 };
