@@ -1,3 +1,4 @@
+import { TaskStatus } from "@/components/global/status-filter";
 import { Views } from "react-big-calendar";
 
 import {
@@ -22,8 +23,8 @@ export const menuLinks = [
     icon: <IoCalendarOutline size={18} />,
   },
   {
-    label: "Zamanlama",
-    href: "/dashboard/timing",
+    label: "Odaklanma",
+    href: "/dashboard/focusing",
     icon: <IoTimeOutline size={18} />,
   },
   {
@@ -52,6 +53,11 @@ export const VIEW_OPTIONS = [
   { id: Views.DAY, label: "Day" },
   { id: Views.WEEK, label: "Week" },
   { id: Views.MONTH, label: "Month" },
+];
+
+export const taskStatusses = [
+  { value: "active", label: "Aktif" },
+  { value: "completed", label: "Tamamlandı" },
 ];
 
 export const StudyFieldOptions = ["YKS", "LGS", "KPSS"];

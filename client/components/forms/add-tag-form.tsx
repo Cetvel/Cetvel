@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ListSchema } from "@/lib/schemas";
+import { TagSchema } from "@/lib/schemas";
 import { z } from "zod";
 import { instance } from "@/lib/utils";
 import { Form } from "../ui/form";
@@ -18,8 +18,8 @@ import { SelectItem } from "../ui/select";
 const AddTagForm = () => {
   const { tags } = useTags();
 
-  const form = useForm<z.infer<typeof ListSchema>>({
-    resolver: zodResolver(ListSchema),
+  const form = useForm<z.infer<typeof TagSchema>>({
+    resolver: zodResolver(TagSchema),
     defaultValues: {
       title: "",
     },
@@ -29,7 +29,7 @@ const AddTagForm = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  async function onSubmit(values: z.infer<typeof ListSchema>) {
+  async function onSubmit(values: z.infer<typeof TagSchema>) {
     setError(null);
     setSuccess(null);
     setLoading(true);

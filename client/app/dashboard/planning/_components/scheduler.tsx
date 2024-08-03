@@ -9,10 +9,11 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/tr";
 
 import { useModal } from "@/providers/modal-provider";
-import TaskModal from "@/components/modals/task-modal";
 import { Button } from "@/components/ui/button";
 import AddTask from "@/components/global/add-task";
 import { VIEW_OPTIONS } from "@/constants";
+import TaskForm from "@/components/forms/task-form";
+import Modal from "@/components/global/modal";
 
 const DndCalendar = Calendar;
 
@@ -24,8 +25,12 @@ type Keys = keyof typeof Views;
 const Scheduler = ({ tags, events }: { tags: any; events: any }) => {
   const { setOpen } = useModal();
 
-  const handleSelectEvent = (event: any) => {
-    setOpen(<TaskModal task={event} />);
+  const handleSelectEvent = (event: Task) => {
+    setOpen(
+      <Modal title={event.title}>
+        <TaskForm type="edit" task={event} />
+      </Modal>
+    );
   };
 
   const [date, setDate] = useState<Date>(moment().toDate());
@@ -75,7 +80,6 @@ const Scheduler = ({ tags, events }: { tags: any; events: any }) => {
             <Button variant="outline" onClick={onTodayClick} size={"sm"}>
               Bugün
             </Button>
-            <AddTask />
           </div>
           <div className="flex gap-4 items-center md:absolute md:left-1/2 md:-translate-x-1/2">
             <Button variant={"outline"} size={"icon-sm"} onClick={onPrevClick}>
@@ -94,6 +98,7 @@ const Scheduler = ({ tags, events }: { tags: any; events: any }) => {
                 key={id}
                 className="join-item"
                 variant={view === id ? "secondary" : "outline"}
+                size={"sm"}
                 onClick={() => setView(id)}
               >
                 {label == "Day" ? "Gün" : label == "Week" ? "Hafta" : "Ay"}

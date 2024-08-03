@@ -28,6 +28,8 @@ type ComboboxProps = {
   searchText?: string;
   emptyText?: string;
   selectText?: string;
+  searchable?: boolean;
+  className?: string;
 };
 
 export function Combobox({
@@ -37,6 +39,8 @@ export function Combobox({
   emptyText,
   searchText,
   selectText,
+  searchable,
+  className,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
@@ -51,7 +55,7 @@ export function Combobox({
             size={"sm"}
             role="combobox"
             aria-expanded={open}
-            className="w-[120px] justify-between"
+            className={cn("w-[120px] justify-between", className)}
           >
             {value
               ? items.find((item) => item.value === value)?.label
@@ -63,7 +67,9 @@ export function Combobox({
         </PopoverTrigger>
         <PopoverContent className="w-max p-0">
           <Command>
-            <CommandInput placeholder={searchText ? searchText : "Ara..."} />
+            {searchable && (
+              <CommandInput placeholder={searchText ? searchText : "Ara..."} />
+            )}
             <CommandList>
               <CommandEmpty>
                 {emptyText ? emptyText : "Sonuç bulunamadı."}

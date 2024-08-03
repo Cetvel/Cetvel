@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import Image from "next/image";
-import ReactDatePicker from "react-datepicker";
 import { Control } from "react-hook-form";
 
 import { Checkbox } from "./checkbox";
@@ -14,6 +13,9 @@ import {
 import { Input } from "./input";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./select";
 import { Textarea } from "./textarea";
+import { IoCalendar } from "react-icons/io5";
+import { Calendar } from "./calendar";
+import { DatePicker } from "./date-picker";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -113,25 +115,9 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
       );
     case FormFieldType.DATE_PICKER:
       return (
-        <div className="flex rounded-xl border border-neutral-200 dark:border-neutral-500 bg-dark-400">
-          <Image
-            src="/assets/icons/calendar.svg"
-            height={24}
-            width={24}
-            alt="user"
-            className="ml-2"
-          />
-          <FormControl>
-            <ReactDatePicker
-              showTimeSelect={props.showTimeSelect ?? false}
-              selected={field.value}
-              onChange={(date: Date | null) => field.onChange(date)}
-              timeInputLabel="Time:"
-              dateFormat={props.dateFormat ?? "MM/dd/yyyy"}
-              wrapperClassName="date-picker"
-            />
-          </FormControl>
-        </div>
+        <FormControl>
+          <DatePicker selected={field.value} onSelect={field.onChange} />
+        </FormControl>
       );
     case FormFieldType.SELECT:
       return (

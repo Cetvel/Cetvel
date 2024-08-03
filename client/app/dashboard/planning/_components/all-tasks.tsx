@@ -1,14 +1,17 @@
 "use client";
 
+import TagFilter from "@/components/global/tag-filter";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import React, { useState } from "react";
-import {} from "react-icons/io5";
-import TagManager from "./tag-manager";
-import Task from "./task";
+import TagManager from "../../_components/tag-manager";
+import AddTask from "@/components/global/add-task";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Reorder } from "framer-motion";
-import { filterTasks } from "./task-filter";
-import AddTask from "@/components/global/add-task";
-import TagFilter from "@/components/global/tag-filter";
+import { filterTasks } from "../../_components/task-filter";
+import Task from "../../_components/task";
+import { Input } from "@/components/ui/input";
+import { IoSearch } from "react-icons/io5";
+import DetailedTask from "@/components/global/detailed-task";
 import StatusFilter from "@/components/global/status-filter";
 
 const tasksMock = [
@@ -46,42 +49,43 @@ const tasksMock = [
   },
 ];
 
-const Tasktag = () => {
+const AllTasks = () => {
   const [tasks, setTasks] = useState(tasksMock);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
   return (
-    <>
-      <aside className="flex flex-col gap-4 flex-grow lg:col-span-5">
-        <div className="items-center justify-between flex">
-          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 md:pl-4 flex-1">
-            <h2 className="text-lg font-bold text-base-content whitespace-nowrap mt-0.5">
-              Bugünün Görevleri
-            </h2>
-            <div className="flex gap-2">
-              <TagFilter onChange={setSelectedTag} />
-              <StatusFilter onChange={setSelectedStatus} />
-              <TagManager />
+    <Card>
+      <CardContent>
+        <div className="items-center justify-between flex mb-6">
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6 flex-1">
+            <div className="flex rounded-xl items-center pl-4 border border-card">
+              <IoSearch className="w-5 h-5 !text-secondary-content" />
+              <Input placeholder="Görev ara..." className="shad-input !h-9" />
             </div>
           </div>
-          <AddTask />
+          <div className="flex gap-2">
+            <TagFilter onChange={setSelectedTag} />
+            <StatusFilter onChange={setSelectedStatus} />
+            <TagManager />
+            <AddTask />
+          </div>
         </div>
 
-        <ScrollArea className="bg-card rounded-xl border border-card p-2 md:p-4 h-[300px] lg:h-[292px] flex-grow overflow-x-hidden">
+        <ScrollArea className="flex-grow h-[280px] lg:h-[300px] overflow-x-hidden ">
           <Reorder.Group axis="y" values={tasks} onReorder={setTasks}>
             <div className="flex flex-col gap-3 w-full">
               {filterTasks(tasks, selectedTag, selectedStatus).map(
                 (item: any, i: number) => (
-                  <Task key={item.id} task={item} />
+                  <DetailedTask key={item.id} task={item} />
                 )
               )}
             </div>
           </Reorder.Group>
         </ScrollArea>
-      </aside>
-    </>
+      </CardContent>
+    </Card>
   );
 };
 
-export default Tasktag;
+export default AllTasks;

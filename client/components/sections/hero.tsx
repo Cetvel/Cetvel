@@ -12,8 +12,8 @@ const Hero: React.FC = () => {
       <Navigation />
       <div className="flex flex-col gap-8 max-w-3xl md:items-center px-4 z-10 md:-mt-52 text-center">
         <TextGenerateEffect
-          words="Yapay zeka ile destekli,
-          Kişisel planlama ve analiz platformu."
+          words="Yapay zeka destekli,
+          akıllı öğrenme asistanı."
         />
         <p className="font-normal text-dark-600 dark:text-light-600 md:text-xl">
           Yapay zekanın gücüyle kişiselleştirilmiş öğrenme deneyimi sunan

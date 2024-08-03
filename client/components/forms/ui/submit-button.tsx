@@ -1,7 +1,6 @@
 import { Button, ButtonProps } from "@/components/ui/button";
 import Image from "next/image";
 import React from "react";
-import { useFormStatus } from "react-dom";
 
 interface SubmitButtonProps extends ButtonProps {
   loading: boolean;
@@ -22,7 +21,7 @@ const SubmitButton = ({
   ...props
 }: SubmitButtonProps) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 justify-end">
       {button && button}
       <Button
         /* @ts-ignore */

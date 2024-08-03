@@ -2,10 +2,12 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, Reorder, motion } from "framer-motion";
-import { IoChevronForwardOutline } from "react-icons/io5";
+import { IoCheckmark, IoChevronForwardOutline } from "react-icons/io5";
 import { format } from "date-fns";
 import { useModal } from "@/providers/modal-provider";
-import TaskModal from "@/components/modals/task-modal";
+import { cn } from "@/lib/utils";
+import Modal from "@/components/global/modal";
+import TaskForm from "@/components/forms/task-form";
 
 type Props = {
   task: any;
@@ -29,12 +31,35 @@ const Task = ({ task }: Props) => {
         onDragEnd={() => setIsDragging(false)}
       >
         <motion.button
-          className="flex w-full text-sm md:text-base items-center gap-2 px-4 lg:px-6 py-4 justify-between border border-card rounded-xl hover:bg-secondary transition-colors"
+          className={cn(
+            "flex w-full text-sm md:text-base items-center gap-2 px-4 lg:px-6 py-4 justify-between border border-card rounded-xl hover:bg-secondary transition-colors",
+            {
+              "bg-base-200": task.status === "completed",
+            }
+          )}
           onClick={() => {
-            if (!isDragging) setOpen(<TaskModal task={task} />);
+            if (!isDragging)
+              setOpen(
+                <Modal title={task.title}>
+                  <TaskForm type="edit" task={task} />
+                </Modal>
+              );
           }}
         >
-          <h3 className="text-start">{task.title}</h3>
+          <h3 className="text-start flex gap-2 items-center">
+            <span
+              className={cn({
+                "line-through": task.status === "completed",
+              })}
+            >
+              {task.title}
+            </span>
+            {task.status === "completed" && (
+              <span className="text-primary-500">
+                <IoCheckmark className="h-5 w-5" />
+              </span>
+            )}
+          </h3>
 
           <div>
             <div className="text-secondary-content flex gap-1 lg:gap-4 items-center">

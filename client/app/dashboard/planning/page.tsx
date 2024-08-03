@@ -1,6 +1,8 @@
 import PageHeader from "@/components/global/page-header";
 import Scheduler from "./_components/scheduler";
 import React from "react";
+import AllTasks from "./_components/all-tasks";
+import RecommendedTasks from "./_components/recommended-tasks";
 
 const tasksMock = [
   {
@@ -36,7 +38,15 @@ const Page = async () => {
   return (
     <>
       <PageHeader title="Planlama" />
-      <Scheduler events={tasksMock} tags={tags} />
+      <div className="grid grid-cols-6 gap-6 mb-6">
+        <div className="col-span-4">
+          <AllTasks />
+        </div>
+        <div className="col-span-2">
+          <RecommendedTasks />
+        </div>
+      </div>
+      <Scheduler tags={tags} events={tasksMock} />
     </>
   );
 };

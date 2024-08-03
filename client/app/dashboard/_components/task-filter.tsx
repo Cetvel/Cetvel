@@ -1,9 +1,13 @@
-export const filterTasks = (tasks: any[], list: string | null) => {
-  if (!list) {
+export const filterTasks = (
+  tasks: any[],
+  tag: string | null,
+  status: string | null
+) => {
+  if (!tag && !status) {
     return tasks;
   }
 
   return tasks.filter((task) => {
-    return task.list.includes(list);
+    return (!tag || task.tag === tag) && (!status || task.status === status);
   });
 };

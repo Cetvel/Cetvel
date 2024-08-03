@@ -58,6 +58,10 @@ h6 {
     @apply bg-white dark:bg-dark-400;
   }
 
+  .bg-base-200 {
+    @apply bg-light-500 dark:bg-dark-300;
+  }
+
   .border-card {
     @apply border border-neutral-200 dark:border-neutral-500;
   }
@@ -67,7 +71,7 @@ h6 {
   }
 
   .text-secondary-content {
-    @apply text-dark-700 dark:text-light-600;
+    @apply text-dark-700 dark:text-light-600 !important;
   }
 
   .text-base-content {
@@ -122,9 +126,13 @@ h6 {
   .checkbox-label {
     @apply text-sm !important;
   }
+
+  .date-picker {
+    @apply overflow-hidden border-transparent w-full placeholder:text-secondary-content h-11 rounded-xl px-3 outline-none !important;
+  }
 }
 
-/* Date Picker Start */
+/* React Calendar Start */
 .react-calendar {
   @apply rounded-xl bg-white dark:bg-dark-500 border-neutral-200 dark:border-neutral-500 p-4 !important;
 }
@@ -165,7 +173,7 @@ h6 {
 abbr:where([title]) {
   @apply no-underline;
 }
-/* Date Picker End */
+/* React Calendar End */
 
 /* Big Calendar Start */
 .rbc-calendar {

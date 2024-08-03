@@ -5,7 +5,7 @@ import { IoAdd } from "react-icons/io5";
 import Modal from "./modal";
 import { useModal } from "@/providers/modal-provider";
 import { Button } from "../ui/button";
-import AddTaskForm from "../forms/add-task-form";
+import TaskForm from "../forms/task-form";
 
 const AddTask = () => {
   const { setOpen } = useModal();
@@ -16,7 +16,7 @@ const AddTask = () => {
         onClick={() =>
           setOpen(
             <Modal title="Görev Ekle">
-              <AddTaskForm />
+              <TaskForm />
             </Modal>
           )
         }

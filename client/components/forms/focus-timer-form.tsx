@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 
-const TimerForm = () => {
+const FocusTimerForm = () => {
   const [breakMinutes, setBreakMinutes] = useState(5);
   const [workMinutes, setWorkMinutes] = useState<number>(30);
 
@@ -96,19 +96,20 @@ const TimerForm = () => {
   if (seconds < 10) seconds = "0" + seconds;
 
   return (
-    <Tabs defaultValue="pomodoro">
-      <TabsList className="w-full grid grid-cols-2 mt-2">
-        <TabsTrigger value="pomodoro">Pomodoro</TabsTrigger>
+    <Tabs defaultValue="focus">
+      <TabsList className="w-full grid grid-cols-2">
+        <TabsTrigger value="focus">Odaklanma</TabsTrigger>
         <TabsTrigger value="settings">Ayarlar</TabsTrigger>
       </TabsList>
-      <TabsContent value="pomodoro">
+      <TabsContent value="focus">
         <h2 className="text-5xl font-bold my-10 text-center">
           {minutes}:{seconds}
         </h2>
-        <div className="flex gap-2 mb-6 items-center w-full">
+        <div className="flex flex-col gap-4 mb-6 items-center w-full">
+          <p>Lütfen odaklanma süresince odağınızı çalışmanıza verin!</p>
           <Input
             type="text"
-            className="shad-input"
+            className="shad-input border-card"
             placeholder="Ne üstünde çalışıyorsun?"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -186,7 +187,7 @@ const TimerForm = () => {
           <div className="form-control">
             <div className="label mb-1">
               <span className="label-text">
-                Çalışma süresi: {workMinutes} dk
+                Odaklanma süresi: {workMinutes} dk
               </span>
             </div>
             <Input
@@ -219,4 +220,4 @@ const TimerForm = () => {
   );
 };
 
-export default TimerForm;
+export default FocusTimerForm;

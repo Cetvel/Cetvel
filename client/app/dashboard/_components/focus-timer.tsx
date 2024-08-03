@@ -5,15 +5,9 @@ import { IoPlay } from "react-icons/io5";
 import { useModal } from "@/providers/modal-provider";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/global/modal";
-import TimerForm from "@/components/forms/timer-form";
+import FocusTimerForm from "@/components/forms/focus-timer-form";
 
-const tags = [
-  { id: "1", value: "is", label: "İş" },
-  { id: "2", value: "okul", label: "Okul" },
-  { id: "3", value: "kisisel", label: "Kişisel" },
-];
-
-const Timer = () => {
+const FocusTimer = () => {
   const { setOpen } = useModal();
 
   return (
@@ -31,13 +25,13 @@ const Timer = () => {
       >
         <div className="flex flex-col grow items-center justify-center">
           <div className="flex mb-4 items-center">
-            <h2 className="text-2xl font-bold text-white">Zamanlayıcı</h2>
+            <h2 className="text-2xl font-bold text-white">Odaklanma Modu</h2>
           </div>
           <Button
             onClick={() => {
               setOpen(
-                <Modal title="">
-                  <TimerForm />
+                <Modal title="Odaklanma oturumu">
+                  <FocusTimerForm />
                 </Modal>
               );
             }}
@@ -52,4 +46,4 @@ const Timer = () => {
   );
 };
 
-export default Timer;
+export default FocusTimer;

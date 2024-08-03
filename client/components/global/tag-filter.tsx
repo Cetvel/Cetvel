@@ -6,19 +6,21 @@ type Props = {
   onChange: (value: string) => void;
 };
 
-const ListFilter = ({ onChange }: Props) => {
+const TagFilter = ({ onChange }: Props) => {
   const { tags } = useTags();
 
   return (
     <Combobox
+      className={"w-[120px]"}
       itemValue={tags[0].value}
       onChange={onChange}
       items={tags}
-      searchText="Liste Ara..."
-      emptyText="Liste bulunamadı."
-      selectText="Filtrele..."
+      searchText="Etiket Ara..."
+      emptyText="Etiket bulunamadı."
+      selectText="Etiket"
+      searchable
     />
   );
 };
 
-export default ListFilter;
+export default TagFilter;

@@ -55,13 +55,18 @@ const Banner = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundBlendMode: "multiply",
-        backgroundColor: "rgba(0,0,0,0.2)",
       }}
     >
       <div className="flex flex-col gap-2 w-full ">
         <h2 className="text-3xl md:text-4xl text-white font-bold">
           Tekrar Hoşgeldin Ömer!
         </h2>
+        <p>
+          Günlük motivasyon sözü:{" "}
+          <span className="font-medium text-accent-content">
+            &quot;Başarının sırrı, pes etmemekte yatar.&quot;
+          </span>
+        </p>
       </div>
       <div className="flex w-full justify-end">
         <div className="rounded-xl border border-neutral-200 dark:border-neutral-500 bg-white dark:bg-dark-500 !bg-opacity-85 backdrop-blur-xl p-4 flex flex-col gap-4 !w-max overflow-hidden">

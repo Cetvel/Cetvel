@@ -89,22 +89,29 @@ export const TaskSchema = z.object({
       required_error: "Başlık girmek zorunludur",
     })
     .min(2, { message: "Başlık en az 2 karakter uzunluğunda olmalı" }),
-  list: z.string({
-    required_error: "Liste seçmek zorunludur",
+  startsAt: z.string({
+    required_error: "Başlangıç tarihi girmek zorunludur",
   }),
+  endsAt: z.string({
+    required_error: "Bitiş tarihi girmek zorunludur",
+  }),
+  tag: z.string({
+    required_error: "Etiket seçmek zorunludur",
+  }),
+  reminder: z.string().optional(),
 });
 
-export const ListSchema = z.object({
+export const TagSchema = z.object({
   title: z
     .string({
-      required_error: "Liste adı girmek zorunludur",
+      required_error: "Etiket girmek zorunludur",
     })
     .regex(/^[a-zA-ZğüşıöçĞÜŞİÖÇ]+$/, {
-      message: "Liste adı sadece harf içermeli",
+      message: "Etiket sadece harf içermelidir",
     })
-    .min(2, { message: "Liste adı en az 2 karakter uzunluğunda olabilir" })
+    .min(2, { message: "Etiket en az 2 karakter uzunluğunda olabilir" })
     .max(50, {
-      message: "Liste adı en fazla 50 karakter uzunluğunda olabilir",
+      message: "Etiket en fazla 50 karakter uzunluğunda olabilir",
     }),
 });
 
