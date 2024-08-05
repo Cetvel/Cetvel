@@ -11,15 +11,16 @@ const register = catchAsync(async (req: Request, res: Response) => {
     const user =await AuthService.loginUserWithEmailAndPassword(createdUser.email, req.body.password);
     const tokens = tokenService.generateAuthTokens(user) as { accessToken: string, refreshToken: string };
     AuthService.setCookies(res, tokens);
-    res.status(httpStatus.CREATED).send( user );
-});
+    res.status(httpStatus.CREATED).json({data : user});
+})
 
 const login = catchAsync(async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const user = await AuthService.loginUserWithEmailAndPassword(email, password);
     const tokens = tokenService.generateAuthTokens(user) as { accessToken: string, refreshToken: string };
     AuthService.setCookies(res, tokens);
-    res.status(httpStatus.CREATED).send({ user, tokens });
+    console.log("user auth controller ", user);  
+    res.status(httpStatus.CREATED).json( user );
 })
 
 const logout = catchAsync(async (req: Request, res: Response) => { 

@@ -60,6 +60,7 @@ class UserServiceClass implements IUserService {
 		user.email = email;
 		return await user.save();
 	}
+	
 	async updateUserPassword(userId: string, currentPassword: string, newPassword: string): Promise<IUserDocument> {
 		const user = await User.findById(userId)
 		if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'Kullanıcı Bulunamadı');

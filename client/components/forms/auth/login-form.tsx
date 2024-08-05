@@ -80,7 +80,7 @@ const LoginForm = () => {
           placeholder="Şifrenizi girin"
         />
 
-        <FormError title={"Hata"} description={error} />
+        <FormError description={error} />
         <FormSuccess title={"Başarılı"} description={success} />
         <SubmitButton
           text="Giriş Yap"

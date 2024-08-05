@@ -15,14 +15,14 @@ const createExam = catchAsync(async (req: AuthenticatedRequest, res: Response) =
     res.status(httpStatus.CREATED).send(newExam);
 });
 
-const getExam = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
-    const exam = await examService.getExamById(req.params.examId);
-    if (!exam) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Deneme bulunamadı');
-    }
+// const getExam = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
+//     const exam = await examService.getExamById(req.params.examId);
+//     if (!exam) {
+//         throw new ApiError(httpStatus.NOT_FOUND, 'Deneme bulunamadı');
+//     }
     
-    res.send(exam);
-});
+//     res.send(exam);
+// });
 
 const getUserExams = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
     const exams = await examService.getUserExams(req.userId, req.path.split('/').pop());
@@ -30,7 +30,7 @@ const getUserExams = catchAsync(async (req: AuthenticatedRequest, res: Response)
 });
 
 const getUserExamsByType = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
-    const exams = await examService.getUserExamsByType(req.userId, req.params.type);
+    const exams = await examService.getExamsByType(req.userId);
     res.send(exams);
 });
 
@@ -76,7 +76,7 @@ const compareUserExams = catchAsync(async (req: Request, res: Response) => {
 
 export default {
     createExam,
-    getExam,
+    // getExam,
     getUserExams,
     getUserExamsByType,
     updateExam,
