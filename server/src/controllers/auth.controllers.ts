@@ -8,17 +8,17 @@ import tokenService from "../services/token.service";
 
 const register = catchAsync(async (req: Request, res: Response) => {
     const createdUser = await userService.createUser(req.body);
-    const user =await AuthService.loginUserWithEmailAndPassword(createdUser.email, req.body.password);
-    const tokens = tokenService.generateAuthTokens(user) as { accessToken: string, refreshToken: string };
+    // const user =await AuthService.loginUserWithEmailAndPassword(createdUser.email, req.body.password);
+    const tokens = tokenService.generateAuthTokens(createdUser) as { accessToken: string, refreshToken: string };
     AuthService.setCookies(res, tokens);
-    res.status(httpStatus.CREATED).json({data : user});
+    res.status(httpStatus.CREATED).json({data : createdUser});
 })
 
 const login = catchAsync(async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const user = await AuthService.loginUserWithEmailAndPassword(email, password);
-    const tokens = tokenService.generateAuthTokens(user) as { accessToken: string, refreshToken: string };
-    AuthService.setCookies(res, tokens);
+    // const tokens = tokenService.generateAuthTokens(user) as { accessToken: string, refreshToken: string };
+    // AuthService.setCookies(res, tokens);
     console.log("user auth controller ", user);  
     res.status(httpStatus.CREATED).json( user );
 })
