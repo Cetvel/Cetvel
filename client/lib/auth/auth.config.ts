@@ -7,16 +7,21 @@ import { JWT } from "next-auth/jwt";
 export default {
   providers: [
     Credentials({
+
       async authorize(credentials) {
+        console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET);
+        console.log("authorize calisti", credentials);
         const validatedFields = LoginSchema.safeParse(credentials);
 
         if (validatedFields.success) {
           const user = await instance
             .post("/auth/login", credentials)
             .then((res) => res.data)
-            .catch((error) => {
+            .catch((error) => { 
               throw new Error(error.response.data.message);
             });
+
+            console.log("user", user);
 
           if (user) {
             return user;
@@ -27,6 +32,7 @@ export default {
   ],
 
   callbacks: {
+<<<<<<< HEAD
     async jwt({ token, user }: { token: JWT; user: any }) {
       if (user) {
         token.accessToken = user.accessToken;
@@ -35,10 +41,19 @@ export default {
       return token;
     },
 
+=======
+    
+>>>>>>> afa583aeba446c7d5ccc9e2fe538d3fae75934d6
     async session({ session, token }: { session: any; token: JWT }) {
-      session.user.accessToken = token.accessToken;
-      session.user.id = token.id;
+      session.user.id = token.sub;
+      console.log("session", session);
       return session;
+    },
+    
+    async jwt({ token }: { token: JWT; user: any }) {
+      console.log("token", token);
+      
+      return token;
     },
   },
 

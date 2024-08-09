@@ -16,9 +16,9 @@ interface ExamReturns<T> {
 
 interface IExamService {
     createExam(userId: string, examData: any, examType: string): Promise<ExamDocument>;
-    getExamById(examId: string): Promise<ExamReturns<AytDocument | TytDocument | LgsDocument>>;
+    // getExamById(examId: string): Promise<ExamReturns<AytDocument | TytDocument | LgsDocument>>;
     getUserExams(userId: string, examType: string): Promise<ExamDocument[]>;
-    // getUserExamsByType(userId: string, examType: string): Promise<ExamDocument[]>;
+    getExamsByType(userId: string): Promise<ExamReturns<AytDocument | TytDocument | LgsDocument>>;
     updateExam(examId: string, updateData: any): Promise<ExamDocument>;
     deleteExam(examId: string): Promise<ExamDocument>;
     getUserExamsByDateRange(userId: string, startDate: Date, endDate: Date): Promise<ExamDocument[]>;
@@ -32,31 +32,23 @@ class ExamServiceClass implements IExamService {
         const ExamModel = ExamModelFilter(examType)
         const exam = new ExamModel(examData);
         if (!exam) throw new Error('Sınav oluşturulamadı');
-
         exam.userId = userId;
-
         return await exam.save();
     }
 
     // Kullanıcının tüm sınavlarını getirme
     async getUserExams(userId: string, examType: string) {
         const ExamModel = ExamModelFilter(examType)
-
         return await ExamModel.find({ userId }) as ExamDocument[];
     }
-
-
-
-
 
     // Sınav silme
     async deleteExam(examId: string) {
         return await Exam.findByIdAndDelete(examId);
-
     }
 
     // Belirli bir türdeki sınavları getirme
-    async getExamById(examId: string): Promise<ExamReturns<AytDocument | TytDocument | LgsDocument>> {
+    async getExamsByType(examId: string): Promise<ExamReturns<AytDocument | TytDocument | LgsDocument>> {
         const exam = await Exam.findById(examId) as AytDocument | TytDocument | LgsDocument;
 
         if (!exam) throw new Error('Exam not found');
@@ -83,7 +75,9 @@ class ExamServiceClass implements IExamService {
     async updateExam(examId: string, updateData: any) {
         return await Exam.findByIdAndUpdate(examId, updateData, { new: true });
     }
-
+    async getUserExamsByUserId(userId: string, examType: string) {
+        return await Exam.find({ userId })
+    }
 
     // Kullanıcının belirli bir tarih aralığındaki sınavlarını getirme
     async getUserExamsByDateRange(userId: string, startDate: Date, endDate: Date) {
@@ -92,9 +86,7 @@ class ExamServiceClass implements IExamService {
             examDate: { $gte: startDate, $lte: endDate }
         });
     }
-    async getUserExamsByType(userId: string, examType: string) {
-        return await Exam.find({ userId })
-    }
+
     // İstatistiksel analizler
     async getUserExamStatistics(userId: string) {
         const exams = await Exam.find({ userId });
