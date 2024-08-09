@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
 
@@ -12,7 +11,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
         <Image src="image/logo.svg" width={50} height={50} alt="Cetvel Logo" />
         <h1 className="text-3xl font-bold">Cetvel</h1>
       </div>
-      <Card className="max-w-2xl w-full">{children}</Card>
+      {children}
     </main>
   );
 };

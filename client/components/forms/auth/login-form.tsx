@@ -11,11 +11,7 @@ import FormSuccess from "../ui/form-success";
 import { z } from "zod";
 import { Form } from "../../ui/form";
 import CustomFormField, { FormFieldType } from "../../ui/custom-form-field";
-import { signIn } from "next-auth/react";
-import { DEFAULT_LOGIN_REDIRECT } from "@/lib/routes";
-import { catchError } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { login } from "@/actions/user";
 
 const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -35,30 +31,6 @@ const LoginForm = () => {
     setError(null);
     setSuccess(null);
     setLoading(true);
-
-    try {
-      const result = await login(values);
-      if(result.success){
-        const signInResult = await signIn('credentials', {
-          redirect: true,
-          email: values.email,
-          password: values.password,
-        })
-        setSuccess(result.success)
-        if (signInResult?.error) {
-          setError('Giriş yapılırken bir hata oluştu');
-        } else {
-          // Redirect or update UI as needed
-          console.log('Kayıt ve giriş başarılı');
-        }
-      }else{
-        setError(result.error || 'Giriş sırasında bir hata oluştu');
-      }
-    } catch (error:any) {
-      setError(error.message || 'Bir hata oluştu');
-    } finally {
-      setLoading(false);
-    }
   }
 
   return (

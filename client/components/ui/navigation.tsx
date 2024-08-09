@@ -3,11 +3,9 @@ import React from "react";
 import { Button } from "./button";
 import { IoMenuOutline } from "react-icons/io5";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "./sheet";
-import { auth, signOut } from "@/lib/auth";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const Navigation = async () => {
-  const session = await auth();
-
   return (
     <>
       {/* Main Nav */}
@@ -37,39 +35,28 @@ const Navigation = async () => {
             </Link>
           </li>
         </ul>
-        <div className="hidden md:flex items-center gap-4">
-          {session ? (
-            <>
-              <Link href="/dashboard">
-                <Button variant="secondary" size="sm">
-                  Uygulamayı kullan
-                </Button>
-              </Link>
-              <form
-                action={async (formData) => {
-                  "use server";
-
-                  await signOut();
-                }}
-              >
-                <Button type="submit" variant="destructive" size="sm">
-                  Çıkış Yap
-                </Button>
-              </form>
-            </>
-          ) : (
-            <>
-              <Link href="/login">
-                <Button variant="secondary" size="sm">
-                  Giriş Yap
-                </Button>
-              </Link>
-              <Link href="/register">
-                <Button size="sm">Kayıt Ol</Button>
-              </Link>
-            </>
-          )}
-        </div>
+        <SignedOut>
+          <div className="hidden md:flex items-center gap-4">
+            <Link href="/login">
+              <Button variant="secondary" size="sm">
+                Giriş Yap
+              </Button>
+            </Link>
+            <Link href="/register">
+              <Button size="sm">Kayıt Ol</Button>
+            </Link>
+          </div>
+        </SignedOut>
+        <SignedIn>
+          <div className="hidden md:flex items-center gap-4">
+            <Link href="/dashboard">
+              <Button variant="secondary" size="sm">
+                Panele git
+              </Button>
+            </Link>
+            <UserButton />
+          </div>
+        </SignedIn>
 
         {/* Side Nav */}
         <Sheet>
@@ -87,16 +74,18 @@ const Navigation = async () => {
               <h2 className="text-xl font-bold">Cetvel</h2>
             </SheetHeader>
 
-            <div className="flex flex-col space-y-4 mt-10">
-              <Link href={"/login"}>
-                <Button variant="secondary" className="w-full">
-                  Giriş Yap
-                </Button>
-              </Link>
-              <Link href={"/register"}>
-                <Button className="w-full">Kayıt Ol</Button>
-              </Link>
-            </div>
+            <SignedOut>
+              <div className="flex flex-col space-y-4 mt-10">
+                <Link href={"/login"}>
+                  <Button variant="secondary" className="w-full">
+                    Giriş Yap
+                  </Button>
+                </Link>
+                <Link href={"/register"}>
+                  <Button className="w-full">Kayıt Ol</Button>
+                </Link>
+              </div>
+            </SignedOut>
           </SheetContent>
         </Sheet>
       </nav>
