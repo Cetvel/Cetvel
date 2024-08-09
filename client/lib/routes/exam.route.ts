@@ -15,6 +15,7 @@ router.post("/create/lgs", authenticateToken, validate(examValidation.lgsValidat
 // router.post("/create/kpss", authenticateToken, validate(examValidation.createKpss), examController.createExam);
 
 
+
 router.put('/update/tyt/:examId', authenticateToken, validate(examValidation.tytValidition), examController.updateExam);
 router.put('/update/ayt/say/:examId', authenticateToken, validate(examValidation.aytSayValidation), examController.updateExam);
 router.put('/update/ayt/ea/:examId', authenticateToken, validate(examValidation.aytEaValidation), examController.updateExam);

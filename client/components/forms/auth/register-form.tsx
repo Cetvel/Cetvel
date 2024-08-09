@@ -33,6 +33,30 @@ const RegisterForm = () => {
     setError(null);
     setSuccess(null);
     setLoading(true);
+
+    try {
+      const result = await register(values);
+      if (result.success) {
+        const signInResult = await signIn("credentials", {
+          redirect: true,
+          email: values.email,
+          password: values.password,
+        });
+        setSuccess(result.success);
+        if (signInResult?.error) {
+          setError("Giriş yapılırken bir hata oluştu");
+        } else {
+          // Redirect or update UI as needed
+          console.log("Kayıt ve giriş başarılı");
+        }
+      } else {
+        setError(result.error || "Kayıt sırasında bir hata oluştu");
+      }
+    } catch (error: any) {
+      setError(error.message || "Bir hata oluştu");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
