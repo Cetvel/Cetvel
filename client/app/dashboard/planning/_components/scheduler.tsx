@@ -10,7 +10,6 @@ import "moment/locale/tr";
 
 import { useModal } from "@/providers/modal-provider";
 import { Button } from "@/components/ui/button";
-import AddTask from "@/components/global/add-task";
 import { VIEW_OPTIONS } from "@/constants";
 import TaskForm from "@/components/forms/task-form";
 import Modal from "@/components/global/modal";

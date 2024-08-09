@@ -89,16 +89,16 @@ export const TaskSchema = z.object({
       required_error: "Başlık girmek zorunludur",
     })
     .min(2, { message: "Başlık en az 2 karakter uzunluğunda olmalı" }),
-  startsAt: z.string({
+  startsAt: z.date({
     required_error: "Başlangıç tarihi girmek zorunludur",
   }),
-  endsAt: z.string({
+  endsAt: z.date({
     required_error: "Bitiş tarihi girmek zorunludur",
   }),
   tag: z.string({
     required_error: "Etiket seçmek zorunludur",
   }),
-  reminder: z.string().optional(),
+  reminder: z.date().optional(),
 });
 
 export const TagSchema = z.object({

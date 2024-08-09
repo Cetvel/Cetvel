@@ -15,7 +15,7 @@ const AddTask = () => {
       <Button
         onClick={() =>
           setOpen(
-            <Modal title="Görev Ekle">
+            <Modal title="Görev oluştur">
               <TaskForm />
             </Modal>
           )
@@ -23,7 +23,7 @@ const AddTask = () => {
         size={"sm"}
       >
         <IoAdd className="mr-2" size={16} />
-        Görev Ekle
+        Oluştur
       </Button>
     </>
   );

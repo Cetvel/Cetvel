@@ -14,11 +14,9 @@ import {
 } from "../ui/tooltip";
 
 const FocusTimerForm = () => {
-  const [breakMinutes, setBreakMinutes] = useState(5);
   const [workMinutes, setWorkMinutes] = useState<number>(30);
 
-  const [isPaused, setIsPaused] = useState(false);
-  const [mode, setMode] = useState<"work" | "break">("break");
+  const [isPaused, setIsPaused] = useState(true);
   const [secondsLeft, setSecondsLeft] = useState(0);
 
   const [startDate, setStartDate] = useState(new Date());
@@ -27,12 +25,11 @@ const FocusTimerForm = () => {
 
   const secondsLeftRef = useRef(secondsLeft);
   const isPausedRef = useRef(isPaused);
-  const modeRef = useRef(mode);
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (isPausedRef.current) return;
-      if (secondsLeftRef.current === 0) return switchMode();
+      if (secondsLeftRef.current === 0) return initTimer();
 
       tick();
     }, 1000);
@@ -49,27 +46,8 @@ const FocusTimerForm = () => {
     secondsLeftRef.current = workMinutes * 60;
     setSecondsLeft(secondsLeftRef.current);
 
-    modeRef.current = "work";
-    setMode(modeRef.current);
-
     isPausedRef.current = true;
     setIsPaused(isPausedRef.current);
-  };
-
-  const switchMode = () => {
-    const nextMode = modeRef.current === "work" ? "break" : "work";
-    const nextSeconds = (nextMode === "work" ? workMinutes : breakMinutes) * 60;
-
-    setMode(nextMode);
-    modeRef.current = nextMode;
-
-    setSecondsLeft(nextSeconds);
-    secondsLeftRef.current = nextSeconds;
-
-    if (nextMode === "work") {
-      isPausedRef.current = true;
-      setIsPaused(isPausedRef.current);
-    }
   };
 
   const handlePause = (pause: boolean) => {
@@ -106,11 +84,13 @@ const FocusTimerForm = () => {
           {minutes}:{seconds}
         </h2>
         <div className="flex flex-col gap-4 mb-6 items-center w-full">
-          <p>Lütfen odaklanma süresince odağınızı çalışmanıza verin!</p>
+          <p className="text-sm text-secondary-content text-center">
+            Lütfen odaklanma süresince odağınızı <br /> çalışmanıza verin!
+          </p>
           <Input
             type="text"
             className="shad-input border-card"
-            placeholder="Ne üstünde çalışıyorsun?"
+            placeholder="Çalışılacak konu"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
@@ -197,20 +177,6 @@ const FocusTimerForm = () => {
               onChange={(e) => setWorkMinutes(+e.target.value)}
               value={workMinutes}
               className="range range-xs range-error border-none"
-              step="10"
-            />
-          </div>
-          <div className="form-control">
-            <div className="label mb-1">
-              <span className="label-text">Mola süresi: {breakMinutes} dk</span>
-            </div>
-            <Input
-              type="range"
-              min={5}
-              max="30"
-              value={breakMinutes}
-              onChange={(e) => setBreakMinutes(+e.target.value)}
-              className="range range-xs range-success border-none"
               step="5"
             />
           </div>

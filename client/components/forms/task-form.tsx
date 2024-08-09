@@ -65,7 +65,7 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
           <CustomFormField
             fieldType={FormFieldType.DATE_PICKER}
             control={form.control}
-            name="startAt"
+            name="startsAt"
             label="Başlangıç"
             placeholder="Tarih seçin"
           />

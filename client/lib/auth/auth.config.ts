@@ -25,7 +25,7 @@ export default {
       },
     }),
   ],
-  
+
   callbacks: {
     async jwt({ token, user }: { token: JWT; user: any }) {
       if (user) {
@@ -34,19 +34,19 @@ export default {
       }
       return token;
     },
-    
+
     async session({ session, token }: { session: any; token: JWT }) {
       session.user.accessToken = token.accessToken;
       session.user.id = token.id;
       return session;
     },
   },
-  
+
   // JWT'nin nasıl işleneceğini belirleyen seçenekler
   session: {
     strategy: "jwt",
   },
-  
+
   // JWT'nin şifrelenmesi için bir gizli anahtar (Bu anahtarı güvenli bir şekilde saklayın)
   secret: process.env.NEXTAUTH_SECRET,
 } satisfies NextAuthConfig;

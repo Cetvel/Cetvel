@@ -13,9 +13,16 @@ declare type Task = {
   title: string;
   tag: string;
   status: string;
-  startsAt: string;
-  endsAt: string;
-  reminder: string;
+  startsAt: Date;
+  endsAt: Date;
+  reminder: Date;
+};
+
+declare type FocusItem = {
+  id: number;
+  description: string;
+  time: string;
+  date: Date;
 };
 
 declare type studyField = "YKS" | "KPSS" | "LGS";

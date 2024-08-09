@@ -38,34 +38,6 @@ export const instance = axios.create({
   withCredentials: true,
 });
 
-export const colors = {
-  primary: "#7747ff",
-  secondary: {
-    light: "#E7E8EB",
-    dark: "#374151",
-  },
-  accent: {
-    light: "#ffffff",
-    dark: "#313844",
-  },
-  base100: {
-    light: "#ffffff",
-    dark: "#282E38",
-  },
-  base200: {
-    light: "#F4F6F8",
-    dark: "#242932",
-  },
-  base300: {
-    light: "#FAFBFC",
-    dark: "#20252d",
-  },
-  neutral: {
-    light: "#e2e8f0",
-    dark: "#3E4756",
-  },
-};
-
 export const checkMaxQuestions = (
   questions: number,
   lesson: string,
