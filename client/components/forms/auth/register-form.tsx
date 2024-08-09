@@ -41,6 +41,7 @@ const RegisterForm = () => {
     
     try{
         const result = await register(values)
+        console.log('Result Client: ' , result)
         if(result.success){
           const signInResult = await signIn('credentials', {
             redirect: true,
@@ -48,7 +49,7 @@ const RegisterForm = () => {
             password: values.password,
       })
       setSuccess(result.success)
-         if (signInResult?.error) {
+         if (signInResult) {
         setError('Giriş yapılırken bir hata oluştu');
       } else {
         // Redirect or update UI as needed

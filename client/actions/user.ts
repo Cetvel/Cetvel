@@ -33,6 +33,7 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 }}
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
+  console.log("here is worked register action ")
   const validatedFields = RegisterSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -42,12 +43,14 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const { name, email, password } = validatedFields.data;
 
   try {
+    console.log(name, email, password)
     const result = await instance.post("/auth/register", {
       name,
       email,
       password,
     });
 
+    console.log("RESULT Data: ", result.data)
     return {
       success: "Başarıyla kayıt oldunuz.",
       data: result.data
