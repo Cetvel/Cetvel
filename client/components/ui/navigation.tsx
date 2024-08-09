@@ -37,12 +37,12 @@ const Navigation = async () => {
         </ul>
         <SignedOut>
           <div className="hidden md:flex items-center gap-4">
-            <Link href="/login">
+            <Link href={process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL!}>
               <Button variant="secondary" size="sm">
                 Giriş Yap
               </Button>
             </Link>
-            <Link href="/register">
+            <Link href={process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL!}>
               <Button size="sm">Kayıt Ol</Button>
             </Link>
           </div>
