@@ -37,6 +37,10 @@ h6 {
   @apply text-dark-600 dark:text-light-400;
 }
 
+li {
+  list-style-type: none !important;
+}
+
 /* Utils */
 @layer utilities {
   body {

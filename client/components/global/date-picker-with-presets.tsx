@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { addDays, format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -19,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { IoCalendar } from "react-icons/io5";
 
 type DatePickerWithPresetsProps = {
   onDateChange: (date: Date | undefined) => void;
@@ -43,7 +43,7 @@ export function DatePickerWithPresets({
             !date && "text-muted-foreground"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
+          <IoCalendar className="mr-2 h-4 w-4" />
           {date ? format(date, "dd-MM-yyyy") : <span>Bir tarih seçin</span>}
         </Button>
       </PopoverTrigger>

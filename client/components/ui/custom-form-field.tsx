@@ -14,6 +14,7 @@ import { Input } from "./input";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./select";
 import { Textarea } from "./textarea";
 import { DatePicker } from "./date-picker";
+import Datetime from "react-datetime";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -23,6 +24,7 @@ export enum FormFieldType {
   DATE_PICKER = "datePicker",
   SELECT = "select",
   SKELETON = "skeleton",
+  DATE_TIME_PICKER = "dateTimePicker",
 }
 
 interface CustomProps {
@@ -134,6 +136,22 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
       );
     case FormFieldType.SKELETON:
       return props.renderSkeleton ? props.renderSkeleton(field) : null;
+    case FormFieldType.DATE_TIME_PICKER:
+      return (
+        <FormControl>
+          <Datetime
+            value={field.value}
+            onChange={(date) => field.onChange(date)}
+            dateFormat={props.dateFormat}
+            timeFormat={props.showTimeSelect}
+            inputProps={{
+              placeholder: props.placeholder,
+              className: "shad-input",
+            }}
+          />
+        </FormControl>
+      );
+
     default:
       return null;
   }

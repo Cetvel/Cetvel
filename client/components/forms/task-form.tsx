@@ -63,7 +63,7 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
 
         <div className="grid grid-cols-2 gap-2">
           <CustomFormField
-            fieldType={FormFieldType.DATE_PICKER}
+            fieldType={FormFieldType.DATE_TIME_PICKER}
             control={form.control}
             name="startsAt"
             label="Başlangıç"
