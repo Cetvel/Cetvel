@@ -16,7 +16,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -25,8 +24,6 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { IoArrowBack, IoArrowForward, IoSearch } from "react-icons/io5";
 import { Input } from "../ui/input";
-import { DatePickerWithPresets } from "./date-picker-with-presets";
-import { format } from "date-fns";
 import { DatePickerWithRange } from "./date-range-picker";
 
 interface DataTableProps<TData, TValue> {
@@ -58,6 +55,11 @@ export function DataTable<TData, TValue>({
       sorting,
       columnFilters,
       rowSelection,
+    },
+    initialState: {
+      pagination: {
+        pageSize: 5,
+      },
     },
   });
 
