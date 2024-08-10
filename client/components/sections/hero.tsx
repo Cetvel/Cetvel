@@ -3,6 +3,7 @@ import { TextGenerateEffect } from "@/components/global/text-generate-effect";
 import Navigation from "../ui/navigation";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { SignUpButton } from "@clerk/nextjs";
 
 const Hero: React.FC = () => {
   return (
@@ -21,9 +22,9 @@ const Hero: React.FC = () => {
           ihtiyacınız olan her şeyi size sunar. Hemen denemeye başlayın ve farkı
           hissedin!
         </p>
-        <Link href={"/register"}>
-          <Button size={"lg"}>Hemen Başla</Button>
-        </Link>
+        <SignUpButton>
+          <Button size="lg">Hemen Başla</Button>
+        </SignUpButton>
       </div>
     </section>
   );

@@ -3,7 +3,14 @@ import React from "react";
 import { Button } from "./button";
 import { IoMenuOutline } from "react-icons/io5";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "./sheet";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 const Navigation = async () => {
   return (
@@ -37,14 +44,14 @@ const Navigation = async () => {
         </ul>
         <SignedOut>
           <div className="hidden md:flex items-center gap-4">
-            <Link href={process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL!}>
+            <SignInButton>
               <Button variant="secondary" size="sm">
                 Giriş Yap
               </Button>
-            </Link>
-            <Link href={process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL!}>
+            </SignInButton>
+            <SignUpButton>
               <Button size="sm">Kayıt Ol</Button>
-            </Link>
+            </SignUpButton>
           </div>
         </SignedOut>
         <SignedIn>
@@ -54,7 +61,11 @@ const Navigation = async () => {
                 Panele git
               </Button>
             </Link>
-            <UserButton />
+            <UserButton
+              appearance={{
+                baseTheme: dark,
+              }}
+            />
           </div>
         </SignedIn>
 

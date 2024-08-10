@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,8 +11,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { IoEllipsisHorizontal, IoPencil, IoTrashBin } from "react-icons/io5";
 import { format } from "date-fns";
+import { tr } from "date-fns/locale";
+import { IoEllipsisHorizontal, IoPencil, IoTrashBin } from "react-icons/io5";
 
 export const columns: ColumnDef<FocusItem>[] = [
   {
@@ -25,10 +27,16 @@ export const columns: ColumnDef<FocusItem>[] = [
   {
     accessorKey: "date",
     header: "Tarih",
-    cell: ({ row }) => {
-      const item = row.original;
+    filterFn: (row, columnId, filterValue) => {
+      const filter_from = filterValue.from;
+      const filter_to = filterValue.to;
 
-      return format(item.date, "dd-MM-yyyy");
+      const date = new Date(row.original.date);
+
+      return date >= filter_from && date <= filter_to;
+    },
+    cell: ({ row }) => {
+      return format(new Date(row.original.date), "LLL, d yyyy", { locale: tr });
     },
   },
   {

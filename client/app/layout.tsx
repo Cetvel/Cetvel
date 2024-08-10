@@ -3,8 +3,9 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 import ModalProvider from "@/providers/modal-provider";
-import { ClerkProvider } from "@clerk/nextjs";
 import { trTR } from "@clerk/localizations";
+import { dark } from "@clerk/themes";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
@@ -26,6 +27,12 @@ export default function RootLayout({
         variables: {
           colorPrimary: "#6366f1",
           borderRadius: "0.5rem",
+        },
+        signIn: {
+          baseTheme: dark,
+        },
+        signUp: {
+          baseTheme: dark,
         },
       }}
     >

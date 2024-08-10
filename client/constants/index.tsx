@@ -1,4 +1,3 @@
-import { TaskStatus } from "@/components/global/status-filter";
 import { Views } from "react-big-calendar";
 
 import {
@@ -61,3 +60,6 @@ export const taskStatusses = [
 ];
 
 export const StudyFieldOptions = ["YKS", "LGS", "KPSS"];
+
+export const GoalUnitOptions = ["Saat", "Dakika", "Sayı", "Konu sayısı"];
+export const GoalTypeOptions = ["Günlük", "Haftalık", "Aylık"];

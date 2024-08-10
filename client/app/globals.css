@@ -37,6 +37,10 @@ h6 {
   @apply text-dark-600 dark:text-light-400;
 }
 
+li {
+  list-style-type: none !important;
+}
+
 /* Utils */
 @layer utilities {
   body {
@@ -84,15 +88,15 @@ h6 {
   }
 
   .shad-input {
-    @apply bg-white placeholder:text-dark-700 border-neutral-200 dark:bg-transparent shadow-sm dark:border-neutral-500 dark:placeholder:text-light-600 h-11 focus-visible:ring-0 outline-none focus-visible:ring-offset-0 !important;
+    @apply placeholder:text-dark-700 border-neutral-200 bg-transparent shadow-none dark:border-neutral-500 dark:placeholder:text-light-600 h-11 focus-visible:ring-0 outline-none focus-visible:ring-offset-0 !important;
   }
 
   .shad-input-icon {
-    @apply bg-white placeholder:text-dark-700 border-neutral-200 dark:bg-transparent dark:border-neutral-500 dark:placeholder:text-light-600 h-11 focus-visible:ring-0 focus-visible:ring-offset-0 !important;
+    @apply placeholder:text-dark-700 border-neutral-200 bg-transparent dark:border-neutral-500 dark:placeholder:text-light-600 h-11 focus-visible:ring-0 focus-visible:ring-offset-0 !important;
   }
 
   .shad-textArea {
-    @apply bg-white placeholder:text-dark-700 border-neutral-200 dark:bg-transparent dark:border-neutral-500 dark:placeholder:text-light-600 focus-visible:ring-0 focus-visible:ring-offset-0 !important;
+    @apply placeholder:text-dark-700 border-neutral-200 bg-transparent dark:border-neutral-500 dark:placeholder:text-light-600 focus-visible:ring-0 focus-visible:ring-offset-0 !important;
   }
 
   .shad-combobox-item {
@@ -104,7 +108,7 @@ h6 {
   }
 
   .shad-select-trigger {
-    @apply bg-white placeholder:text-dark-700 rounded-xl border-neutral-200 dark:bg-transparent dark:border-neutral-500 dark:placeholder:text-light-600 h-11 focus:ring-0 focus:ring-offset-0 !important;
+    @apply bg-white placeholder:text-dark-700 rounded-xl border-neutral-200 bg-transparent dark:border-neutral-500 dark:placeholder:text-light-600 h-11 focus:ring-0 focus:ring-offset-0 !important;
   }
 
   .shad-select-content {
@@ -151,6 +155,14 @@ h6 {
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+  }
+
+  .day-range-start {
+    @apply bg-primary-500 text-white !important;
+  }
+
+  .day-range-end {
+    @apply bg-primary-500 text-white !important;
   }
 }
 

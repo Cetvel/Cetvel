@@ -14,15 +14,18 @@ import { Input } from "./input";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./select";
 import { Textarea } from "./textarea";
 import { DatePicker } from "./date-picker";
+import Datetime from "react-datetime";
 
 export enum FormFieldType {
   INPUT = "input",
   PASSWORD = "password",
+  NUMBER = "number",
   TEXTAREA = "textarea",
   CHECKBOX = "checkbox",
   DATE_PICKER = "datePicker",
   SELECT = "select",
   SKELETON = "skeleton",
+  DATE_TIME_PICKER = "dateTimePicker",
 }
 
 interface CustomProps {
@@ -30,7 +33,7 @@ interface CustomProps {
   name: string;
   label?: React.ReactNode;
   placeholder?: string;
-  iconSrc?: string;
+  icon?: React.ReactNode;
   iconAlt?: string;
   disabled?: boolean;
   dateFormat?: string;
@@ -45,15 +48,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.INPUT:
       return (
         <div className="flex rounded-xl border border-card">
-          {props.iconSrc && (
-            <Image
-              src={props.iconSrc}
-              height={24}
-              width={24}
-              alt={props.iconAlt || "icon"}
-              className="ml-2"
-            />
-          )}
+          {props.icon}
           <FormControl>
             <Input
               placeholder={props.placeholder}
@@ -66,18 +61,24 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.PASSWORD:
       return (
         <div className="flex rounded-xl border-card">
-          {props.iconSrc && (
-            <Image
-              src={props.iconSrc}
-              height={24}
-              width={24}
-              alt={props.iconAlt || "icon"}
-              className="ml-2"
-            />
-          )}
+          {props.icon}
           <FormControl>
             <Input
               type="password"
+              placeholder={props.placeholder}
+              {...field}
+              className="shad-input border-0"
+            />
+          </FormControl>
+        </div>
+      );
+    case FormFieldType.NUMBER:
+      return (
+        <div className="flex rounded-xl border border-card">
+          {props.icon}
+          <FormControl>
+            <Input
+              type="number"
               placeholder={props.placeholder}
               {...field}
               className="shad-input border-0"
@@ -134,6 +135,22 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
       );
     case FormFieldType.SKELETON:
       return props.renderSkeleton ? props.renderSkeleton(field) : null;
+    case FormFieldType.DATE_TIME_PICKER:
+      return (
+        <FormControl>
+          <Datetime
+            value={field.value}
+            onChange={(date) => field.onChange(date)}
+            dateFormat={props.dateFormat}
+            timeFormat={props.showTimeSelect}
+            inputProps={{
+              placeholder: props.placeholder,
+              className: "shad-input",
+            }}
+          />
+        </FormControl>
+      );
+
     default:
       return null;
   }

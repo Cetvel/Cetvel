@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { addDays, format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -19,19 +18,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { IoCalendar } from "react-icons/io5";
 
 type DatePickerWithPresetsProps = {
+  value: Date;
   onDateChange: (date: Date | undefined) => void;
 };
 
 export function DatePickerWithPresets({
+  value,
   onDateChange,
 }: DatePickerWithPresetsProps) {
-  const [date, setDate] = React.useState<Date>();
-
-  React.useCallback(() => {
-    onDateChange(date);
-  }, [date, onDateChange]);
+  const [date, setDate] = React.useState<Date>(value);
 
   return (
     <Popover>
@@ -43,7 +41,7 @@ export function DatePickerWithPresets({
             !date && "text-muted-foreground"
           )}
         >
-          <CalendarIcon className="mr-2 h-4 w-4" />
+          <IoCalendar className="mr-2 h-4 w-4" />
           {date ? format(date, "dd-MM-yyyy") : <span>Bir tarih seçin</span>}
         </Button>
       </PopoverTrigger>
@@ -64,7 +62,14 @@ export function DatePickerWithPresets({
           </SelectContent>
         </Select>
         <div className="rounded-xl border-card">
-          <Calendar mode="single" selected={date} onSelect={setDate} />
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={(date) => {
+              setDate(date!);
+              onDateChange(date);
+            }}
+          />
         </div>
       </PopoverContent>
     </Popover>

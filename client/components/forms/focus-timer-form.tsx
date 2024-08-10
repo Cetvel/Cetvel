@@ -12,6 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { Slider } from "../ui/slider";
 
 const FocusTimerForm = () => {
   const [workMinutes, setWorkMinutes] = useState<number>(30);
@@ -165,19 +166,16 @@ const FocusTimerForm = () => {
       <TabsContent value="settings">
         <div className="flex flex-col gap-6 mt-6">
           <div className="form-control">
-            <div className="label mb-1">
-              <span className="label-text">
-                Odaklanma süresi: {workMinutes} dk
-              </span>
-            </div>
-            <Input
-              type="range"
-              min={20}
-              max="120"
-              onChange={(e) => setWorkMinutes(+e.target.value)}
-              value={workMinutes}
-              className="range range-xs range-error border-none"
-              step="5"
+            <p className="mb-2">
+              Odaklanma süresi:{" "}
+              <span className="font-semibold">{workMinutes} dk</span>
+            </p>
+            <Slider
+              min={15}
+              max={60}
+              step={5}
+              value={[workMinutes]}
+              onValueChange={(value) => setWorkMinutes(value[0])}
             />
           </div>
         </div>
