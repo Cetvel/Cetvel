@@ -31,7 +31,7 @@ const PageHeader = ({ title }: Props) => {
         >
           <IoNotificationsOutline size={18} />
         </Button>
-        <div className="h-9 w-11 flex items-center justify-center pr-2">
+        <div className="h-5 flex items-center justify-center px-4 pr-3 !border-l-2 border-neutral-200 dark:border-neutral-500">
           <UserButton
             appearance={{
               baseTheme: resolvedTheme === "dark" ? dark : undefined,

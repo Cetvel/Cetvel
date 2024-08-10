@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Modal from "@/components/global/modal";
 import { useTags } from "@/hooks/use-tags";
 import Tag from "./tag";
-import AddTagForm from "@/components/forms/add-tag-form";
+import AddTagForm from "@/components/forms/tag-form";
 import { DialogHeader } from "@/components/ui/dialog";
 
 const TagManager = () => {

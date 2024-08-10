@@ -2,20 +2,15 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TagSchema } from "@/lib/schemas";
 import { z } from "zod";
-import { instance } from "@/lib/utils";
 import { Form } from "../ui/form";
 import CustomFormField, { FormFieldType } from "../ui/custom-form-field";
-import FormError from "./ui/form-error";
-import FormSuccess from "./ui/form-success";
 import SubmitButton from "./ui/submit-button";
 import { useTags } from "@/hooks/use-tags";
-import { SelectItem } from "../ui/select";
 
-const AddTagForm = () => {
+const TagForm = () => {
   const { tags } = useTags();
 
   const form = useForm<z.infer<typeof TagSchema>>({
@@ -54,4 +49,4 @@ const AddTagForm = () => {
   );
 };
 
-export default AddTagForm;
+export default TagForm;

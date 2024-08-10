@@ -19,6 +19,7 @@ import Datetime from "react-datetime";
 export enum FormFieldType {
   INPUT = "input",
   PASSWORD = "password",
+  NUMBER = "number",
   TEXTAREA = "textarea",
   CHECKBOX = "checkbox",
   DATE_PICKER = "datePicker",
@@ -32,7 +33,7 @@ interface CustomProps {
   name: string;
   label?: React.ReactNode;
   placeholder?: string;
-  iconSrc?: string;
+  icon?: React.ReactNode;
   iconAlt?: string;
   disabled?: boolean;
   dateFormat?: string;
@@ -47,15 +48,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.INPUT:
       return (
         <div className="flex rounded-xl border border-card">
-          {props.iconSrc && (
-            <Image
-              src={props.iconSrc}
-              height={24}
-              width={24}
-              alt={props.iconAlt || "icon"}
-              className="ml-2"
-            />
-          )}
+          {props.icon}
           <FormControl>
             <Input
               placeholder={props.placeholder}
@@ -68,18 +61,24 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.PASSWORD:
       return (
         <div className="flex rounded-xl border-card">
-          {props.iconSrc && (
-            <Image
-              src={props.iconSrc}
-              height={24}
-              width={24}
-              alt={props.iconAlt || "icon"}
-              className="ml-2"
-            />
-          )}
+          {props.icon}
           <FormControl>
             <Input
               type="password"
+              placeholder={props.placeholder}
+              {...field}
+              className="shad-input border-0"
+            />
+          </FormControl>
+        </div>
+      );
+    case FormFieldType.NUMBER:
+      return (
+        <div className="flex rounded-xl border border-card">
+          {props.icon}
+          <FormControl>
+            <Input
+              type="number"
               placeholder={props.placeholder}
               {...field}
               className="shad-input border-0"

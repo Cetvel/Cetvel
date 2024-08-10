@@ -6,31 +6,26 @@ const data = [
   {
     id: 1,
     description: "description 1",
-    time: "time 1",
+    time: "13:00:00",
     date: new Date(),
   },
   {
     id: 2,
     description: "description 2",
-    time: "time 2",
+    time: "25:00:00",
     date: new Date(),
   },
   {
     id: 3,
     description: "description 3",
-    time: "time 3",
+    time: "30:00:00",
     date: new Date(),
   },
 ];
 
 const FocusItemsTable = () => {
   return (
-    <DataTable
-      columns={columns}
-      data={data}
-      searchableColumn="description"
-      dateFilterColumn="date"
-    />
+    <DataTable columns={columns} data={data} searchableColumn="description" />
   );
 };
 

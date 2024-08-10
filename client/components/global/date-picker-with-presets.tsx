@@ -21,17 +21,15 @@ import {
 import { IoCalendar } from "react-icons/io5";
 
 type DatePickerWithPresetsProps = {
+  value: Date;
   onDateChange: (date: Date | undefined) => void;
 };
 
 export function DatePickerWithPresets({
+  value,
   onDateChange,
 }: DatePickerWithPresetsProps) {
-  const [date, setDate] = React.useState<Date>();
-
-  React.useCallback(() => {
-    onDateChange(date);
-  }, [date, onDateChange]);
+  const [date, setDate] = React.useState<Date>(value);
 
   return (
     <Popover>
@@ -64,7 +62,14 @@ export function DatePickerWithPresets({
           </SelectContent>
         </Select>
         <div className="rounded-xl border-card">
-          <Calendar mode="single" selected={date} onSelect={setDate} />
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={(date) => {
+              setDate(date!);
+              onDateChange(date);
+            }}
+          />
         </div>
       </PopoverContent>
     </Popover>

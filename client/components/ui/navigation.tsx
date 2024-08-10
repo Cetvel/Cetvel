@@ -10,6 +10,7 @@ import {
   SignUpButton,
   UserButton,
 } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 const Navigation = async () => {
   return (
@@ -60,7 +61,11 @@ const Navigation = async () => {
                 Panele git
               </Button>
             </Link>
-            <UserButton />
+            <UserButton
+              appearance={{
+                baseTheme: dark,
+              }}
+            />
           </div>
         </SignedIn>
 

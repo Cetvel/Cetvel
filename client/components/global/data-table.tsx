@@ -23,23 +23,22 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { IoArrowBack, IoArrowForward } from "react-icons/io5";
+import { IoArrowBack, IoArrowForward, IoSearch } from "react-icons/io5";
 import { Input } from "../ui/input";
 import { DatePickerWithPresets } from "./date-picker-with-presets";
 import { format } from "date-fns";
+import { DatePickerWithRange } from "./date-range-picker";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   searchableColumn: string;
-  dateFilterColumn?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   searchableColumn,
-  dateFilterColumn,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -64,26 +63,30 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <Input
-        placeholder="Ara..."
-        value={
-          (table.getColumn(searchableColumn)?.getFilterValue() as string) ?? ""
-        }
-        onChange={(event) =>
-          table
-            .getColumn(searchableColumn)
-            ?.setFilterValue(format(event.target.value, "dd-MM-yyyy"))
-        }
-        className="max-w-sm mb-4 shad-input border-card"
-      />
+      <div className="flex space-x-2 items-center mb-4">
+        <div className="border-card bg-card flex items-center px-4 h-11 rounded-xl">
+          <IoSearch size={18} className="text-secondary-content" />{" "}
+          <Input
+            placeholder="Ara..."
+            value={
+              (table.getColumn(searchableColumn)?.getFilterValue() as string) ??
+              ""
+            }
+            onChange={(event) =>
+              table
+                .getColumn(searchableColumn)
+                ?.setFilterValue(event.target.value)
+            }
+            className="shad-input"
+          />
+        </div>
 
-      {dateFilterColumn && (
-        <DatePickerWithPresets
+        <DatePickerWithRange
           onDateChange={(date) => {
-            table.getColumn(dateFilterColumn)?.setFilterValue(date);
+            table.getColumn("date")?.setFilterValue(date);
           }}
         />
-      )}
+      </div>
 
       <div className="border-card rounded-xl">
         <Table>

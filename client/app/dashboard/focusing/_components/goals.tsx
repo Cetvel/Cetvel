@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -9,8 +11,13 @@ import { IoDiscOutline } from "react-icons/io5";
 import Goal from "./goal";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useModal } from "@/providers/modal-provider";
+import GoalForm from "@/components/forms/goal-form";
+import Modal from "@/components/global/modal";
 
 const Goals = () => {
+  const { setOpen } = useModal();
+
   return (
     <Card>
       <CardHeader>
@@ -37,7 +44,18 @@ const Goals = () => {
         </ScrollArea>
       </CardContent>
       <CardFooter className="justify-self-end flex flex-col items-stretch">
-        <Button variant={"secondary"}>Yeni hedef ekle</Button>
+        <Button
+          variant={"secondary"}
+          onClick={() =>
+            setOpen(
+              <Modal title="Hedef ekle">
+                <GoalForm />
+              </Modal>
+            )
+          }
+        >
+          Yeni hedef ekle
+        </Button>
       </CardFooter>
     </Card>
   );
