@@ -1,12 +1,10 @@
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
-import { WebhookEvent,UserJSON } from '@clerk/nextjs/server'
+import { WebhookEvent } from '@clerk/nextjs/server'
 import UserData from '@/lib/models/user.model'
-import connectDB from '@/lib/config/config'
 export async function POST(req: Request) {
 
-    // await connectDB()
-    // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
+    
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
 
     if (!WEBHOOK_SECRET) {
@@ -51,19 +49,16 @@ export async function POST(req: Request) {
 
     const { id } = evt.data;
     const eventType = evt.type;
-    console.log("EVT.DATA: ", evt.data)
-    console.log(`Webhook with and ID of ${id} and type of ${eventType}`)
 
     if (eventType === 'user.created') {
-        console.log("Aslinda dogru yere girmeyi basardin tebrik ediyorum.")
         const user = evt.data
         const newUser = new UserData({
             clerkId: user.id,
-            email: "deneme@email.com",
-            name:  "Muhammed" ,
+            name:  user.username ,
+            email: user.email_addresses[0].email_address,
         })
 
-        console.log("New User: ", user)
+        
         await newUser.save()
     }
 
