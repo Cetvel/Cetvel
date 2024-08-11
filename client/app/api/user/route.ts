@@ -2,14 +2,8 @@ import { NextResponse } from 'next/server';
 
 // GET request handler
 export async function GET(request: Request) {
-    // API'den veri çekme
-    const fetchedData = await fetch('https://jsonplaceholder.typicode.com/todos')
-      .then(response => response.json());
-      
-    // Dönüş yapılacak veri
-    const data = { message: 'Hello, Omer!', todo: fetchedData };
   
-    return NextResponse.json(data, { status: 200 });
+    return NextResponse.json({deathMessage : "What the f**k are you doing here?!💀"});
   }
 
 // POST request handler
