@@ -1,7 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
-// Mock data. Normally, you would interact with a database.
 import TodoModel from "@/lib/models/todo.model";
 import { ITodoDocument } from "@/lib/models/todo.model";
 export async function GET(request: NextRequest) {

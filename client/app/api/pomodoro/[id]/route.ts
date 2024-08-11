@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
-import TodoModel from "@/lib/models/todo.model";
+import PomodoroModel from "@/lib/models/pomodoro.model";
 
 export async function PUT(request:NextRequest , { params }: { params: { id: string } }) {
     const { userId } = getAuth(request);
@@ -15,11 +15,11 @@ export async function PUT(request:NextRequest , { params }: { params: { id: stri
     }
     
     const body = await request.json();
-    const todo = await TodoModel.findOneAndUpdate({ _id: id }, body, { new: true });
-    if (!todo) {
-        return NextResponse.json({ error: "Todo not found" }, { status: 404 });
+    const pomodoro = await PomodoroModel.findOneAndUpdate({ _id: id }, body, { new: true });
+    if (!pomodoro) {
+        return NextResponse.json({ error: "pomodoro not found" }, { status: 404 });
     }
-    return NextResponse.json(todo);
+    return NextResponse.json(pomodoro);
 }
 
 
@@ -34,9 +34,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
         return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
     }
     
-    const todo = await TodoModel.findOneAndDelete({ _id: id});
-    if (!todo) {
-        return NextResponse.json({ error: "Todo not found" }, { status: 404 });
+    const pomodoro = await PomodoroModel.findOneAndDelete({ _id: id});
+    if (!pomodoro) {
+        return NextResponse.json({ error: "pomodoro not found" }, { status: 404 });
     }
-    return NextResponse.json({ message: "Todo deleted successfully" });
+    return NextResponse.json({ message: "pomodoro deleted successfully" });
 }
