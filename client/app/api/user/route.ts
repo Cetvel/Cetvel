@@ -1,30 +1,25 @@
 import { NextResponse } from 'next/server';
+import { getAuth } from '@clerk/nextjs/server';
+import { getUserByClerkId } from "@/lib/services/user.service";
+import { NextRequest } from 'next/server';
+import User from '@/lib/models/user.model';
 
-// GET request handler
-export async function GET(request: Request) {
-  
-    return NextResponse.json({deathMessage : "What the f**k are you doing here?!💀"});
-  }
-
-// POST request handler
-export async function POST(request: Request) {
-  const body = await request.json();
-  // Here, you can process the incoming data (e.g., save to a database)
-  const responseData = { message: 'User data received', data: body };
-  return NextResponse.json(responseData, { status: 201 });
+export async function GET(req: NextRequest) {
+    const { userId } = getAuth(req);
+    const user = await getUserByClerkId(userId!)
+    return NextResponse.json({user});
 }
+
 
 // PUT request handler
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   const body = await request.json();
-  // Here, you can update user data
-  const responseData = { message: 'User data updated', data: body };
-  return NextResponse.json(responseData, { status: 200 });
+  const { userId } = getAuth(request);
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const updatedUser = await User.findOneAndUpdate({ clerkId: userId }, body, { new: true });
+  return NextResponse.json(updatedUser, { status: 200 } );
 }
 
-// DELETE request handler
-export async function DELETE(request: Request) {
-  // Here, you can delete user data
-  const responseData = { message: 'User data deleted' };
-  return NextResponse.json(responseData, { status: 204 });
-}
