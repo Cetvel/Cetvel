@@ -4,7 +4,7 @@ import { WebhookEvent } from '@clerk/nextjs/server'
 import UserData from '@/lib/models/user.model'
 export async function POST(req: Request) {
 
-    
+
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
 
     if (!WEBHOOK_SECRET) {
@@ -46,20 +46,45 @@ export async function POST(req: Request) {
             status: 400
         })
     }
-
-    const { id } = evt.data;
     const eventType = evt.type;
 
-    if (eventType === 'user.created') {
-        const user = evt.data
-        const newUser = new UserData({
-            clerkId: user.id,
-            name:  user.username ,
-            email: user.email_addresses[0].email_address,
-        })
+    switch (eventType) {
+        case 'user.created': {
+            const user = evt.data
+            const newUser = new UserData({
+                clerkId: user.id,
+                name: user.username,
+                email: user.email_addresses[0].email_address,
+            })
+            await newUser.save()
+            break
+        }
+        case 'user.updated': {
+            const userUpdated = evt.data;
+            const updatedUser = await UserData.findOne({ clerkId: userUpdated.id });
+            if (updatedUser) {
+                updatedUser.name = userUpdated.username;
+                updatedUser.email = userUpdated.email_addresses[0].email_address;
+                await updatedUser.save();
+            } else {
+                console.error('User not found for update:', userUpdated.id);
+            }
+            break;
+        }
+        case 'user.deleted': {
+            const userDeleted = evt.data;
+            const deletedUser = await UserData.findOne({ clerkId: userDeleted.id });
+            if (deletedUser) {
+                await deletedUser.delete();
+            } else {
+                console.error('User not found for deletion:', userDeleted.id);
+            }
+            break
+        }
 
         
-        await newUser.save()
+        default:
+            console.log('Unhandled event type:', eventType);
     }
 
 
