@@ -3,7 +3,9 @@ import { todoStatics , ITodoStatics } from './plugins/todo.plugins';
 
 
 interface ITodo {
+	example : string 
 	userId: Types.ObjectId;
+	clerkId?: string;
 	title: string;
 	description?: string;
 	status: 'incomplete' | 'in-progress' | 'completed';
@@ -26,10 +28,19 @@ interface TodoModel extends Model<ITodoDocument>, ITodoStatics { }
 
 
 const TodoSchema = new Schema<ITodoDocument>({
+	example:{
+		type: String,
+		required: false,
+	},
+
+	clerkId:{
+		type: String,
+		required: false,
+	},
 	userId: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',
-		required: true
+		required: false
 	},
 	title: {
 		type: String,
@@ -68,6 +79,6 @@ const TodoSchema = new Schema<ITodoDocument>({
 
 Object.assign(TodoSchema.statics, todoStatics);
 
-const TodoModel= mongoose.model<ITodoDocument,TodoModel>('Todo', TodoSchema);
+const Todo= mongoose.models.Todo || mongoose.model<ITodoDocument,TodoModel>('Todo', TodoSchema);
 
-export default TodoModel;
+export default Todo;
