@@ -24,18 +24,8 @@ export const userMethods: IUserMethods = {
 
 }
 
-export interface IUserStaticMethods {
-    isEmailTaken: (email: string, excludeUserId?: string | Types.ObjectId) => Promise<boolean>;
-
-}
-export const userStaticMethods: IUserStaticMethods = {
-    isEmailTaken: async function (this: Model<IUserDocument>, email: string, excludeUserId?: string | Types.ObjectId): Promise<boolean> {
-        const query: any = { email };
-        if (excludeUserId) { query._id = { $ne: excludeUserId }; }
-        const user = await this.findOne(query);
-        return !!user;
-    }
-};
+export interface IUserStaticMethods {}
+export const userStaticMethods: IUserStaticMethods = {}
 
 
 
