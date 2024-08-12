@@ -3,16 +3,18 @@ import { todoStatics , ITodoStatics } from './plugins/todo.plugins';
 
 
 interface ITodo {
-	example : string 
 	userId: Types.ObjectId;
 	clerkId?: string;
 	title: string;
 	description?: string;
+	tag: string
 	status: 'incomplete' | 'in-progress' | 'completed';
-	createdAt: Date;
 	updatedAt: Date;
+	startsAt: Date ;
+	endsAt: Date ;
 	completedAt?: Date;
-	tag: string;
+	createdAt: Date;
+	 
 	// priority: 'low' | 'medium' | 'high';
 	// dueDate?: Date;
 	// reminder?: Date;
@@ -28,11 +30,6 @@ interface TodoModel extends Model<ITodoDocument>, ITodoStatics { }
 
 
 const TodoSchema = new Schema<ITodoDocument>({
-	example:{
-		type: String,
-		required: false,
-	},
-
 	clerkId:{
 		type: String,
 		required: false,
@@ -47,15 +44,18 @@ const TodoSchema = new Schema<ITodoDocument>({
 		required: true,
 		trim: true
 	},
-	description: {
-		type: String,
-		trim: true
-	},
 	status: {
 		type: String,
 		enum: ['incomplete', 'in-progress', 'completed'],
 		default: 'incomplete'
 	},
+	tag: {
+		type: String,
+		trim: true,
+		required: true
+	},
+	startsAt : {type : Date , required : true},
+    endsAt : {type : Date , required : true},
 	createdAt: {
 		type: Date,
 		default: Date.now
@@ -64,11 +64,7 @@ const TodoSchema = new Schema<ITodoDocument>({
 		type: Date,
 		default: Date.now
 	},
-	tag: {
-		type: String,
-		trim: true,
-		required: true
-	},
+	
 	completedAt: {
 		type: Date
 	}
