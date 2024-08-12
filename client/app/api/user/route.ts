@@ -18,7 +18,7 @@ export async function PUT(request: NextRequest) {
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-
+  
   const updatedUser = await User.findOneAndUpdate({ clerkId: userId }, body, { new: true });
   return NextResponse.json(updatedUser, { status: 200 } );
 }
