@@ -11,22 +11,23 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
     try {
-        const body = await request.json();
-        console.log("Parsed body:", body);
-        if (!body) {
-            return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
-        }
+
         const { userId } = getAuth(request);
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        // Pomodoro oluştur
+        const body = await request.json();
+        console.log("Parsed body:", body);
+        if (!body) {
+            return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
+        }
+        
         const pomodoro = new PomodoroModel({
             clerkId: getAuth(request).userId,
             ...body
         }) as PomodoroDocument
-
+        
         await pomodoro.save();
         return NextResponse.json(pomodoro, { status: 201 });
     } catch (error) {
