@@ -4,13 +4,17 @@ import { todoStatics , ITodoStatics } from './plugins/todo.plugins';
 
 interface ITodo {
 	userId: Types.ObjectId;
+	clerkId?: string;
 	title: string;
 	description?: string;
+	tag: string
 	status: 'incomplete' | 'in-progress' | 'completed';
-	createdAt: Date;
 	updatedAt: Date;
+	startsAt: Date ;
+	endsAt: Date ;
 	completedAt?: Date;
-	tag: string;
+	createdAt: Date;
+	 
 	// priority: 'low' | 'medium' | 'high';
 	// dueDate?: Date;
 	// reminder?: Date;
@@ -26,18 +30,18 @@ interface TodoModel extends Model<ITodoDocument>, ITodoStatics { }
 
 
 const TodoSchema = new Schema<ITodoDocument>({
+	clerkId:{
+		type: String,
+		required: false,
+	},
 	userId: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',
-		required: true
+		required: false
 	},
 	title: {
 		type: String,
 		required: true,
-		trim: true
-	},
-	description: {
-		type: String,
 		trim: true
 	},
 	status: {
@@ -45,6 +49,13 @@ const TodoSchema = new Schema<ITodoDocument>({
 		enum: ['incomplete', 'in-progress', 'completed'],
 		default: 'incomplete'
 	},
+	tag: {
+		type: String,
+		trim: true,
+		required: true
+	},
+	startsAt : {type : Date , required : true},
+    endsAt : {type : Date , required : true},
 	createdAt: {
 		type: Date,
 		default: Date.now
@@ -53,11 +64,7 @@ const TodoSchema = new Schema<ITodoDocument>({
 		type: Date,
 		default: Date.now
 	},
-	tag: {
-		type: String,
-		trim: true,
-		required: true
-	},
+	
 	completedAt: {
 		type: Date
 	}
@@ -68,6 +75,6 @@ const TodoSchema = new Schema<ITodoDocument>({
 
 Object.assign(TodoSchema.statics, todoStatics);
 
-const TodoModel= mongoose.model<ITodoDocument,TodoModel>('Todo', TodoSchema);
+const Todo= mongoose.models.Todo || mongoose.model<ITodoDocument,TodoModel>('Todo', TodoSchema);
 
-export default TodoModel;
+export default Todo;

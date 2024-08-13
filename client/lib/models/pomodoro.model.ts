@@ -1,12 +1,14 @@
 import mongoose, { Schema, Model, Document, Types } from "mongoose";
-import { reduceEachLeadingCommentRange } from "typescript";
 
 interface IPomodoro extends Document {
+    clerkId?: string
     title: string;
     tag: string;
-    // description: string;
-    duration: number;
     userId: Types.ObjectId;
+    description: string;
+    duration: number;
+    startsAt : Date;
+    endsAt : Date
 }
 
 export interface PomodoroDocument extends IPomodoro, Document {
@@ -18,13 +20,18 @@ interface PomodoroModel extends Model<PomodoroDocument> { }
 
 
 const PomodoroSchema = new Schema({
+    clerkId: { type: String, required: false },
+    userId: { type: Types.ObjectId, required: false, ref: 'User' },
     title: { type: String, required: true },
     tag: { type: String, required: true },
+    startsAt : {type : Date , required : true},
+    endsAt : {type : Date , required : true},
+    description: { type: String, required: false },
     duration: { type: Number, required: true },
-    userId: { type: Types.ObjectId, required: true, ref: 'User' }
 }, { timestamps: true });
 
 
-const Pomodoro = mongoose.model<PomodoroDocument, PomodoroModel>('Pomodoro', PomodoroSchema);
+
+const Pomodoro = mongoose.models.Pomodoro || mongoose.model<PomodoroDocument, PomodoroModel>('Pomodoro', PomodoroSchema);
 
 export default Pomodoro
