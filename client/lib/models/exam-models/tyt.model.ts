@@ -33,134 +33,53 @@ export interface Section {
 export interface Tyt {
     solvingTime?: number
 }
-export interface TytDocument extends Tyt, Section, Document, ITytMethods {
+export interface ITytDocument extends Tyt, Section, Document, ITytMethods {
     _id: Schema.Types.ObjectId;
 }
-
-const TytSchema: Schema<TytDocument> = new Schema({
-    solvingTime: {
-        type: Number,
-        required: false,
-        max : 135
-    },
-    math: {
-        solvingTime: {
-            type: Number,
-            required: false,
-            max : 135
-        },
-        correct: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 40
-        },
-        wrong: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 40
-        },
-        empty: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 40
-        }
+const TytSchema = new Schema<ITytDocument>({
+    solvingTime: { type: Number, required: false, max: 135 },
+    math: { 
+        solvingTime: { type: Number, required: false, max: 135 },
+        correct: { type: Number, required: true, min: 0, max: 40 },
+        wrong: { type: Number, required: true, min: 0, max: 40 },
+        empty: { type: Number, required: true, min: 0, max: 40 }
     },
     science: {
-        solvingTime: {
-            type: Number,
-            required: false,
-            max : 135
-        },
-        correct: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 20
-        },
-        wrong: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 20
-        },
-        empty: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 20
-        }
+        solvingTime: { type: Number, required: false, max: 135 },
+        correct: { type: Number, required: true, min: 0, max: 20 },
+        wrong: { type: Number, required: true, min: 0, max: 20 },
+        empty: { type: Number, required: true, min: 0, max: 20 }
     },
     turkish: {
-        solvingTime: {
-            type: Number,
-            required: false,
-            max : 135
-        },
-        correct: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 40
-        },
-        wrong: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 40
-        },
-        empty: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 40
-        }
+        solvingTime: { type: Number, required: false, max: 135 },
+        correct: { type: Number, required: true, min: 0, max: 40 },
+        wrong: { type: Number, required: true, min: 0, max: 40 },
+        empty: { type: Number, required: true, min: 0, max: 40 }
     },
     social: {
-        solvingTime: {
-            type: Number,
-            required: false,
-            max : 135
-        },
-        correct: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 20
-        },
-        wrong: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 20
-        },
-        empty: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 20
-        }
+        solvingTime: { type: Number, required: false, max: 135 },
+        correct: { type: Number, required: true, min: 0, max: 20 },
+        wrong: { type: Number, required: true, min: 0, max: 20 },
+        empty: { type: Number, required: true, min: 0, max: 20 }
     }
 });
 
-// Virtual properties for section net scores
 (Object.keys(TytSchema.paths) as (keyof Section)[]).forEach(section => {
-    TytSchema.virtual(`${section}.totalNet`).get(function (this: TytDocument) {
+    TytSchema.virtual(`${section}.totalNet`).get(function (this: ITytDocument) {
         return this.calculateSectionNet(section);
     });
 });
 
 // Virtual for total net score
-TytSchema.virtual('totalNet').get(function (this: TytDocument) {
+TytSchema.virtual('totalNet').get(function (this: ITytDocument) {
     return (Object.keys(this.toObject()) as (keyof Section)[])
         .reduce((sum, section) => sum + this.calculateSectionNet(section), 0);
 });
 
 TytSchema.methods = TytMethods;
 
-const Tyt = Exam.discriminator<TytDocument>('tyt', TytSchema);
+const Tyt = (mongoose.models.Tyt as mongoose.Model<ITytDocument>) || 
+    Exam.discriminator<ITytDocument>('Tyt', TytSchema);
 
 export default Tyt;
 
