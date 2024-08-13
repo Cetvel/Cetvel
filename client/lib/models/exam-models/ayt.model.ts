@@ -322,6 +322,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
     }
 })
 
-const Ayt = Exam.discriminator<AytDocument>('ayt', AytSchema);
+const Ayt = (mongoose.models.Ayt as mongoose.Model<AytDocument>) 
+Exam.discriminator<AytDocument>('ayt', AytSchema);
 
 export default Ayt;
