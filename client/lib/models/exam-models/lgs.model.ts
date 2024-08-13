@@ -1,4 +1,4 @@
-import { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 import Exam from "../exam.model";
 
 export interface Section {
@@ -103,6 +103,6 @@ const LgsSchema = new Schema<LgsDocument>({
     },
 })
 
-const Lgs = Exam.discriminator<LgsDocument>('lgs', LgsSchema)
+const Lgs = (mongoose.models.Lgs as mongoose.Model<LgsDocument>)||Exam.discriminator<LgsDocument>('lgs', LgsSchema)
 
 export default Lgs
