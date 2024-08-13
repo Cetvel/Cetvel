@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import AytModel from "@/lib/models/exam-models/ayt.model";
-
+import { AytDocument } from "@/lib/models/exam-models/ayt.model";
 export async function GET(request: NextRequest) {
   try {
     const { userId } = getAuth(request);
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const exams = await AytModel.find({ clerkId : userId });
+    const exams = await AytModel.find({ clerkId : userId }) as AytDocument[];
     return NextResponse.json(exams);
   } catch (error) {
     console.error("Error processing request:", error);

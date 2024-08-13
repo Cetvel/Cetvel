@@ -7,19 +7,10 @@ import Exam from "../exam.model";
     ea = math +  literature + history1 + geography1 
     soz = literature + history2 + geography2 + philosophy + religion
 */
+
 export interface Section {
-    math?: {
-        solvingTime?: number,
-        correct: number,
-        wrong: number,
-        empty: number,
-    },
-    physics?: {
-        solvingTime?: number
-        correct: number,
-        wrong: number,
-        empty: number,
-    },
+    math?: { solvingTime?: number, correct: number, wrong: number, empty: number },
+    physics?: { solvingTime?: number, correct: number, wrong: number, empty: number, },
     chemistry?: {
         solvingTime?: number
         correct: number,
@@ -77,11 +68,11 @@ export interface Section {
 }
 
 interface Ayt {
-    aytField: {
+    aytType: {
         type: string,
         enum: ['say', 'ea', `soz`],
     },
-    solvingTime ? : {
+    solvingTime?: {
         type: number
         max: 180
     }
@@ -94,15 +85,8 @@ export interface AytDocument extends Ayt, Document, Section {
 
 
 const AytSchema: Schema<AytDocument> = new Schema({
-    aytField: {
-        type: String,
-        enum: ['say', 'ea', 'soz'],
-        required: true
-    },
-    solvingTime: {
-        type: Number,
-        required: false,
-    },
+    aytType: { type: String, enum: ['say', 'ea', 'soz'], required: true },
+    solvingTime: { type: Number, required: false },
     // Say ve Ea icin ortak alanlar
 
     math: {
@@ -322,7 +306,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
     }
 })
 
-const Ayt = (mongoose.models.Ayt as mongoose.Model<AytDocument>) 
-Exam.discriminator<AytDocument>('ayt', AytSchema);
+const Ayt = (mongoose.models.Ayt as mongoose.Model<AytDocument>)||
+Exam.discriminator<AytDocument>('Ayt', AytSchema);
 
 export default Ayt;

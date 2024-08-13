@@ -10,7 +10,7 @@ export async function GET(request: NextRequest, { params }: { params: { aytType:
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
         const { aytType } = params;
-        const exams = await AytModel.find({ clerkId: userId , aytField: aytType });
+        const exams = await AytModel.find({ clerkId: userId , aytType }) as AytDocument[];
         return NextResponse.json(exams);
     } catch (error) {
         console.error("Error processing request:", error);
