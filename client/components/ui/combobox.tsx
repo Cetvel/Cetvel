@@ -24,7 +24,7 @@ import { Drawer, DrawerContent, DrawerTrigger } from "./drawer";
 type ComboboxProps = {
   itemValue: string;
   onChange: (value: string) => void;
-  items: { value: string; label: string }[];
+  items: { id: string; value: string }[];
   searchText?: string;
   emptyText?: string;
   selectText?: string;
@@ -58,7 +58,7 @@ export function Combobox({
             className={cn("w-[120px] justify-between", className)}
           >
             {value
-              ? items.find((item) => item.value === value)?.label
+              ? items.find((item) => item.value === value)?.value
               : selectText
               ? selectText
               : "Seçiniz..."}
@@ -91,7 +91,7 @@ export function Combobox({
                         value === item.value ? "opacity-100" : "opacity-0"
                       )}
                     />
-                    {item.label}
+                    {item.value}
                   </CommandItem>
                 ))}
               </CommandGroup>

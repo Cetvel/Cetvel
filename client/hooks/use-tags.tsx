@@ -1,8 +1,8 @@
 export const useTags = () => {
   const tags = [
-    { id: "1", value: "is", label: "İş" },
-    { id: "2", value: "okul", label: "Okul" },
-    { id: "3", value: "kisisel", label: "Kişisel" },
+    { id: "1", value: "is" },
+    { id: "2", value: "okul" },
+    { id: "3", value: "kisisel" },
   ];
 
   return { tags };

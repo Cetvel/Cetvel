@@ -1,10 +1,5 @@
 import PageHeader from "@/components/global/page-header";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 
 const navigationItems: { title: string; href: string }[] = [
@@ -34,20 +29,17 @@ export default async function RootLayout({
   return (
     <main>
       <PageHeader title="Ayarlar" />
-      <div className="flex justify-center mb-6 bg-base-100 rounded-xl border-card p-2">
-        <NavigationMenu className="gap-4">
-          {navigationItems.map((item) => (
-            <NavigationMenuItem key={item.title}>
-              <Link href={item.href} passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  {item.title}
-                </NavigationMenuLink>
-              </Link>
-            </NavigationMenuItem>
-          ))}
-        </NavigationMenu>
-      </div>
-      <div className="w-full flex items-center justify-center">{children}</div>
+      <Tabs defaultValue="account">
+        <TabsList className="w-full grid grid-cols-4 mb-6">
+          <TabsTrigger value="account" defaultChecked>
+            Hesap
+          </TabsTrigger>
+          <TabsTrigger value="notifications">Bildirimler</TabsTrigger>
+          <TabsTrigger value="preferences">Tercihler</TabsTrigger>
+          <TabsTrigger value="payment">Ödeme Bilgileri</TabsTrigger>
+        </TabsList>
+        {children}
+      </Tabs>
     </main>
   );
 }

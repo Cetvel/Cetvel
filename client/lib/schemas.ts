@@ -1,5 +1,17 @@
 import { z } from "zod";
 
+export const onboardingSchema = z.object({
+  educationLevel: z.enum(["İlkokul", "Ortaokul", "Lise"], {
+    required_error: "Eğitim seviyesi seçmek zorunludur",
+  }),
+  examType: z.string({
+    required_error: "Sınav türü seçmek zorunludur",
+  }),
+  field: z.enum(["Sayısal", "Sözel", "Eşit Ağırlık", "Dil"], {
+    required_error: "Alan seçmek zorunludur",
+  }),
+});
+
 export const TaskSchema = z.object({
   title: z
     .string({

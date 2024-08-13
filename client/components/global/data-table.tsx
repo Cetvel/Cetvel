@@ -16,6 +16,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -140,8 +141,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-
-      <div className="flex w-full space-x-4 pt-4 items-center justify-end">
+      <div className="flex items-center justify-end space-x-4 mt-4">
         <Button
           variant={"secondary"}
           size={"sm"}

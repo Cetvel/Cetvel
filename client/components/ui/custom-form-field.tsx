@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import Image from "next/image";
 import { Control } from "react-hook-form";
 
 import { Checkbox } from "./checkbox";
@@ -15,6 +13,9 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from "./select";
 import { Textarea } from "./textarea";
 import { DatePicker } from "./date-picker";
 import Datetime from "react-datetime";
+
+import "react-datetime/css/react-datetime.css";
+import { IoCalendar } from "react-icons/io5";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -138,16 +139,19 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.DATE_TIME_PICKER:
       return (
         <FormControl>
-          <Datetime
-            value={field.value}
-            onChange={(date) => field.onChange(date)}
-            dateFormat={props.dateFormat}
-            timeFormat={props.showTimeSelect}
-            inputProps={{
-              placeholder: props.placeholder,
-              className: "shad-input",
-            }}
-          />
+          <div className="flex rounded-xl border border-card items-center px-4">
+            <IoCalendar className="text-secondary-content text-lg mr-2" />
+            <Datetime
+              value={field.value}
+              onChange={(date) => field.onChange(date)}
+              dateFormat={props.dateFormat}
+              timeFormat={props.showTimeSelect}
+              inputProps={{
+                placeholder: props.placeholder,
+                className: "shad-input text-sm text-secondary-content",
+              }}
+            />
+          </div>
         </FormControl>
       );
 

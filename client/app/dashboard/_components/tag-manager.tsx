@@ -23,7 +23,7 @@ const TagManager = () => {
               </DialogHeader>
               <h4 className="text-lg">Tüm etiketler</h4>
               {tags?.map((tag: any) => (
-                <Tag key={tag.value} id={tag.id} title={tag.label} />
+                <Tag key={tag.value} id={tag.id} title={tag.value} />
               ))}
             </Modal>
           )

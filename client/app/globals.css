@@ -37,10 +37,6 @@ h6 {
   @apply text-dark-600 dark:text-light-400;
 }
 
-li {
-  list-style-type: none !important;
-}
-
 /* Utils */
 @layer utilities {
   body {
@@ -129,6 +125,10 @@ li {
 
   .checkbox-label {
     @apply text-sm !important;
+  }
+
+  .radio-group {
+    @apply px-6 py-4 rounded-xl border border-neutral-200 dark:border-neutral-500 border-dashed bg-base-200 flex gap-2 items-center !important;
   }
 
   .date-picker {
@@ -230,3 +230,70 @@ abbr:where([title]) {
   @apply bg-light-200/50 dark:bg-dark-600/50 text-secondary-content !important;
 }
 /* Big Calendar End */
+
+/* React DateTime Start */
+.rdtPicker {
+  @apply min-w-[250px] p-4 mt-1 z-50 animate-in bg-card shadow-md border-neutral-200 dark:border-neutral-500 !important;
+}
+
+.rdtPicker td.rdtDay:hover,
+.rdtPicker td.rdtHour:hover,
+.rdtPicker td.rdtMinute:hover,
+.rdtPicker td.rdtSecond:hover,
+.rdtPicker .rdtTimeToggle:hover {
+  @apply bg-light-200 dark:bg-dark-600 !important;
+}
+
+.rdtPicker td.rdtOld,
+.rdtPicker td.rdtNew {
+  @apply text-neutral-400 dark:text-neutral-500 !important;
+}
+
+.rdtPicker td.rdtToday:before {
+  @apply border-b-primary-500 border-t-neutral-200 dark:border-t-neutral-500 !important;
+}
+
+.rdtPicker td.rdtActive,
+.rdtPicker td.rdtActive:hover {
+  @apply bg-primary-500 text-white !important;
+}
+
+.rdtPicker td.rdtActive.rdtToday:before {
+  @apply border-b-neutral-200 dark:border-b-neutral-500 !important;
+}
+
+.rdtPicker td.rdtDisabled,
+.rdtPicker td.rdtDisabled:hover {
+  @apply text-neutral-400 dark:text-neutral-500 !important;
+}
+
+.rdtPicker td span.rdtOld {
+  @apply text-neutral-400 dark:text-neutral-500 !important;
+}
+
+.rdtPicker td span.rdtDisabled,
+.rdtPicker td span.rdtDisabled:hover {
+  @apply text-neutral-400 dark:text-neutral-500 !important;
+}
+
+.rdtPicker th {
+  @apply border-b-neutral-200 dark:border-b-neutral-500 !important;
+}
+
+.rdtPicker th.rdtDisabled,
+.rdtPicker th.rdtDisabled:hover {
+  @apply text-neutral-400 dark:text-neutral-500 !important;
+}
+
+.rdtPicker thead tr:first-of-type th:hover {
+  @apply bg-light-200 dark:bg-dark-600 !important;
+}
+
+.rdtPicker tfoot {
+  @apply border-t-neutral-200 dark:border-t-neutral-500 !important;
+}
+
+.rdtPicker button:hover {
+  @apply bg-light-200 dark:bg-dark-600 !important;
+}
+/* React DateTime End */
