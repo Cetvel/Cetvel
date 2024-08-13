@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
-import { getUserByClerkId } from "@/lib/services/user.service";
 import { NextRequest } from 'next/server';
 import User from '@/lib/models/user.model';
 
 export async function GET(req: NextRequest) {
     const { userId } = getAuth(req);
-    const user = await getUserByClerkId(userId!)
-    return NextResponse.json({user});
+    const user = await User.findOne({ clerkId: userId });
+    return NextResponse.json({user})
 }
 
 
