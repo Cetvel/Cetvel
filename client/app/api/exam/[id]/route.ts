@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
-import TytModel from "@/lib/models/exam-models/tyt.model";
+import ExamModel from "@/lib/models/exam.model"
 
 export async function PUT(request:NextRequest , { params }: { params: { id: string } }) {
     const { userId } = getAuth(request);
@@ -15,11 +15,11 @@ export async function PUT(request:NextRequest , { params }: { params: { id: stri
     }
     
     const body = await request.json();
-    const tyt = await TytModel.findOneAndUpdate({ _id: id }, body, { new: true });
-    if (!tyt) {
-        return NextResponse.json({ error: "tyt not found" }, { status: 404 });
+    const exam = await ExamModel.findOneAndUpdate({ _id: id }, body, { new: true });
+    if (!exam) {
+        return NextResponse.json({ error: "exam not found" }, { status: 404 });
     }
-    return NextResponse.json(tyt);
+    return NextResponse.json(exam);
 }
 
 
@@ -34,9 +34,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
         return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
     }
     
-    const tyt = await TytModel.findOneAndDelete({ _id: id});
-    if (!tyt) {
-        return NextResponse.json({ error: "tyt not found" }, { status: 404 });
+    const exam = await ExamModel.findOneAndDelete({ _id: id});
+    if (!exam) {
+        return NextResponse.json({ error: "exam not found" }, { status: 404 });
     }
-    return NextResponse.json({ message: "tyt deleted successfully" });
+    return NextResponse.json({ message: "exam deleted successfully" });
 }
