@@ -7,6 +7,10 @@ interface IUser {
     email: string;
     password: string;
     tag: string[];
+    notificationPreferences: {
+        pomodoroReminder: { type: Boolean, default: true },
+        upcomingTasks: { type: Boolean, default: true },
+      }
     pictures: {
         profilePicture: string;
         coverPicture: string;
@@ -43,6 +47,10 @@ const userSchema = new Schema<IUserDocument, UserModel>({
         trim: true,
         minlength: 4
     },
+    notificationPreferences: {
+        pomodoroReminder: { type: Boolean, default: true },
+        upcomingTasks: { type: Boolean, default: true },
+      },
     tag: {
         type: [String],
         default: ["school", "work", "study"]
