@@ -12,10 +12,7 @@ import { Input } from "./input";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./select";
 import { Textarea } from "./textarea";
 import { DatePicker } from "./date-picker";
-import Datetime from "react-datetime";
-
-import "react-datetime/css/react-datetime.css";
-import { IoCalendar } from "react-icons/io5";
+import { Switch } from "./switch";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -23,10 +20,10 @@ export enum FormFieldType {
   NUMBER = "number",
   TEXTAREA = "textarea",
   CHECKBOX = "checkbox",
+  SWITCH = "switch",
   DATE_PICKER = "datePicker",
   SELECT = "select",
   SKELETON = "skeleton",
-  DATE_TIME_PICKER = "dateTimePicker",
 }
 
 interface CustomProps {
@@ -136,25 +133,16 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
       );
     case FormFieldType.SKELETON:
       return props.renderSkeleton ? props.renderSkeleton(field) : null;
-    case FormFieldType.DATE_TIME_PICKER:
+    case FormFieldType.SWITCH:
       return (
         <FormControl>
-          <div className="flex rounded-xl border border-card items-center px-4">
-            <IoCalendar className="text-secondary-content text-lg mr-2" />
-            <Datetime
-              value={field.value}
-              onChange={(date) => field.onChange(date)}
-              dateFormat={props.dateFormat}
-              timeFormat={props.showTimeSelect}
-              inputProps={{
-                placeholder: props.placeholder,
-                className: "shad-input text-sm text-secondary-content",
-              }}
-            />
-          </div>
+          <Switch
+            checked={field.value}
+            onCheckedChange={field.onChange}
+            disabled={props.disabled}
+          />
         </FormControl>
       );
-
     default:
       return null;
   }
@@ -168,7 +156,7 @@ const CustomFormField = (props: CustomProps) => {
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex-1">
+        <FormItem>
           {props.fieldType !== FormFieldType.CHECKBOX && label && (
             <FormLabel className="shad-input-label">{label}</FormLabel>
           )}

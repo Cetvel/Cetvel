@@ -36,7 +36,6 @@ const PageHeader = ({ title }: Props) => {
             appearance={{
               baseTheme: resolvedTheme === "dark" ? dark : undefined,
             }}
-            showName
           />
         </div>
       </div>
