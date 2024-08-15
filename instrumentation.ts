@@ -14,7 +14,6 @@ export async function register() {
         const connectDB = (await import('./lib/config/config')).default;
         await connectDB();
         isDbConnected = true;
-        console.log('Database connected successfully');
       } catch (error) {
         console.error('Failed to connect to database:', error);
       }
@@ -26,7 +25,6 @@ export async function register() {
         const { setupCronJobs } = await import('./lib/node-cron');
         await setupCronJobs();
         isCronSetup = true;
-        console.log('Cron jobs set up successfully');
       } catch (error) {
         console.error('Failed to setup cron jobs:', error);
       }
