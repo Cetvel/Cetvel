@@ -1,6 +1,7 @@
 "use client";
 
 import SubmitButton from "@/components/forms/ui/submit-button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,31 +11,46 @@ import {
 import CustomFormField, {
   FormFieldType,
 } from "@/components/ui/custom-form-field";
-import { FormControl } from "@/components/ui/form";
+import { FormControl, FormDescription, FormLabel } from "@/components/ui/form";
 import FormStepper from "@/components/ui/form-stepper";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { onboardingSchema } from "@/lib/schemas";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
-import { Form, FormProvider, useForm } from "react-hook-form";
-import { IoArrowForward } from "react-icons/io5";
+import { FormProvider, useForm } from "react-hook-form";
+import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 import { z } from "zod";
 
 const educationLevels = ["İlkokul", "Ortaokul", "Lise"];
-const examTypes = {
+const courseSubjects = {
   İlkokul: ["Genel müfredat"],
   Ortaokul: ["LGS hazırlık", "Genel müfredat"],
   Lise: ["TYT/AYT hazırlık", "Genel müfredat"],
 };
 const fields = ["Sayısal", "Sözel", "Eşit Ağırlık", "Dil"];
+const steps = [
+  {
+    label: "Eğitim bilgilerin",
+    description: "Alanın ve eğitim düzeyine dair bilgiler",
+  },
+  {
+    label: "Bildirimler",
+    description: "Hatırlatıcılar ve bildirimlerin yönetimi",
+  },
+  {
+    label: "Arayüz tercihi",
+    description: "Uygulamayı kişiselleştir",
+  },
+];
 
 const Onboarding = () => {
   const form = useForm<z.infer<typeof onboardingSchema>>({
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
-      educationLevel: "Ortaokul",
-      examType: "",
+      educationLevel: "Lise",
+      courseSubjects: "",
       field: "Sayısal",
     },
   });
@@ -61,21 +77,8 @@ const Onboarding = () => {
       </CardHeader>
       <CardContent className="border-t border-neutral-200 dark:border-neutral-500 mt-6">
         <FormStepper
-          activeStep={0}
-          steps={[
-            {
-              label: "Eğitim bilgilerin",
-              description: "Alanın ve eğitim düzeyine dair bilgiler",
-            },
-            {
-              label: "Daily streak",
-              description: "Uygulamayı kullanma sıklığın",
-            },
-            {
-              label: "Arayüz tercihi",
-              description: "Uygulamayı kişiselleştir",
-            },
-          ]}
+          activeStep={step}
+          steps={steps}
           onStepChange={(step) => setStep(step)}
         />
 
@@ -84,71 +87,13 @@ const Onboarding = () => {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col space-y-4 mt-6"
           >
-            <CustomFormField
-              fieldType={FormFieldType.SKELETON}
-              control={form.control}
-              name="educationLevel"
-              label="Eğitim seviyen"
-              renderSkeleton={(field) => (
-                <FormControl>
-                  <RadioGroup
-                    className="flex gap-6"
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    {educationLevels.map((level, i) => (
-                      <div key={level + i} className="radio-group">
-                        <RadioGroupItem
-                          className="radio-group-item"
-                          value={level}
-                          id={level}
-                        />
-                        <Label htmlFor={level} className="cursor-pointer">
-                          {level}
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              )}
-            />
-
-            <CustomFormField
-              fieldType={FormFieldType.SKELETON}
-              control={form.control}
-              name="examType"
-              label="Sınav türün"
-              renderSkeleton={(field) => (
-                <FormControl>
-                  <RadioGroup
-                    className="flex gap-6"
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    {examTypes[form.watch("educationLevel")].map((type, i) => (
-                      <div key={type + i} className="radio-group">
-                        <RadioGroupItem
-                          className="radio-group-item"
-                          value={type}
-                          id={type}
-                        />
-                        <Label htmlFor={type} className="cursor-pointer">
-                          {type}
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              )}
-            />
-
-            {form.watch("educationLevel") === "Lise" &&
-              form.watch("examType") === examTypes.Lise[0] && (
+            {step === 0 && (
+              <>
                 <CustomFormField
                   fieldType={FormFieldType.SKELETON}
                   control={form.control}
-                  name="field"
-                  label="Alanın"
+                  name="educationLevel"
+                  label="Eğitim seviyen"
                   renderSkeleton={(field) => (
                     <FormControl>
                       <RadioGroup
@@ -156,15 +101,15 @@ const Onboarding = () => {
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
-                        {fields.map((field, i) => (
-                          <div key={field + i} className="radio-group">
+                        {educationLevels.map((level, i) => (
+                          <div key={level + i} className="radio-group">
                             <RadioGroupItem
                               className="radio-group-item"
-                              value={field}
-                              id={field}
+                              value={level}
+                              id={level}
                             />
-                            <Label htmlFor={field} className="cursor-pointer">
-                              {field}
+                            <Label htmlFor={level} className="cursor-pointer">
+                              {level}
                             </Label>
                           </div>
                         ))}
@@ -172,16 +117,121 @@ const Onboarding = () => {
                     </FormControl>
                   )}
                 />
-              )}
+
+                <CustomFormField
+                  fieldType={FormFieldType.SKELETON}
+                  control={form.control}
+                  name="courseSubjects"
+                  label="Hazırlık türün"
+                  renderSkeleton={(field) => (
+                    <FormControl>
+                      <RadioGroup
+                        className="flex gap-6"
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        {courseSubjects[form.watch("educationLevel")].map(
+                          (type, i) => (
+                            <div key={type + i} className="radio-group">
+                              <RadioGroupItem
+                                className="radio-group-item"
+                                value={type}
+                                id={type}
+                              />
+                              <Label htmlFor={type} className="cursor-pointer">
+                                {type}
+                              </Label>
+                            </div>
+                          )
+                        )}
+                      </RadioGroup>
+                    </FormControl>
+                  )}
+                />
+
+                {form.watch("educationLevel") === "Lise" &&
+                  form.watch("courseSubjects") === courseSubjects.Lise[0] && (
+                    <CustomFormField
+                      fieldType={FormFieldType.SKELETON}
+                      control={form.control}
+                      name="field"
+                      label="Alanın"
+                      renderSkeleton={(field) => (
+                        <FormControl>
+                          <RadioGroup
+                            className="flex gap-6"
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            {fields.map((field, i) => (
+                              <div key={field + i} className="radio-group">
+                                <RadioGroupItem
+                                  className="radio-group-item"
+                                  value={field}
+                                  id={field}
+                                />
+                                <Label
+                                  htmlFor={field}
+                                  className="cursor-pointer"
+                                >
+                                  {field}
+                                </Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        </FormControl>
+                      )}
+                    />
+                  )}
+              </>
+            )}
+
+            {step === 1 && (
+              <div className="form-line">
+                <div className="flex flex-col space-y-0.5 flex-grow">
+                  <FormLabel>Bildirimler</FormLabel>
+                  <FormDescription>
+                    Etütlerin ve görevlerin hakkında hatırlatıcı ve diğer
+                    bildirimleri almak ister misin?
+                  </FormDescription>
+                </div>
+
+                <CustomFormField
+                  fieldType={FormFieldType.SWITCH}
+                  control={form.control}
+                  name="notifications"
+                />
+              </div>
+            )}
           </form>
         </FormProvider>
       </CardContent>
-      <CardFooter className="flex justify-end pt-6 border-t border-t-neutral-200 dark:border-neutral-500">
-        <SubmitButton
-          loading={loading}
-          text="Devam et"
-          icon={<IoArrowForward size={18} className="ml-2" />}
-        />
+      <CardFooter
+        className={cn(
+          "flex pt-6 border-t border-t-neutral-200 dark:border-neutral-500",
+          {
+            "justify-between": step !== 0,
+            "justify-end": step === 0,
+          }
+        )}
+      >
+        {step !== 0 && (
+          <Button variant={"secondary"} onClick={() => setStep(step - 1)}>
+            <IoArrowBack size={18} className="mr-2" />
+            Geri Dön
+          </Button>
+        )}
+
+        {step !== 2 && (
+          <Button onClick={() => setStep(step + 1)}>
+            İleri
+            <IoArrowForward size={18} className="ml-2" />
+          </Button>
+        )}
+
+        {step === 2 && (
+          <SubmitButton text="Kullanmaya başla" loading={loading} />
+        )}
       </CardFooter>
     </Card>
   );

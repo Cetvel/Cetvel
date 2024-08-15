@@ -15,7 +15,7 @@ const tasksMock = [
   {
     id: "1",
     title: "Matematik çözümü",
-    tag: "okul",
+    tag: "Okul",
     startsAt: "2022-10-10T09:00:00",
     endsAt: "2022-10-10T10:00:00",
     status: "completed",
@@ -23,7 +23,7 @@ const tasksMock = [
   {
     id: "2",
     title: "Fizik ödevi",
-    tag: "okul",
+    tag: "Okul",
     startsAt: "2022-10-10T10:20:00",
     endsAt: "2022-10-10T11:00:00",
     status: "active",
@@ -31,7 +31,7 @@ const tasksMock = [
   {
     id: "3",
     title: "Matematik konu çalışması",
-    tag: "is",
+    tag: "İş",
     startsAt: "2022-10-10T11:30:00",
     endsAt: "2022-10-10T12:40:00",
     status: "active",
@@ -39,7 +39,7 @@ const tasksMock = [
   {
     id: "4",
     title: "Kimya genel tekrar",
-    tag: "is",
+    tag: "İş",
     startsAt: "2022-10-10T13:00:00",
     endsAt: "2022-10-10T14:00:00",
     status: "completed",
@@ -69,7 +69,7 @@ const Tasktag = () => {
         </div>
 
         <ScrollArea className="bg-card rounded-xl border border-card p-2 md:p-4 h-[300px] lg:h-[292px] flex-grow overflow-x-hidden">
-          <Reorder.Group axis="y" values={tasks} onReorder={setTasks}>
+          <Reorder.Group axİş="y" values={tasks} onReorder={setTasks}>
             <div className="flex flex-col gap-3 w-full">
               {filterTasks(tasks, selectedTag, selectedStatus).map(
                 (item: any, i: number) => (
