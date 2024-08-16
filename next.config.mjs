@@ -10,9 +10,17 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
+<<<<<<< HEAD
       };
+=======
+        '@mapbox/node-pre-gyp': false
+      }
+>>>>>>> 9ea1a5a3396d116a741c4c2a7174ed16f2aeed9c
     }
     return config;
+  },
+  images: {
+    domains: ['utfs.io'],
   },
   async headers() {
     return [

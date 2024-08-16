@@ -14,6 +14,7 @@ interface IUser {
     pictures: {
         profilePicture: string;
         coverPicture: string;
+        clockPicture: string
     }
 }
 
@@ -54,6 +55,11 @@ const userSchema = new Schema<IUserDocument, UserModel>({
     tag: {
         type: [String],
         default: ["school", "work", "study"]
+    },
+    pictures : {
+        profilePicture: String,
+        coverPicture: String,
+        clockPicture: String
     }
 }, {
     timestamps: true,
