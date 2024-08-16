@@ -4,8 +4,17 @@ import TaskList from "./_components/task-list";
 import FocusTimer from "./_components/focus-timer";
 import PageHeader from "@/components/global/page-header";
 import DailyOverview from "./_components/daily-overview";
+import { instance } from "@/lib/utils";
+import { useToast } from "@/components/ui/use-toast";
 
 const page = async () => {
+  try {
+    const tasks = await instance.get("/todo");
+    console.log("tasks: ", tasks);
+  } catch (error: any) {
+    console.error(error.message);
+  }
+
   return (
     <>
       <PageHeader title="Panel" />

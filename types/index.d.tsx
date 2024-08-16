@@ -13,9 +13,7 @@ declare type Task = {
   title: string;
   tag: string;
   status: string;
-  startsAt: Date;
-  endsAt: Date;
-  reminder: Date;
+  date: Date;
 };
 
 declare type FocusItem = {

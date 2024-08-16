@@ -25,9 +25,7 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
   const defaultValues = {
     title: task?.title || "",
     tag: task?.tag || "",
-    startsAt: task?.startsAt || undefined,
-    endsAt: task?.endsAt || undefined,
-    reminder: task?.reminder || undefined,
+    date: task?.date || undefined,
   };
 
   const form = useForm<z.infer<typeof TaskSchema>>({
@@ -63,43 +61,27 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
 
         <div className="grid grid-cols-2 gap-2">
           <CustomFormField
-            fieldType={FormFieldType.DATE_TIME_PICKER}
+            fieldType={FormFieldType.DATE_PICKER}
             control={form.control}
-            name="startsAt"
-            label="Başlangıç"
+            name="date"
+            label="Tarih"
             placeholder="Tarih seçin"
           />
 
           <CustomFormField
-            fieldType={FormFieldType.DATE_PICKER}
+            fieldType={FormFieldType.SELECT}
             control={form.control}
-            name="endsAt"
-            label="Bitiş"
-            placeholder="Tarih seçin"
-          />
+            name="tag"
+            label="Etiket"
+            placeholder="Etiket seçin"
+          >
+            {tags.map((tag: any, i: number) => (
+              <SelectItem key={i} value={tag.value}>
+                {tag.label}
+              </SelectItem>
+            ))}
+          </CustomFormField>
         </div>
-
-        <CustomFormField
-          fieldType={FormFieldType.DATE_PICKER}
-          control={form.control}
-          name="reminder"
-          label="Hatırlatma tarihi"
-          placeholder="Hatırlatma tarihi (opsiyonel)"
-        />
-
-        <CustomFormField
-          fieldType={FormFieldType.SELECT}
-          control={form.control}
-          name="tag"
-          label="Etiket"
-          placeholder="Etiket seçin"
-        >
-          {tags.map((tag: any, i: number) => (
-            <SelectItem key={i} value={tag.value}>
-              {tag.label}
-            </SelectItem>
-          ))}
-        </CustomFormField>
 
         {type === "edit" && (
           <SubmitButton
