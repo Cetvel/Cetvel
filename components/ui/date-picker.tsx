@@ -19,9 +19,14 @@ import { tr } from "date-fns/locale";
 type DatePickerProps = {
   selected?: Date;
   onSelect?: SelectSingleEventHandler;
+  placeholder?: string;
 };
 
-export function DatePicker({ selected, onSelect }: DatePickerProps) {
+export function DatePicker({
+  selected,
+  onSelect,
+  placeholder,
+}: DatePickerProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -38,7 +43,7 @@ export function DatePicker({ selected, onSelect }: DatePickerProps) {
               locale: tr,
             })
           ) : (
-            <span>Tarih seç</span>
+            <span>{placeholder ? placeholder : "Tarih seçin"}</span>
           )}
         </Button>
       </PopoverTrigger>

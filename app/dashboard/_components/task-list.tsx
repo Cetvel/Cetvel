@@ -69,7 +69,7 @@ const Tasktag = () => {
         </div>
 
         <ScrollArea className="bg-card rounded-xl border border-card p-2 md:p-4 h-[300px] lg:h-[292px] flex-grow overflow-x-hidden">
-          <Reorder.Group axİş="y" values={tasks} onReorder={setTasks}>
+          <Reorder.Group axis="y" values={tasks} onReorder={setTasks}>
             <div className="flex flex-col gap-3 w-full">
               {filterTasks(tasks, selectedTag, selectedStatus).map(
                 (item: any, i: number) => (
