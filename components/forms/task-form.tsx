@@ -11,6 +11,8 @@ import SubmitButton from "./ui/submit-button";
 import { useTags } from "@/hooks/use-tags";
 import { SelectItem } from "../ui/select";
 import isEqual from "lodash/isEqual";
+import { axiosInstance } from "@/lib/utils";
+import { useToast } from "../ui/use-toast";
 
 type TaskFormProps = {
   type?: "edit" | "create";
@@ -20,6 +22,7 @@ type TaskFormProps = {
 const TaskForm = ({ type = "create", task }: TaskFormProps) => {
   const { tags } = useTags();
   const [loading, setLoading] = useState<boolean>(false);
+  const { toast } = useToast();
   const [isFormChanged, setIsFormChanged] = useState<boolean>(false);
 
   const defaultValues = {
@@ -46,7 +49,52 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
 
   async function onSubmit(values: z.infer<typeof TaskSchema>) {
     setLoading(true);
-    // Form gönderme işlemleri
+
+    toast({
+      title: values.title,
+      description: "Görev oluşturuluyor, lütfen bekleyin.",
+    });
+
+    if (type === "create") {
+      try {
+        const res = await axiosInstance.post("/todo", values);
+
+        if (res.status === 201) {
+          form.reset();
+          toast({
+            title: "Görev oluşturuldu",
+            description: "Görev başarıyla oluşturuldu.",
+          });
+        }
+      } catch (error) {
+        toast({
+          title: "Görev oluşturulamadı",
+          description: "Görev oluşturulurken bir hata oluştu.",
+        });
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      try {
+        const res = await axiosInstance.put(`/todo/${task?.id}`, values);
+
+        if (res.status === 200) {
+          toast({
+            title: "Görev güncellendi",
+            description: "Görev başarıyla güncellendi.",
+          });
+        }
+      } catch (error) {
+        toast({
+          title: "Görev güncellenemedi",
+          description: "Görev güncellenirken bir hata oluştu.",
+        });
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
   }
 
   return (
