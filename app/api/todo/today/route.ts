@@ -39,7 +39,7 @@ export async function GET(request:NextRequest) {
       }
     }).sort({ startsAt: -1 });
 
-    return NextResponse.json({todos});
+    return NextResponse.json(todos);
   } catch (error) {
     console.error('Error fetching pomodoros:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
