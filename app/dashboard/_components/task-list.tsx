@@ -26,7 +26,7 @@ const Tasktag = () => {
 
   useEffect(() => {
     if (taskData) {
-      setTasks(taskData.todos);
+      setTasks(taskData);
     }
   }, [taskData]);
 
