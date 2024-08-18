@@ -38,11 +38,8 @@ export async function GET(request:NextRequest) {
         ]
       }
     }).sort({ startsAt: -1 });
-    // const pomodoros = await Pomodoro.find({})
 
-    const completedTodosCount = todos.filter(todo => todo.status === 'completed').length;
-
-    return NextResponse.json({todos,completedTodosCount});
+    return NextResponse.json({todos});
   } catch (error) {
     console.error('Error fetching pomodoros:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

@@ -4,6 +4,8 @@ import { getAuth } from "@clerk/nextjs/server";
 import TodoModel from "@/lib/models/todo.model";
 import { ITodoDocument } from "@/lib/models/todo.model";
 export async function GET(request: NextRequest) {
+    if (!getAuth(request).userId) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })}
     const todos = await TodoModel.find({ clerkId: getAuth(request).userId });
     return NextResponse.json(todos);
 }

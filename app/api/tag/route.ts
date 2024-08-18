@@ -4,6 +4,8 @@ import { getAuth } from "@clerk/nextjs/server";
 import TagModel from "@/lib/models/tag.model";
 import { ITagDocument } from "@/lib/models/tag.model";
 export async function GET(request: NextRequest) {
+    if (!getAuth(request).userId) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })}
     const tags = await TagModel.find({ clerkId: getAuth(request).userId });
     return NextResponse.json(tags);
 }

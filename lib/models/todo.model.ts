@@ -1,7 +1,6 @@
 import mongoose, { Schema, Model, Document, Types } from 'mongoose';
 import { todoStatics , ITodoStatics } from './plugins/todo.plugins';
 
-
 interface ITodo {
 	userId: Types.ObjectId;
 	clerkId?: string;
@@ -14,12 +13,6 @@ interface ITodo {
 	endsAt: Date ;
 	completedAt?: Date;
 	createdAt: Date;
-	 
-	// priority: 'low' | 'medium' | 'high';
-	// dueDate?: Date;
-	// reminder?: Date;
-	// recurring: boolean;
-	// attachments: string[];
 }
 
 export interface ITodoDocument extends ITodo, Document {
