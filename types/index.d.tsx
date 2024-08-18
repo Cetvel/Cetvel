@@ -8,7 +8,8 @@ declare type Task = {
   title: string;
   tag: string;
   status: string;
-  date: Date;
+  startsAt: Date;
+  endsAt: Date;
 };
 
 declare type Focus = {

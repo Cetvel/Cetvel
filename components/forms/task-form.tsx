@@ -25,7 +25,8 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
   const defaultValues = {
     title: task?.title || "",
     tag: task?.tag || "",
-    date: task?.date || undefined,
+    startsAt: task?.startsAt || undefined,
+    endsAt: task?.endsAt || undefined,
   };
 
   const form = useForm<z.infer<typeof TaskSchema>>({
@@ -63,25 +64,33 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
           <CustomFormField
             fieldType={FormFieldType.DATE_PICKER}
             control={form.control}
-            name="date"
-            label="Tarih"
+            name="startsAt"
+            label="Başlangıç"
             placeholder="Tarih seçin"
           />
 
           <CustomFormField
-            fieldType={FormFieldType.SELECT}
+            fieldType={FormFieldType.DATE_PICKER}
             control={form.control}
-            name="tag"
-            label="Etiket"
-            placeholder="Etiket seçin"
-          >
-            {tags.map((tag: any, i: number) => (
-              <SelectItem key={i} value={tag.value}>
-                {tag.label}
-              </SelectItem>
-            ))}
-          </CustomFormField>
+            name="endsAt"
+            label="Bitiş"
+            placeholder="Tarih seçin"
+          />
         </div>
+
+        <CustomFormField
+          fieldType={FormFieldType.SELECT}
+          control={form.control}
+          name="tag"
+          label="Etiket"
+          placeholder="Etiket seçin"
+        >
+          {tags.map((tag: any, i: number) => (
+            <SelectItem key={i} value={tag.value}>
+              {tag.label}
+            </SelectItem>
+          ))}
+        </CustomFormField>
 
         {type === "edit" && (
           <SubmitButton

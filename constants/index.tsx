@@ -54,7 +54,7 @@ export const VIEW_OPTIONS = [
 ];
 
 export const taskStatusses = [
-  { value: "active", label: "Aktif" },
+  { value: "incomplete", label: "Aktif" },
   { value: "completed", label: "Tamamlandı" },
 ];
 
