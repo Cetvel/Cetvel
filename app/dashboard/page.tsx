@@ -3,31 +3,10 @@ import Banner from "./_components/banner";
 import TaskList from "./_components/task-list";
 import FocusTimer from "./_components/focus-timer";
 import PageHeader from "@/components/global/page-header";
+import { axiosInstance } from "@/lib/utils";
+import { useAuth } from "@clerk/nextjs";
 
-const tasks: Task[] = [
-  {
-    id: "skdfjsdkjf",
-    title: "Task 1",
-    status: "active",
-    tag: "work",
-    date: new Date(),
-  },
-  {
-    id: "skdfjsdkjf",
-    title: "Task 2",
-    status: "active",
-    tag: "work",
-    date: new Date(),
-  },
-  {
-    id: "skdfjsdkjf",
-    title: "Task 3",
-    status: "active",
-    tag: "work",
-    date: new Date(),
-  },
-];
-const page = async () => {
+const Main = () => {
   return (
     <>
       <PageHeader title="Panel" />
@@ -36,10 +15,10 @@ const page = async () => {
           <Banner />
           <FocusTimer />
         </div>
-        <TaskList taskData={tasks} />
+        <TaskList />
       </div>
     </>
   );
 };
 
-export default page;
+export default Main;

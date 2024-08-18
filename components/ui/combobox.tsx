@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { useMediaQuery } from "usehooks-ts";
 import { Drawer, DrawerContent, DrawerTrigger } from "./drawer";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, ChevronsUpDown } from "lucide-react";
 
 type ComboboxProps = {
   itemValue: string;
@@ -62,7 +62,7 @@ export function Combobox({
               : selectText
                 ? selectText
                 : "Seçiniz..."}
-            <Check className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-max p-0">

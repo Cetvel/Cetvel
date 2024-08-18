@@ -11,11 +11,17 @@ declare type Task = {
   date: Date;
 };
 
-declare type FocusItem = {
-  id: number;
+declare type Focus = {
+  id: string;
   description: string;
   time: string;
   date: Date;
+};
+
+declare type Tag = {
+  id: string;
+  label: string;
+  value: string;
 };
 
 declare type studyField = "YKS" | "KPSS" | "LGS";

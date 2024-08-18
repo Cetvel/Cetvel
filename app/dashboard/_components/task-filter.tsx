@@ -1,5 +1,5 @@
 export const filterTasks = (
-  tasks: any[],
+  tasks: Task[],
   tag: string | null,
   status: string | null
 ) => {

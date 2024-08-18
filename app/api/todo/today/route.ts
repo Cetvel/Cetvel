@@ -1,14 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
-import Todo from '@/lib/models/todo.model';
-export async function GET(request:NextRequest) {
+import { NextRequest, NextResponse } from "next/server";
+import { getAuth } from "@clerk/nextjs/server";
+import Todo from "@/lib/models/todo.model";
+export async function GET(request: NextRequest) {
   try {
     const { userId } = getAuth(request);
 
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
 
     // Türkiye saat dilimi için offset (UTC+3)
     const turkeyOffset = 3 * 60 * 60 * 1000; // 3 saat milisaniye cinsinden
@@ -19,7 +18,7 @@ export async function GET(request:NextRequest) {
     // Türkiye'de bugünün başlangıcı (00:00)
     const todayStartInTurkey = new Date(nowInTurkey);
     todayStartInTurkey.setUTCHours(0, 0, 0, 0);
-    
+
     // Türkiye'de bugünün sonu (23:59:59.999)
     const todayEndInTurkey = new Date(todayStartInTurkey);
     todayEndInTurkey.setUTCHours(23, 59, 59, 999);
@@ -30,18 +29,21 @@ export async function GET(request:NextRequest) {
       $expr: {
         $and: [
           // startsAt Türkiye günü içinde
-          { $gte: [{ $add: ['$startsAt', turkeyOffset] }, todayStartInTurkey] },
-          { $lt: [{ $add: ['$startsAt', turkeyOffset] }, todayEndInTurkey] },
+          { $gte: [{ $add: ["$startsAt", turkeyOffset] }, todayStartInTurkey] },
+          { $lt: [{ $add: ["$startsAt", turkeyOffset] }, todayEndInTurkey] },
           // endsAt Türkiye günü içinde
-          { $gte: [{ $add: ['$endsAt', turkeyOffset] }, todayStartInTurkey] },
-          { $lt: [{ $add: ['$endsAt', turkeyOffset] }, todayEndInTurkey] }
-        ]
-      }
+          { $gte: [{ $add: ["$endsAt", turkeyOffset] }, todayStartInTurkey] },
+          { $lt: [{ $add: ["$endsAt", turkeyOffset] }, todayEndInTurkey] },
+        ],
+      },
     }).sort({ startsAt: -1 });
 
-    return NextResponse.json({todos});
+    return NextResponse.json({ todos });
   } catch (error) {
-    console.error('Error fetching pomodoros:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error("Error fetching pomodoros:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

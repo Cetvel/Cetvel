@@ -21,6 +21,8 @@ const TagFilter = ({ onChange }: Props) => {
   }
 
   if (error) {
+    console.error(error);
+
     return (
       <TooltipProvider>
         <Tooltip>
@@ -37,7 +39,7 @@ const TagFilter = ({ onChange }: Props) => {
     );
   }
 
-  /* return (
+  return (
     <Combobox
       className={"w-[120px]"}
       itemValue={tags[0].value}
@@ -48,9 +50,7 @@ const TagFilter = ({ onChange }: Props) => {
       selectText="Etiket"
       searchable
     />
-  ); */
-
-  return <p>Tag filtresi</p>;
+  );
 };
 
 export default TagFilter;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TagManager from "./tag-manager";
 import Task from "./task";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -10,15 +10,25 @@ import AddTask from "@/components/global/add-task";
 import TagFilter from "@/components/global/tag-filter";
 import StatusFilter from "@/components/global/status-filter";
 import { Card } from "@/components/ui/card";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils";
 
-type TaskListProps = {
-  taskData: Task[];
-};
-
-const Tasktag = ({ taskData }: TaskListProps) => {
-  const [tasks, setTasks] = useState(taskData);
+const Tasktag = () => {
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+
+  const {
+    data: taskData,
+    error,
+    isLoading,
+  } = useSWR<Task[]>("/todo/today", fetcher);
+
+  useEffect(() => {
+    if (taskData) {
+      setTasks(taskData.todos);
+    }
+  }, [taskData]);
 
   return (
     <>
@@ -41,16 +51,12 @@ const Tasktag = ({ taskData }: TaskListProps) => {
           <ScrollArea className="h-[300px] lg:h-[292px] flex-grow overflow-x-hidden">
             <Reorder.Group axis="y" values={tasks} onReorder={setTasks}>
               <div className="flex flex-col gap-3 w-full">
-                {filterTasks(tasks, selectedTag, selectedStatus).length ===
-                0 ? (
-                  <div className="py-2 px-4 border-l-4 mt-2 border-primary">
-                    Görev yok
-                  </div>
-                ) : (
-                  filterTasks(tasks, selectedTag, selectedStatus).map(
-                    (item: any, i: number) => <Task key={item.id} task={item} />
-                  )
-                )}
+                {isLoading && <p>Loading...</p>}
+                {error && <p>Error: {error.message}</p>}
+                {tasks.length === 0 && !isLoading && <p>There are no tasks.</p>}
+                {filterTasks(tasks, selectedTag, selectedStatus).map((task) => (
+                  <Task key={task.id} task={task} />
+                ))}
               </div>
             </Reorder.Group>
           </ScrollArea>

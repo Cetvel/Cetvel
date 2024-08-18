@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 import { Ellipsis, Pencil, Trash } from "lucide-react";
 
-export const columns: ColumnDef<FocusItem>[] = [
+export const columns: ColumnDef<Focus>[] = [
   {
     accessorKey: "description",
     header: "Açıklama",

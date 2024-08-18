@@ -17,3 +17,12 @@ export const axiosInstance = axios.create({
   },
   withCredentials: true,
 });
+
+export const fetcher = async (url: string) => {
+  try {
+    const res = await axiosInstance.get(url);
+    return res.data;
+  } catch (error: any) {
+    throw new Error(error.response.data);
+  }
+};

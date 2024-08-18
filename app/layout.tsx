@@ -37,7 +37,11 @@ export default function RootLayout({
         },
       }}
     >
-      <html lang="tr" className="antialised scroll-smooth">
+      <html
+        lang="tr"
+        className="antialised scroll-smooth"
+        suppressHydrationWarning
+      >
         <body className={dm_sans.className}>
           <ThemeProvider
             attribute="class"
