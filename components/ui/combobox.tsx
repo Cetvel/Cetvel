@@ -17,14 +17,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { IoCheckmark, IoChevronDown } from "react-icons/io5";
 import { useMediaQuery } from "usehooks-ts";
 import { Drawer, DrawerContent, DrawerTrigger } from "./drawer";
+import { Check, ChevronDown } from "lucide-react";
 
 type ComboboxProps = {
   itemValue: string;
   onChange: (value: string) => void;
-  items: { id: string; value: string }[];
+  items: { label: string; value: string }[];
   searchText?: string;
   emptyText?: string;
   selectText?: string;
@@ -60,9 +60,9 @@ export function Combobox({
             {value
               ? items.find((item) => item.value === value)?.value
               : selectText
-              ? selectText
-              : "Seçiniz..."}
-            <IoChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                ? selectText
+                : "Seçiniz..."}
+            <Check className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-max p-0">
@@ -85,7 +85,7 @@ export function Combobox({
                       onChange(currentValue === value ? "" : currentValue);
                     }}
                   >
-                    <IoCheckmark
+                    <Check
                       className={cn(
                         "mr-2 h-4 w-4",
                         value === item.value ? "opacity-100" : "opacity-0"
@@ -115,9 +115,9 @@ export function Combobox({
           {value
             ? items.find((item) => item.value === value)?.label
             : selectText
-            ? selectText
-            : "Seçiniz..."}
-          <IoChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              ? selectText
+              : "Seçiniz..."}
+          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </DrawerTrigger>
       <DrawerContent>
@@ -138,7 +138,7 @@ export function Combobox({
                     onChange(currentValue === value ? "" : currentValue);
                   }}
                 >
-                  <IoCheckmark
+                  <Check
                     className={cn(
                       "mr-2 h-4 w-4",
                       value === item.value ? "opacity-100" : "opacity-0"

@@ -45,44 +45,21 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
   switch (props.fieldType) {
     case FormFieldType.INPUT:
       return (
-        <div className="flex rounded-xl border border-card">
-          {props.icon}
-          <FormControl>
-            <Input
-              placeholder={props.placeholder}
-              {...field}
-              className="shad-input border-0"
-            />
-          </FormControl>
-        </div>
+        <FormControl>
+          <Input placeholder={props.placeholder} {...field} />
+        </FormControl>
       );
     case FormFieldType.PASSWORD:
       return (
-        <div className="flex rounded-xl border-card">
-          {props.icon}
-          <FormControl>
-            <Input
-              type="password"
-              placeholder={props.placeholder}
-              {...field}
-              className="shad-input border-0"
-            />
-          </FormControl>
-        </div>
+        <FormControl>
+          <Input type="password" placeholder={props.placeholder} {...field} />
+        </FormControl>
       );
     case FormFieldType.NUMBER:
       return (
-        <div className="flex rounded-xl border border-card">
-          {props.icon}
-          <FormControl>
-            <Input
-              type="number"
-              placeholder={props.placeholder}
-              {...field}
-              className="shad-input border-0"
-            />
-          </FormControl>
-        </div>
+        <FormControl>
+          <Input type="number" placeholder={props.placeholder} {...field} />
+        </FormControl>
       );
     case FormFieldType.TEXTAREA:
       return (
@@ -90,7 +67,6 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
           <Textarea
             placeholder={props.placeholder}
             {...field}
-            className="shad-textArea"
             disabled={props.disabled}
           />
         </FormControl>

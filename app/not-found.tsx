@@ -1,7 +1,7 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { IoArrowBack } from "react-icons/io5";
 
 const NotFound = () => {
   return (
@@ -20,9 +20,9 @@ const NotFound = () => {
           </p>
           <Link
             href="/"
-            className="text-primary-500 duration-150 hover:text-primary-500/50 font-medium inline-flex items-center gap-x-1"
+            className="text-primary duration-150 hover:text-primary/50 font-medium inline-flex items-center gap-x-1"
           >
-            <IoArrowBack />
+            <ArrowLeft />
             Geri dön
           </Link>
         </div>

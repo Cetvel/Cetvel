@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useTransition } from "react";
-import { IoPause, IoPlay, IoReload, IoSquare } from "react-icons/io5";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
@@ -13,6 +12,7 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { Slider } from "../ui/slider";
+import { Pause, Play, RotateCw, Square } from "lucide-react";
 
 const FocusTimerForm = () => {
   const [workMinutes, setWorkMinutes] = useState<number>(30);
@@ -90,7 +90,6 @@ const FocusTimerForm = () => {
           </p>
           <Input
             type="text"
-            className="shad-input border-card"
             placeholder="Çalışılacak konu"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -108,7 +107,7 @@ const FocusTimerForm = () => {
                     }}
                     size={"icon"}
                   >
-                    <IoPlay className="w-6 h-6" />
+                    <Play className="w-6 h-6" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -121,7 +120,7 @@ const FocusTimerForm = () => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button onClick={() => handlePause(true)} size={"icon"}>
-                    <IoPause className="w-6 h-6" />
+                    <Pause className="w-6 h-6" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -134,7 +133,7 @@ const FocusTimerForm = () => {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button onClick={initTimer} variant={"outline"} size={"icon"}>
-                  <IoReload className="w-6 h-6" />
+                  <RotateCw className="w-6 h-6" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
@@ -151,7 +150,7 @@ const FocusTimerForm = () => {
                     variant={"destructive"}
                     size={"icon"}
                   >
-                    <IoSquare className="w-5 h-5" />
+                    <Square className="w-5 h-5" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>

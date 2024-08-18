@@ -69,7 +69,7 @@ const Banner = () => {
         </p>
       </div>
       <div className="flex w-full justify-end">
-        <div className="rounded-xl border border-neutral-200 dark:border-neutral-500 bg-white dark:bg-dark-500 !bg-opacity-85 backdrop-blur-xl p-4 flex flex-col gap-4 !w-max overflow-hidden">
+        <div className="rounded-xl border bg-accent !bg-opacity-85 backdrop-blur-xl p-4 flex flex-col gap-4 !w-max overflow-hidden">
           <h3 className="md:text-lg">Yaklaşanlar</h3>
           {tasks &&
             (tasks.length > 0 ? (
@@ -81,24 +81,18 @@ const Banner = () => {
                     animate="visible"
                     initial="hidden"
                     key={task.id}
-                    className="pl-4 pr-8 border-l-4 border-primary-500"
+                    className="pl-4 pr-8 border-l-4 border-primary"
                   >
                     <h4 className="font-medium">{task.title}</h4>
-                    <p className="text-dark-700 dark:text-light-600 text-sm">
-                      {padTo2Digits(task.startsAt.getHours()) +
-                        ":" +
-                        padTo2Digits(task.startsAt.getMinutes())}{" "}
-                      -{" "}
-                      {padTo2Digits(task.endsAt.getHours()) +
-                        ":" +
-                        padTo2Digits(task.endsAt.getMinutes())}
-                    </p>
+                    <p className="text-muted-foreground text-sm"></p>
                   </motion.div>
                 );
               })
             ) : (
               <div className="pl-4 pr-8 border-l-4 border-primary">
-                <h4 className="font-medium text-accent-content">Görev yok</h4>
+                <h4 className="font-medium text-accent-foreground">
+                  Görev yok
+                </h4>
               </div>
             ))}
         </div>

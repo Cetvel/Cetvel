@@ -3,11 +3,6 @@ declare type SearchParamProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-declare enum TaskStatus {
-  COMPLETED = "completed",
-  ACTIVE = "active",
-}
-
 declare type Task = {
   id: string;
   title: string;

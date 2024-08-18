@@ -11,10 +11,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { IoCalendar } from "react-icons/io5";
 import { SelectSingleEventHandler } from "react-day-picker";
 
 import { tr } from "date-fns/locale";
+import { CalendarDays } from "lucide-react";
 
 type DatePickerProps = {
   selected?: Date;
@@ -33,11 +33,11 @@ export function DatePicker({
         <Button
           variant={"outline"}
           className={cn(
-            "w-full justify-start text-left font-normal",
+            "w-full justify-start text-left font-normal !bg-background",
             !selected && "text-secondary-content"
           )}
         >
-          <IoCalendar className="mr-2 h-4 w-4" />
+          <CalendarDays className="mr-2 h-4 w-4" />
           {selected ? (
             format(selected, "PPP", {
               locale: tr,

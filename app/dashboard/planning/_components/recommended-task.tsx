@@ -4,8 +4,8 @@ import TaskForm from "@/components/forms/task-form";
 import Modal from "@/components/global/modal";
 import { Button } from "@/components/ui/button";
 import { useModal } from "@/providers/modal-provider";
+import { ChevronRight } from "lucide-react";
 import React from "react";
-import { IoChevronForward } from "react-icons/io5";
 
 type Props = {
   task: Task;
@@ -28,7 +28,7 @@ const RecommendedTask = ({ task }: Props) => {
     >
       <h5 className="font-medium">{task.title}</h5>
 
-      <IoChevronForward className="w-4 h-4 text-secondary-content" />
+      <ChevronRight className="w-4 h-4 text-secondary-content" />
     </Button>
   );
 };

@@ -4,18 +4,18 @@ import React, { useContext } from "react";
 import Image from "next/image";
 import { ContainerScroll } from "@/components/global/container-scroll-animation";
 import { HoverEffect } from "@/components/global/card-hover-effect";
-import { IoFlashOutline, IoTimeOutline } from "react-icons/io5";
+import { Flashlight, Timer } from "lucide-react";
 
 const features = [
   {
     image: "/image/features/todos.svg",
-    icon: <IoFlashOutline size={20} />,
+    icon: <Flashlight size={20} />,
     title: "Görevler",
     description: "Saniyeler içinde görevlerinizi planlayın ve organize edin",
   },
   {
     image: "/image/features/pomodoro.svg",
-    icon: <IoTimeOutline size={20} />,
+    icon: <Timer size={20} />,
     title: "Pomodoro",
     description: "Pomodoro tekniği ile daha verimli çalışın",
   },

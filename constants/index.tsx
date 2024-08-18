@@ -1,50 +1,49 @@
-import { Views } from "react-big-calendar";
-
 import {
-  IoBarChartOutline,
-  IoBookOutline,
-  IoCalendarOutline,
-  IoGridOutline,
-  IoRocketOutline,
-  IoSettingsOutline,
-  IoTimeOutline,
-} from "react-icons/io5";
+  BarChart,
+  Book,
+  Calendar,
+  LayoutGrid,
+  Rocket,
+  Settings,
+  Timer,
+} from "lucide-react";
+import { Views } from "react-big-calendar";
 
 export const menuLinks = [
   {
     label: "Panel",
     href: "/dashboard",
-    icon: <IoGridOutline size={18} />,
+    icon: <LayoutGrid size={18} />,
   },
   {
     label: "Planlama",
     href: "/dashboard/planning",
-    icon: <IoCalendarOutline size={18} />,
+    icon: <Calendar size={18} />,
   },
   {
     label: "Odaklanma",
     href: "/dashboard/focusing",
-    icon: <IoTimeOutline size={18} />,
+    icon: <Timer size={18} />,
   },
   {
     label: "Dersler",
     href: "/dashboard/courses",
-    icon: <IoBookOutline size={18} />,
+    icon: <Book size={18} />,
   },
   {
     label: "Hesaplama",
     href: "/dashboard/calculation",
-    icon: <IoRocketOutline size={18} />,
+    icon: <Rocket size={18} />,
   },
   {
     label: "İstatistik",
     href: "/dashboard/stats",
-    icon: <IoBarChartOutline size={18} />,
+    icon: <BarChart size={18} />,
   },
   {
     label: "Ayarlar",
     href: "/dashboard/settings",
-    icon: <IoSettingsOutline size={18} />,
+    icon: <Settings size={18} />,
   },
 ];
 

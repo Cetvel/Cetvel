@@ -93,7 +93,7 @@ const GoalForm = () => {
           />
         </div>
 
-        <SubmitButton text="Ekle" className="ml-auto" loading={loading} />
+        <SubmitButton text="Ekle" loading={loading} />
       </form>
     </Form>
   );

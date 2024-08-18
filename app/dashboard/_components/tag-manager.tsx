@@ -1,5 +1,4 @@
 import React from "react";
-import { IoDocumentTextOutline } from "react-icons/io5";
 import { useModal } from "@/providers/modal-provider";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/global/modal";
@@ -7,10 +6,11 @@ import { useTags } from "@/hooks/use-tags";
 import Tag from "./tag";
 import AddTagForm from "@/components/forms/tag-form";
 import { DialogHeader } from "@/components/ui/dialog";
+import { TagIcon } from "lucide-react";
 
 const TagManager = () => {
   const { setOpen } = useModal();
-  const { tags } = useTags();
+  const { tags, loading, error } = useTags();
 
   return (
     <>
@@ -22,9 +22,15 @@ const TagManager = () => {
                 <AddTagForm />
               </DialogHeader>
               <h4 className="text-lg">Tüm etiketler</h4>
-              {tags?.map((tag: any) => (
-                <Tag key={tag.value} id={tag.id} title={tag.value} />
-              ))}
+              {loading && <p>Yükleniyor...</p>}
+              {error && <p>{error.message}</p>}
+              {tags?.length === 0 ? (
+                <p>Etiket yok</p>
+              ) : (
+                tags?.map((tag: any) => (
+                  <Tag key={tag.value} id={tag.id} title={tag.value} />
+                ))
+              )}
             </Modal>
           )
         }
@@ -32,7 +38,7 @@ const TagManager = () => {
         size="icon-sm"
         className="p-2"
       >
-        <IoDocumentTextOutline size={16} />
+        <TagIcon size={16} />
       </Button>
     </>
   );

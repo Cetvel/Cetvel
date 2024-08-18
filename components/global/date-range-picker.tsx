@@ -12,9 +12,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { IoCalendar } from "react-icons/io5";
 
 import { tr } from "date-fns/locale";
+import { CalendarRange } from "lucide-react";
 
 type DatePickerWithRangeProps = {
   value?: {
@@ -49,7 +49,7 @@ export function DatePickerWithRange({
               !date && "text-secondary-content"
             )}
           >
-            <IoCalendar className="mr-2 h-4 w-4" />
+            <CalendarRange className="mr-2 h-4 w-4" />
             {date?.from ? (
               date.to ? (
                 <>

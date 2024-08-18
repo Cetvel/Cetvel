@@ -6,15 +6,15 @@ import {
 } from "@/components/ui/card";
 import React from "react";
 import { FocusingStatsChart } from "./stats-chart";
-import { IoTrendingUp } from "react-icons/io5";
+import { TrendingUp } from "lucide-react";
 
 const Statistics = () => {
   return (
     <Card className="flex flex-col justify-between">
       <CardHeader>
         <h3 className="header-3 flex items-center gap-3">
-          <span className="text-primary-500">
-            <IoTrendingUp size={30} />
+          <span className="text-primary">
+            <TrendingUp size={30} />
           </span>
           Odaklanma İstatistikleri
         </h3>

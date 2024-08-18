@@ -1,6 +1,6 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { X } from "lucide-react";
 import React from "react";
-import { IoCloseCircleOutline } from "react-icons/io5";
 
 type Props = {
   title?: string | null;
@@ -11,8 +11,8 @@ const FormError = ({ title, description }: Props) => {
   if (!description) return null;
 
   return (
-    <Alert variant="error" role="alert">
-      <IoCloseCircleOutline className="h-5 w-5" />
+    <Alert variant="destructive" role="alert">
+      <X className="h-5 w-5" />
       <AlertTitle>{title}</AlertTitle>
       <AlertDescription>{description}</AlertDescription>
     </Alert>

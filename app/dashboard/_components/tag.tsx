@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { Trash } from "lucide-react";
 import React from "react";
-import { IoTrashBin } from "react-icons/io5";
 
 interface ListItemProps {
   id: string;
@@ -16,7 +16,7 @@ const Tag = ({ id, title }: ListItemProps) => {
     <div className="flex items-center p-1 pl-4 rounded-xl justify-between border-card">
       <h4>{title}</h4>
       <Button variant={"ghost"} size={"icon-sm"} onClick={handleDelete}>
-        <IoTrashBin />
+        <Trash />
       </Button>
     </div>
   );

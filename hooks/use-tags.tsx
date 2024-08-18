@@ -1,9 +1,31 @@
-export const useTags = () => {
-  const tags = [
-    { id: "1", value: "İş" },
-    { id: "2", value: "Okul" },
-    { id: "3", value: "Kişisel" },
-  ];
+import { useState, useEffect } from "react";
+import { instance } from "@/lib/utils";
 
-  return { tags };
+interface Tag {
+  id: number;
+  label: string;
+  value: string;
+}
+
+export const useTags = () => {
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await instance.get<Tag[]>("/tag");
+        setTags(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError(err instanceof Error ? err : new Error("Bir hata oluştu"));
+        setLoading(false);
+      }
+    };
+
+    fetchTags();
+  }, []);
+
+  return { tags, loading, error };
 };

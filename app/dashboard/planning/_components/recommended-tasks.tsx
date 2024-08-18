@@ -1,44 +1,29 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import React from "react";
-import { IoSparkles } from "react-icons/io5";
 import RecommendedTask from "./recommended-task";
+import { Sparkles } from "lucide-react";
 
 const recommendedTasksMock: Task[] = [
   {
-    id: "1",
-    title: "Matematik çözümü",
-    tag: "okul",
-    startsAt: new Date(),
-    endsAt: new Date(),
+    id: "skdfjsdkjf",
+    title: "Task 1",
     status: "active",
-    reminder: new Date(),
+    tag: "work",
+    date: new Date(),
   },
   {
-    id: "2",
-    title: "Fizik ödevi",
-    tag: "okul",
-    startsAt: new Date(),
-    endsAt: new Date(),
+    id: "skdfjsdkjf",
+    title: "Task 2",
     status: "active",
-    reminder: new Date(),
+    tag: "work",
+    date: new Date(),
   },
   {
-    id: "3",
-    title: "Matematik konu çalışması",
-    tag: "is",
-    startsAt: new Date(),
-    endsAt: new Date(),
+    id: "skdfjsdkjf",
+    title: "Task 3",
     status: "active",
-    reminder: new Date(),
-  },
-  {
-    id: "4",
-    title: "Kimya genel tekrar",
-    tag: "is",
-    startsAt: new Date(),
-    endsAt: new Date(),
-    status: "active",
-    reminder: new Date(),
+    tag: "work",
+    date: new Date(),
   },
 ];
 
@@ -47,7 +32,7 @@ const RecommendedTasks = () => {
     <Card className="h-full">
       <CardHeader>
         <h3 className="header-3 flex">
-          <IoSparkles className="w-6 h-6 mr-2 text-primary-500" />
+          <Sparkles className="w-6 h-6 mr-2 text-primary" />
           Önerilen görevler
         </h3>
       </CardHeader>

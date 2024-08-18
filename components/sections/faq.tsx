@@ -53,7 +53,7 @@ const Faq = () => {
       className="bg-light-400 dark:bg-dark-300 py-24 px-6 md:px-4 flex flex-col gap-10 md:items-center"
     >
       <div>
-        <p className="font-bold text-primary-500 mb-4 md:text-center">
+        <p className="font-bold text-primary mb-4 md:text-center">
           Merak ettikleriniz
         </p>
         <h1 className="text-3xl lg:text-5xl font-bold text-base-content md:text-center leading-snug">

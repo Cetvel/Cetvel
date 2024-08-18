@@ -13,7 +13,7 @@ import {
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
-import { IoEllipsisHorizontal, IoPencil, IoTrashBin } from "react-icons/io5";
+import { Ellipsis, Pencil, Trash } from "lucide-react";
 
 export const columns: ColumnDef<FocusItem>[] = [
   {
@@ -49,18 +49,18 @@ export const columns: ColumnDef<FocusItem>[] = [
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon-sm">
               <span className="sr-only">Menü</span>
-              <IoEllipsisHorizontal />
+              <Ellipsis />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Eylemler</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <IoPencil />
+              <Pencil />
               Düzenle
             </DropdownMenuItem>
             <DropdownMenuItem className="text-red-500">
-              <IoTrashBin />
+              <Trash />
               Sil
             </DropdownMenuItem>
           </DropdownMenuContent>

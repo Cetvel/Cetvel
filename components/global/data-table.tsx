@@ -23,9 +23,9 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { IoArrowBack, IoArrowForward, IoSearch } from "react-icons/io5";
 import { Input } from "../ui/input";
 import { DatePickerWithRange } from "./date-range-picker";
+import { ArrowLeft, ArrowRight, Search } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -68,7 +68,7 @@ export function DataTable<TData, TValue>({
     <>
       <div className="flex space-x-2 items-center mb-4">
         <div className="border-card bg-card flex items-center px-4 h-11 rounded-xl">
-          <IoSearch size={18} className="text-secondary-content" />{" "}
+          <Search size={18} className="text-secondary-content" />{" "}
           <Input
             placeholder="Ara..."
             value={
@@ -148,7 +148,7 @@ export function DataTable<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          <IoArrowBack className="mr-2" />
+          <ArrowRight className="mr-2" />
           Önceki
         </Button>
         <Button
@@ -158,7 +158,7 @@ export function DataTable<TData, TValue>({
           disabled={!table.getCanNextPage()}
         >
           Sonraki
-          <IoArrowForward className="ml-2" />
+          <ArrowLeft className="ml-2" />
         </Button>
       </div>
     </>

@@ -1,6 +1,6 @@
 import React from "react";
-import { taskStatusses } from "@/constants";
 import { Combobox } from "../ui/combobox";
+import { taskStatusses } from "@/constants";
 
 type Props = {
   onChange: (value: string) => void;
@@ -13,7 +13,7 @@ const StatusFilter = ({ onChange }: Props) => {
       itemValue={taskStatusses[0].value}
       onChange={onChange}
       items={taskStatusses}
-      selectText="Tüm durumlar"
+      selectText="Tümü"
     />
   );
 };

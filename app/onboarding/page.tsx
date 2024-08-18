@@ -18,9 +18,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { onboardingSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 import { z } from "zod";
 
 const educationLevels = ["İlkokul", "Ortaokul", "Lise"];
@@ -217,7 +217,7 @@ const Onboarding = () => {
       >
         {step !== 0 && (
           <Button variant={"secondary"} onClick={() => setStep(step - 1)}>
-            <IoArrowBack size={18} className="mr-2" />
+            <ArrowLeft size={18} className="mr-2" />
             Geri Dön
           </Button>
         )}
@@ -225,7 +225,7 @@ const Onboarding = () => {
         {step !== 2 && (
           <Button onClick={() => setStep(step + 1)}>
             İleri
-            <IoArrowForward size={18} className="ml-2" />
+            <ArrowRight size={18} className="ml-2" />
           </Button>
         )}
 

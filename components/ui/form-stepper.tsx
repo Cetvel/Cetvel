@@ -15,7 +15,7 @@ const FormStepper = ({ activeStep, onStepChange, steps }: Props) => {
         <li
           key={index}
           className={`flex items-center space-x-2.5 rtl:space-x-reverse cursor-pointer w-full sm:w-auto ${
-            activeStep === index ? "text-primary-500" : "text-secondary-content"
+            activeStep === index ? "text-primary" : "text-secondary-content"
           }`}
           onClick={() => onStepChange(index)}
         >

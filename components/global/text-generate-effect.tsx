@@ -34,7 +34,7 @@ export const TextGenerateEffect = ({
               key={word + idx}
               className={` ${
                 idx > 5
-                  ? "underline decoration-primary-500"
+                  ? "underline decoration-primary"
                   : "text-dark-100 dark:text-light-300"
               } opacity-0`}
             >

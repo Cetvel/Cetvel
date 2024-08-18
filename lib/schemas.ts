@@ -27,26 +27,14 @@ export const TaskSchema = z.object({
 });
 
 export const TagSchema = z.object({
-  title: z
+  label: z
     .string({
       required_error: "Etiket girmek zorunludur",
-    })
-    .regex(/^[a-zA-ZğüşıöçĞÜŞİÖÇ]+$/, {
-      message: "Etiket sadece harf içermelidir",
     })
     .min(2, { message: "Etiket en az 2 karakter uzunluğunda olabilir" })
     .max(50, {
       message: "Etiket en fazla 50 karakter uzunluğunda olabilir",
     }),
-});
-
-export const ReminderSchema = z.object({
-  time: z.string({
-    required_error: "Zaman girmek zorunludur",
-  }),
-  date: z.date({
-    required_error: "Tarih girmek zorunludur",
-  }),
 });
 
 export const GoalSchema = z.object({

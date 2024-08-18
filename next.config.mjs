@@ -10,17 +10,13 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
-<<<<<<< HEAD
+        "@mapbox/node-pre-gyp": false,
       };
-=======
-        '@mapbox/node-pre-gyp': false
-      }
->>>>>>> 9ea1a5a3396d116a741c4c2a7174ed16f2aeed9c
     }
     return config;
   },
   images: {
-    domains: ['utfs.io'],
+    domains: ["utfs.io"],
   },
   async headers() {
     return [
@@ -28,7 +24,7 @@ const nextConfig = {
         source: `/api/:path*`,
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Origin", value: "*" }, // replace this your actual origin
           {
             key: "Access-Control-Allow-Methods",
             value: "GET,DELETE,PATCH,POST,PUT",

@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { IoAdd } from "react-icons/io5";
 import Modal from "./modal";
 import { useModal } from "@/providers/modal-provider";
 import { Button } from "../ui/button";
 import TaskForm from "../forms/task-form";
+import { Plus } from "lucide-react";
 
 const AddTask = () => {
   const { setOpen } = useModal();
@@ -22,7 +22,7 @@ const AddTask = () => {
         }
         size={"sm"}
       >
-        <IoAdd className="mr-2" size={16} />
+        <Plus className="mr-2" size={16} />
         Oluştur
       </Button>
     </>

@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { IoPlay } from "react-icons/io5";
 import { useModal } from "@/providers/modal-provider";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/global/modal";
 import FocusTimerForm from "@/components/forms/focus-timer-form";
+import { Play } from "lucide-react";
 
 const FocusTimer = () => {
   const { setOpen } = useModal();
@@ -37,7 +37,7 @@ const FocusTimer = () => {
             }}
             size={"sm"}
           >
-            <IoPlay className="mr-1 w-3 h-3" />
+            <Play className="mr-1 w-3 h-3" />
             Başlat
           </Button>
         </div>

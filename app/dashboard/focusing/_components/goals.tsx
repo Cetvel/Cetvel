@@ -7,13 +7,13 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import React from "react";
-import { IoDiscOutline } from "react-icons/io5";
 import Goal from "./goal";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useModal } from "@/providers/modal-provider";
 import GoalForm from "@/components/forms/goal-form";
 import Modal from "@/components/global/modal";
+import { Disc } from "lucide-react";
 
 const Goals = () => {
   const { setOpen } = useModal();
@@ -22,8 +22,8 @@ const Goals = () => {
     <Card>
       <CardHeader>
         <h3 className="flex items-center gap-3 header-3">
-          <span className="text-primary-500">
-            <IoDiscOutline size={30} />
+          <span className="text-primary">
+            <Disc size={30} />
           </span>
           Hedefler
         </h3>

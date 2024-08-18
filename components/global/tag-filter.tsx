@@ -1,15 +1,23 @@
-import { useTags } from "@/hooks/use-tags";
 import React from "react";
 import { Combobox } from "../ui/combobox";
+import { useTags } from "@/hooks/use-tags";
 
 type Props = {
   onChange: (value: string) => void;
 };
 
 const TagFilter = ({ onChange }: Props) => {
-  const { tags } = useTags();
+  const { tags, loading, error } = useTags();
 
-  return (
+  if (loading) {
+    return <div>Yükleniyor...</div>;
+  }
+
+  if (error) {
+    return <div>{error.message}</div>;
+  }
+
+  /* return (
     <Combobox
       className={"w-[120px]"}
       itemValue={tags[0].value}
@@ -20,7 +28,9 @@ const TagFilter = ({ onChange }: Props) => {
       selectText="Etiket"
       searchable
     />
-  );
+  ); */
+
+  return <p>Tag filtresi</p>;
 };
 
 export default TagFilter;

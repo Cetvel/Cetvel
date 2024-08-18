@@ -3,8 +3,6 @@
 import moment from "moment";
 import React, { useCallback, useMemo, useState } from "react";
 import { Calendar, Views, momentLocalizer } from "react-big-calendar";
-import { IoChevronBackOutline, IoChevronForwardOutline } from "react-icons/io5";
-
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/tr";
 
@@ -13,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { VIEW_OPTIONS } from "@/constants";
 import TaskForm from "@/components/forms/task-form";
 import Modal from "@/components/global/modal";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const DndCalendar = Calendar;
 
@@ -82,13 +81,13 @@ const Scheduler = ({ tags, events }: { tags: any; events: any }) => {
           </div>
           <div className="flex gap-4 items-center md:absolute md:left-1/2 md:-translate-x-1/2">
             <Button variant={"outline"} size={"icon-sm"} onClick={onPrevClick}>
-              <IoChevronBackOutline size={16} />
+              <ChevronLeft size={16} />
             </Button>
             <span className="text-2xl font-bold text-accent-content">
               {dateText}
             </span>
             <Button variant={"outline"} size="icon-sm" onClick={onNextClick}>
-              <IoChevronForwardOutline size={16} />
+              <ChevronRight size={16} />
             </Button>
           </div>
           <div className="flex gap-2">

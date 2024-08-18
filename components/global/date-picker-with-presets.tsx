@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { IoCalendar } from "react-icons/io5";
+import { CalendarCog } from "lucide-react";
 
 type DatePickerWithPresetsProps = {
   value: Date;
@@ -41,7 +41,7 @@ export function DatePickerWithPresets({
             !date && "text-muted-foreground"
           )}
         >
-          <IoCalendar className="mr-2 h-4 w-4" />
+          <CalendarCog className="mr-2 h-4 w-4" />
           {date ? format(date, "dd-MM-yyyy") : <span>Bir tarih seçin</span>}
         </Button>
       </PopoverTrigger>

@@ -5,28 +5,30 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TagSchema } from "@/lib/schemas";
 import { z } from "zod";
-import { Form } from "../ui/form";
-import CustomFormField, { FormFieldType } from "../ui/custom-form-field";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "../ui/form";
 import SubmitButton from "./ui/submit-button";
-import { useTags } from "@/hooks/use-tags";
+import { Input } from "../ui/input";
+import { useToast } from "../ui/use-toast";
 
 const TagForm = () => {
-  const { tags } = useTags();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof TagSchema>>({
     resolver: zodResolver(TagSchema),
     defaultValues: {
-      title: "",
+      label: "",
     },
   });
 
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   async function onSubmit(values: z.infer<typeof TagSchema>) {
-    setError(null);
-    setSuccess(null);
     setLoading(true);
   }
 
@@ -36,11 +38,17 @@ const TagForm = () => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex items-center space-x-2 flex-col sm:flex-row"
       >
-        <CustomFormField
-          fieldType={FormFieldType.INPUT}
+        <FormField
           control={form.control}
-          name="title"
-          placeholder="Etiket adı"
+          name="label"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormControl>
+                <Input {...field} placeholder="Etiket adı" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
 
         <SubmitButton text="Ekle" className="ml-auto" loading={loading} />
