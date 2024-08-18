@@ -1,33 +1,47 @@
+"use client"
+
 import React from "react";
 import Banner from "./_components/banner";
 import TaskList from "./_components/task-list";
 import FocusTimer from "./_components/focus-timer";
 import PageHeader from "@/components/global/page-header";
+import { useAuth } from "@clerk/nextjs";
+import useSWR from "swr";
+const fetcher = (url : string) => fetch(url).then(res => res.json())
 
-const tasks: Task[] = [
-  {
-    id: "skdfjsdkjf",
-    title: "Task 1",
-    status: "active",
-    tag: "work",
-    date: new Date(),
-  },
-  {
-    id: "skdfjsdkjf",
-    title: "Task 2",
-    status: "active",
-    tag: "work",
-    date: new Date(),
-  },
-  {
-    id: "skdfjsdkjf",
-    title: "Task 3",
-    status: "active",
-    tag: "work",
-    date: new Date(),
-  },
-];
-const page = async () => {
+
+// const tasks = [
+//   {
+//     id: 1,
+//     title: "Task 1",
+//     status: "completed",
+//     tags: ["tag1", "tag2"],
+//   },
+//   {
+//     id: 2,
+//     title: "Task 2",
+//     status: "active",
+//     tags: ["tag1", "tag3"],
+//   },
+//   {
+//     id: 3,
+//     title: "Task 3",
+//     status: "active",
+//     tags: ["tag2", "tag3"],
+//   },
+// ];
+
+
+
+export const   page =  () => {
+
+  const { data, error } = useSWR('http://localhost:3000/api/todo/today', fetcher)
+  const tasks = data
+
+
+  if (error) return <div>failed to load</div>
+  if (!tasks) return <div>loading...</div>
+  console.log('Returned tasks:', tasks)
   return (
     <>
       <PageHeader title="Panel" />

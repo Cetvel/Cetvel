@@ -11,12 +11,27 @@ import TagFilter from "@/components/global/tag-filter";
 import StatusFilter from "@/components/global/status-filter";
 import { Card } from "@/components/ui/card";
 
+type Todo = {
+  _id: string;
+  clerkId: string;
+  title: string;
+  status: string;
+  tag: string;
+  startsAt: string;
+  endsAt: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};
+
 type TaskListProps = {
-  taskData: Task[];
+  taskData: {
+    todos: Todo[];
+  };
 };
 
 const Tasktag = ({ taskData }: TaskListProps) => {
-  const [tasks, setTasks] = useState(taskData);
+  const [tasks, setTasks] = useState(taskData.todos);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
@@ -41,15 +56,14 @@ const Tasktag = ({ taskData }: TaskListProps) => {
           <ScrollArea className="h-[300px] lg:h-[292px] flex-grow overflow-x-hidden">
             <Reorder.Group axis="y" values={tasks} onReorder={setTasks}>
               <div className="flex flex-col gap-3 w-full">
-                {filterTasks(tasks, selectedTag, selectedStatus).length ===
-                0 ? (
+                {filterTasks(tasks, selectedTag, selectedStatus).length === 0 ? (
                   <div className="py-2 px-4 border-l-4 mt-2 border-primary">
                     Görev yok
                   </div>
                 ) : (
-                  filterTasks(tasks, selectedTag, selectedStatus).map(
-                    (item: any, i: number) => <Task key={item.id} task={item} />
-                  )
+                  filterTasks(tasks, selectedTag, selectedStatus).map((item: Todo) => (
+                    <Task key={item._id} task={item} />
+                  ))
                 )}
               </div>
             </Reorder.Group>
