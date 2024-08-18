@@ -1,7 +1,6 @@
 import Link from "next/link";
 import React from "react";
 import { Button } from "./button";
-import { IoMenuOutline } from "react-icons/io5";
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "./sheet";
 import {
   SignedIn,
@@ -11,6 +10,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { Menu } from "lucide-react";
 
 const Navigation = async () => {
   return (
@@ -77,7 +77,7 @@ const Navigation = async () => {
               size={"icon"}
               className="flex md:hidden"
             >
-              <IoMenuOutline size={24} />
+              <Menu size={24} />
             </Button>
           </SheetTrigger>
           <SheetContent>

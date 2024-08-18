@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { instance } from "@/lib/utils";
+import { axiosInstance } from "@/lib/utils";
 
 interface Tag {
   id: number;
@@ -15,7 +15,7 @@ export const useTags = () => {
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await instance.get<Tag[]>("/tag");
+        const response = await axiosInstance.get<Tag[]>("/tag");
         setTags(response.data);
         setLoading(false);
       } catch (err) {

@@ -28,7 +28,7 @@ const Tasktag = ({ taskData }: TaskListProps) => {
             <h2 className="text-lg font-bold text-secondary-foreground whitespace-nowrap mt-0.5">
               Bugünün Görevleri
             </h2>
-            <div className="flex gap-2">
+            <div className="flex gap-3 items-center">
               <TagFilter onChange={setSelectedTag} />
               <StatusFilter onChange={setSelectedStatus} />
               <TagManager />

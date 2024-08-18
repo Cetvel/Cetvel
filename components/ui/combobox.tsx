@@ -58,7 +58,7 @@ export function Combobox({
             className={cn("w-[120px] justify-between", className)}
           >
             {value
-              ? items.find((item) => item.value === value)?.value
+              ? items.find((item) => item.value === value)?.label
               : selectText
                 ? selectText
                 : "Seçiniz..."}
@@ -91,7 +91,7 @@ export function Combobox({
                         value === item.value ? "opacity-100" : "opacity-0"
                       )}
                     />
-                    {item.value}
+                    {item.label}
                   </CommandItem>
                 ))}
               </CommandGroup>
