@@ -4,7 +4,7 @@ declare type SearchParamProps = {
 };
 
 declare type Task = {
-  id: string;
+  _id: string;
   title: string;
   tag: string;
   status: string;
@@ -13,14 +13,14 @@ declare type Task = {
 };
 
 declare type Focus = {
-  id: string;
+  _id: string;
   description: string;
   time: string;
   date: Date;
 };
 
 declare type Tag = {
-  id: string;
+  _id: string;
   label: string;
   value: string;
 };

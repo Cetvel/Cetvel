@@ -28,7 +28,7 @@ const TagManager = () => {
                 <p>Etiket yok</p>
               ) : (
                 tags?.map((tag: any) => (
-                  <Tag key={tag.value} id={tag.id} title={tag.value} />
+                  <Tag key={tag.value} _id={tag._id} label={tag.label} />
                 ))
               )}
             </Modal>

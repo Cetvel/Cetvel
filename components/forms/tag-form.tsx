@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TagSchema } from "@/lib/schemas";
+import { mutate } from "swr";
 import { z } from "zod";
 import {
   Form,
@@ -15,6 +16,7 @@ import {
 import SubmitButton from "./ui/submit-button";
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
+import { axiosInstance } from "@/lib/utils";
 
 const TagForm = () => {
   const { toast } = useToast();
@@ -30,6 +32,38 @@ const TagForm = () => {
 
   async function onSubmit(values: z.infer<typeof TagSchema>) {
     setLoading(true);
+
+    toast({
+      title: values.label,
+      description: "Etiket oluşturuluyor...",
+    });
+
+    const data = {
+      label: values.label,
+      value: values.label,
+    };
+
+    try {
+      const res = await axiosInstance.post("/tag", data);
+
+      if (res.status === 201) {
+        form.reset();
+        toast({
+          title: values.label,
+          description: "Etiket oluşturuldu",
+        });
+        mutate("/tag");
+      }
+    } catch (error) {
+      toast({
+        title: values.label,
+        description: "Bir hata oluştu",
+        variant: "destructive",
+      });
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

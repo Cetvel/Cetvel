@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { mutate } from "swr";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TaskSchema } from "@/lib/schemas";
 import { z } from "zod";
@@ -13,6 +14,8 @@ import { SelectItem } from "../ui/select";
 import isEqual from "lodash/isEqual";
 import { axiosInstance } from "@/lib/utils";
 import { useToast } from "../ui/use-toast";
+import { Button } from "../ui/button";
+import { useModal } from "@/providers/modal-provider";
 
 type TaskFormProps = {
   type?: "edit" | "create";
@@ -21,6 +24,7 @@ type TaskFormProps = {
 
 const TaskForm = ({ type = "create", task }: TaskFormProps) => {
   const { tags } = useTags();
+  const { setClose } = useModal();
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const [isFormChanged, setIsFormChanged] = useState<boolean>(false);
@@ -52,7 +56,8 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
 
     toast({
       title: values.title,
-      description: "Görev oluşturuluyor, lütfen bekleyin.",
+      description:
+        type === "create" ? "Görev oluşturuluyor..." : "Görev güncelleniyor...",
     });
 
     if (type === "create") {
@@ -65,35 +70,65 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
             title: "Görev oluşturuldu",
             description: "Görev başarıyla oluşturuldu.",
           });
+          mutate(`/todo/today`);
+          setClose();
         }
       } catch (error) {
         toast({
           title: "Görev oluşturulamadı",
           description: "Görev oluşturulurken bir hata oluştu.",
+          variant: "destructive",
         });
-        console.error(error);
       } finally {
         setLoading(false);
       }
     } else {
       try {
-        const res = await axiosInstance.put(`/todo/${task?.id}`, values);
+        const res = await axiosInstance.put(`/todo/${task?._id}`, values);
 
-        if (res.status === 200) {
+        if (res) {
           toast({
             title: "Görev güncellendi",
             description: "Görev başarıyla güncellendi.",
           });
+          mutate(`/todo/today`);
+          setClose();
         }
       } catch (error) {
         toast({
           title: "Görev güncellenemedi",
           description: "Görev güncellenirken bir hata oluştu.",
+          variant: "destructive",
         });
         console.error(error);
       } finally {
         setLoading(false);
       }
+    }
+  }
+
+  async function onDelete() {
+    setLoading(true);
+
+    try {
+      const res = await axiosInstance.delete(`/todo/${task?._id}`);
+
+      if (res.status === 200) {
+        toast({
+          title: "Görev silindi",
+          description: "Görev başarıyla silindi.",
+        });
+        mutate(`/todo/today`);
+        setClose();
+      }
+    } catch (error) {
+      toast({
+        title: "Görev silinemedi",
+        description: "Görev silinirken bir hata oluştu.",
+      });
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -141,11 +176,16 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
         </CustomFormField>
 
         {type === "edit" && (
-          <SubmitButton
-            disabled={!isFormChanged}
-            text="Güncelle"
-            loading={loading}
-          />
+          <div className="flex items-center justify-end gap-2">
+            <Button type="button" variant={"destructive"} onClick={onDelete}>
+              Sil
+            </Button>
+            <SubmitButton
+              disabled={!isFormChanged}
+              text="Güncelle"
+              loading={loading}
+            />
+          </div>
         )}
         {type === "create" && <SubmitButton text="Oluştur" loading={loading} />}
       </form>

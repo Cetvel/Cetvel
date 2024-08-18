@@ -22,7 +22,10 @@ const Tasktag = () => {
     data: taskData,
     error,
     isLoading,
-  } = useSWR<Task[]>("/todo/today", fetcher);
+  } = useSWR<Task[]>("/todo/today", fetcher, {
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+  });
 
   useEffect(() => {
     if (taskData) {
@@ -55,7 +58,7 @@ const Tasktag = () => {
                 {error && <p>Error: {error.message}</p>}
                 {tasks.length === 0 && !isLoading && <p>There are no tasks.</p>}
                 {filterTasks(tasks, selectedTag, selectedStatus).map((task) => (
-                  <Task key={task.id} task={task} />
+                  <Task key={task._id} task={task} />
                 ))}
               </div>
             </Reorder.Group>

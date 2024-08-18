@@ -1,5 +1,6 @@
+import { fetcher } from "@/lib/utils";
 import { useState, useEffect } from "react";
-import { axiosInstance } from "@/lib/utils";
+import useSWR from "swr";
 
 interface Tag {
   id: number;
@@ -12,20 +13,19 @@ export const useTags = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    const fetchTags = async () => {
-      try {
-        const response = await axiosInstance.get<Tag[]>("/tag");
-        setTags(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error("Bir hata oluştu"));
-        setLoading(false);
-      }
-    };
+  const { data, error: fetchError } = useSWR<Tag[]>("/tag", fetcher);
 
-    fetchTags();
-  }, []);
+  useEffect(() => {
+    if (data) {
+      setTags(data);
+      setLoading(false);
+    }
+
+    if (fetchError) {
+      setError(fetchError);
+      setLoading(false);
+    }
+  }, [data, fetchError]);
 
   return { tags, loading, error };
 };
