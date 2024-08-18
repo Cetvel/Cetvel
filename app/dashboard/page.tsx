@@ -1,10 +1,10 @@
+"use client";
+
 import React from "react";
 import Banner from "./_components/banner";
 import TaskList from "./_components/task-list";
 import FocusTimer from "./_components/focus-timer";
 import PageHeader from "@/components/global/page-header";
-import { axiosInstance } from "@/lib/utils";
-import { useAuth } from "@clerk/nextjs";
 
 const Main = () => {
   return (
