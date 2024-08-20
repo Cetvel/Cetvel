@@ -34,8 +34,9 @@ export async function POST(request: NextRequest) {
     }) as ITodoDocument;
 
     await todo.save();
-    revalidatePath("/api/todo");
-    return NextResponse.json(todo, { status: 201 });
+    const response =  NextResponse.json(todo, { status: 201 });
+    response.headers.set('Cache-Control', 's-maxage=60, stale-while-revalidate')
+    return response;
   } catch (error) {
     console.error("Error processing request:", error);
     return NextResponse.json(
