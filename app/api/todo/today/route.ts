@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import Todo from "@/lib/models/todo.model";
+
 export async function GET(request: NextRequest) {
   try {
     const { userId } = getAuth(request);
@@ -26,21 +27,32 @@ export async function GET(request: NextRequest) {
     // MongoDB sorgusu
     const todos = await Todo.find({
       clerkId: userId,
-      $expr: {
-        $and: [
-          // startsAt Türkiye günü içinde
-          { $gte: [{ $add: ["$startsAt", turkeyOffset] }, todayStartInTurkey] },
-          { $lt: [{ $add: ["$startsAt", turkeyOffset] }, todayEndInTurkey] },
-          // endsAt Türkiye günü içinde
-          { $gte: [{ $add: ["$endsAt", turkeyOffset] }, todayStartInTurkey] },
-          { $lt: [{ $add: ["$endsAt", turkeyOffset] }, todayEndInTurkey] },
-        ],
-      },
-    }).sort({ startsAt: -1 });
+      $or: [
+        // Başlangıç zamanı bugün içinde
+        {
+          startsAt: {
+            $gte: new Date(todayStartInTurkey.getTime() - turkeyOffset),
+            $lt: new Date(todayEndInTurkey.getTime() - turkeyOffset)
+          }
+        },
+        // Bitiş zamanı bugün içinde
+        {
+          endsAt: {
+            $gte: new Date(todayStartInTurkey.getTime() - turkeyOffset),
+            $lt: new Date(todayEndInTurkey.getTime() - turkeyOffset)
+          }
+        },
+        // Başlangıç zamanı bugünden önce ve bitiş zamanı bugünden sonra
+        {
+          startsAt: { $lt: new Date(todayStartInTurkey.getTime() - turkeyOffset) },
+          endsAt: { $gt: new Date(todayEndInTurkey.getTime() - turkeyOffset) }
+        }
+      ]
+    }).sort({ startsAt: 1 });
 
-    return NextResponse.json(todos );
+    return NextResponse.json(todos);
   } catch (error) {
-    console.error("Error fetching pomodoros:", error);
+    console.error("Error fetching todos:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
