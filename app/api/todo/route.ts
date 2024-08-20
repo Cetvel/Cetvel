@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import TodoModel from "@/lib/models/todo.model";
 import { ITodoDocument } from "@/lib/models/todo.model";
-import { revalidatePath } from "next/cache";
 export async function GET(request: NextRequest) {
   if (!getAuth(request).userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -34,8 +33,11 @@ export async function POST(request: NextRequest) {
     }) as ITodoDocument;
 
     await todo.save();
-    const response =  NextResponse.json(todo, { status: 201 });
-    response.headers.set('Cache-Control', 's-maxage=60, stale-while-revalidate')
+    const response = NextResponse.json(todo, { status: 201 });
+    response.headers.set(
+      "Cache-Control",
+      "s-maxage=60, stale-while-revalidate"
+    );
     return response;
   } catch (error) {
     console.error("Error processing request:", error);

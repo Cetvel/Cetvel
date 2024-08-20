@@ -12,6 +12,9 @@ import StatusFilter from "@/components/global/status-filter";
 import { Card } from "@/components/ui/card";
 import useSWR from "swr";
 import { fetcher } from "@/lib/utils";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle, CircleSlash2 } from "lucide-react";
+import TasksLoader from "./tasks-loader";
 
 const Tasktag = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -54,9 +57,27 @@ const Tasktag = () => {
           <ScrollArea className="h-[300px] lg:h-[292px] flex-grow overflow-x-hidden">
             <Reorder.Group axis="y" values={tasks} onReorder={setTasks}>
               <div className="flex flex-col gap-3 w-full">
-                {isLoading && <p>Loading...</p>}
-                {error && <p>Error: {error.message}</p>}
-                {tasks.length === 0 && !isLoading && <p>There are no tasks.</p>}
+                {isLoading && <TasksLoader />}
+                {error && (
+                  <Alert variant={"destructive"}>
+                    <AlertCircle size={18} />
+                    <AlertTitle>Hata</AlertTitle>
+                    <AlertDescription>
+                      Görevler yüklenirken bir hata oluştu.
+                    </AlertDescription>
+                  </Alert>
+                )}
+                {tasks.length === 0 && !isLoading && !error && (
+                  <Alert>
+                    <CircleSlash2 size={18} />
+                    <AlertTitle>
+                      Hiç görev yok. Yeni bir görev eklemek ister misin?
+                    </AlertTitle>
+                    <AlertDescription className="text-muted-foreground">
+                      Yeni bir görev eklemek için yukarıdaki butona tıkla.
+                    </AlertDescription>
+                  </Alert>
+                )}
                 {filterTasks(tasks, selectedTag, selectedStatus).map((task) => (
                   <Task key={task._id} task={task} />
                 ))}

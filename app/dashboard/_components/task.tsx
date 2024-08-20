@@ -33,7 +33,7 @@ const Task = ({ task }: Props) => {
           className={cn(
             "flex w-full text-sm md:text-base items-center gap-2 px-4 lg:px-6 py-3 justify-between border rounded-xl hover:bg-secondary transition-colors",
             {
-              "bg-base-200": task.status === "completed",
+              "bg-secondary": task.status === "completed",
             }
           )}
           onClick={() => {

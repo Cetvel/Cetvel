@@ -1,23 +1,24 @@
 import React from "react";
 import { Combobox } from "../ui/combobox";
-import { useTags } from "@/hooks/use-tags";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, LoaderCircle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils";
 
 type Props = {
   onChange: (value: string) => void;
 };
 
 const TagFilter = ({ onChange }: Props) => {
-  const { tags, loading, error } = useTags();
+  const { data: tags, isLoading, error } = useSWR<Tag[]>("/tag", fetcher);
 
-  if (loading) {
-    return <div>Yükleniyor...</div>;
+  if (isLoading) {
+    return <LoaderCircle size={18} className="animate-spin" />;
   }
 
   if (error) {
@@ -42,9 +43,9 @@ const TagFilter = ({ onChange }: Props) => {
   return (
     <Combobox
       className={"w-[120px]"}
-      itemValue={tags[0].value}
+      itemValue={tags!.length ? tags![0].label : ""}
       onChange={onChange}
-      items={tags}
+      items={tags!}
       searchText="Etiket Ara..."
       emptyText="Etiket bulunamadı."
       selectText="Etiket"

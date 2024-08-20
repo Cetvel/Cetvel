@@ -9,13 +9,26 @@ import { z } from "zod";
 import { Form } from "../ui/form";
 import CustomFormField, { FormFieldType } from "../ui/custom-form-field";
 import SubmitButton from "./ui/submit-button";
-import { useTags } from "@/hooks/use-tags";
 import { SelectItem } from "../ui/select";
 import isEqual from "lodash/isEqual";
-import { axiosInstance } from "@/lib/utils";
+import { axiosInstance, fetcher } from "@/lib/utils";
 import { useToast } from "../ui/use-toast";
 import { Button } from "../ui/button";
 import { useModal } from "@/providers/modal-provider";
+import { ArrowUpFromLine, Check, LoaderCircle, Trash, X } from "lucide-react";
+import useSWR from "swr";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
+import {
+  createTask,
+  deleteTask,
+  toggleTaskComplete,
+  updateTask,
+} from "@/lib/api/task";
 
 type TaskFormProps = {
   type?: "edit" | "create";
@@ -23,7 +36,11 @@ type TaskFormProps = {
 };
 
 const TaskForm = ({ type = "create", task }: TaskFormProps) => {
-  const { tags } = useTags();
+  const {
+    data: tags,
+    isLoading: isTagsLoading,
+    error: tagsError,
+  } = useSWR<Tag[]>("/tag", fetcher);
   const { setClose } = useModal();
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
@@ -32,8 +49,8 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
   const defaultValues = {
     title: task?.title || "",
     tag: task?.tag || "",
-    startsAt: task?.startsAt || undefined,
-    endsAt: task?.endsAt || undefined,
+    startsAt: task?.startsAt ? new Date(task.startsAt) : new Date(),
+    endsAt: task?.endsAt ? new Date(task.endsAt) : new Date(),
   };
 
   const form = useForm<z.infer<typeof TaskSchema>>({
@@ -54,82 +71,43 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
   async function onSubmit(values: z.infer<typeof TaskSchema>) {
     setLoading(true);
 
-    toast({
-      title: values.title,
-      description:
-        type === "create" ? "Görev oluşturuluyor..." : "Görev güncelleniyor...",
-    });
+    const data = {
+      ...values,
+      startsAt: values.startsAt.toISOString(),
+      endsAt: values.endsAt.toISOString(),
+    };
 
-    if (type === "create") {
-      try {
-        const res = await axiosInstance.post("/todo", values);
+    const success =
+      type === "create"
+        ? await createTask(data)
+        : await updateTask(task?._id!, data);
 
-        if (res.status === 201) {
-          form.reset();
-          toast({
-            title: "Görev oluşturuldu",
-            description: "Görev başarıyla oluşturuldu.",
-          });
-          mutate(`/todo/today`);
-          setClose();
-        }
-      } catch (error) {
-        toast({
-          title: "Görev oluşturulamadı",
-          description: "Görev oluşturulurken bir hata oluştu.",
-          variant: "destructive",
-        });
-      } finally {
-        setLoading(false);
+    if (success) {
+      if (type === "create") {
+        form.reset();
       }
-    } else {
-      try {
-        const res = await axiosInstance.put(`/todo/${task?._id}`, values);
-
-        if (res) {
-          toast({
-            title: "Görev güncellendi",
-            description: "Görev başarıyla güncellendi.",
-          });
-          mutate(`/todo/today`);
-          setClose();
-        }
-      } catch (error) {
-        toast({
-          title: "Görev güncellenemedi",
-          description: "Görev güncellenirken bir hata oluştu.",
-          variant: "destructive",
-        });
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
+      setClose();
     }
+
+    setLoading(false);
   }
 
   async function onDelete() {
     setLoading(true);
-
-    try {
-      const res = await axiosInstance.delete(`/todo/${task?._id}`);
-
-      if (res.status === 200) {
-        toast({
-          title: "Görev silindi",
-          description: "Görev başarıyla silindi.",
-        });
-        mutate(`/todo/today`);
-        setClose();
-      }
-    } catch (error) {
-      toast({
-        title: "Görev silinemedi",
-        description: "Görev silinirken bir hata oluştu.",
-      });
-      console.error(error);
-    } finally {
-      setLoading(false);
+    const success = await deleteTask(task?._id!);
+    if (success) {
+      setClose();
     }
+    setLoading(false);
+  }
+
+  async function toggleComplete() {
+    setLoading(true);
+    const success = await toggleTaskComplete(task!);
+    if (success) {
+      setClose();
+    }
+    setLoading(false);
   }
 
   return (
@@ -168,22 +146,63 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
           label="Etiket"
           placeholder="Etiket seçin"
         >
-          {tags.map((tag: any, i: number) => (
-            <SelectItem key={i} value={tag.value}>
-              {tag.label}
+          {tags ? (
+            tags.map((tag: any, i: number) => (
+              <SelectItem key={i} value={tag.value}>
+                {tag.label}
+              </SelectItem>
+            ))
+          ) : isTagsLoading ? (
+            <SelectItem value="" disabled>
+              <LoaderCircle size={16} className="animate-spin" />
             </SelectItem>
-          ))}
+          ) : !tagsError ? (
+            <SelectItem value="" disabled>
+              Etiket yok
+            </SelectItem>
+          ) : tagsError ? (
+            <SelectItem value="" disabled>
+              Etiketler yüklenemedi
+            </SelectItem>
+          ) : null}
         </CustomFormField>
 
         {type === "edit" && (
-          <div className="flex items-center justify-end gap-2">
-            <Button type="button" variant={"destructive"} onClick={onDelete}>
-              Sil
-            </Button>
+          <div className="flex justify-center">
             <SubmitButton
-              disabled={!isFormChanged}
-              text="Güncelle"
+              icon={<ArrowUpFromLine size={16} />}
               loading={loading}
+              additionalButtons={[
+                ({ loading }) => ({
+                  button: (
+                    <Button
+                      type="button"
+                      onClick={toggleComplete}
+                      disabled={loading}
+                      variant="secondary"
+                    >
+                      {task?.status === "completed" ? (
+                        <X size={16} />
+                      ) : (
+                        <Check size={16} />
+                      )}
+                    </Button>
+                  ),
+                }),
+
+                ({ loading }) => ({
+                  button: (
+                    <Button
+                      type="button"
+                      onClick={onDelete}
+                      disabled={loading}
+                      variant="destructive"
+                    >
+                      <Trash size={16} />
+                    </Button>
+                  ),
+                }),
+              ]}
             />
           </div>
         )}

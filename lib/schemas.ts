@@ -60,3 +60,16 @@ export const GoalSchema = z.object({
     required_error: "İlgili konu veya ders seçmek zorunludur",
   }),
 });
+
+export const FocusTimeSchema = z.object({
+  title: z
+    .string({
+      required_error: "Başlık girmek zorunludur",
+    })
+    .min(2, { message: "Başlık en az 2 karakter uzunluğunda olmalı" }),
+  tag: z
+    .string({
+      required_error: "Etiket seçmek zorunludur",
+    })
+    .min(2, { message: "Etiket en az 2 karakter uzunluğunda olmalı" }),
+});

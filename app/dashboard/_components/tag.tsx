@@ -1,7 +1,15 @@
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
 import { axiosInstance } from "@/lib/utils";
-import { Trash } from "lucide-react";
+import { Ellipsis, Palette, Pencil, Trash } from "lucide-react";
 import React from "react";
 import { mutate } from "swr";
 
@@ -35,11 +43,33 @@ const Tag = ({ _id, label }: Partial<Tag>) => {
   };
 
   return (
-    <div className="flex items-center p-1 pl-4 rounded-xl justify-between border-card">
+    <div className="flex items-center p-1 pl-4 rounded-xl justify-between border">
       <h4>{label}</h4>
-      <Button variant={"ghost"} size={"icon-sm"} onClick={handleDelete}>
-        <Trash />
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon-sm">
+            <span className="sr-only">Menü</span>
+            <Ellipsis size={14} />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            className="text-destructive flex items-center gap-2"
+            onClick={handleDelete}
+          >
+            <Trash size={16} />
+            Sil
+          </DropdownMenuItem>
+          <DropdownMenuItem className="flex items-center gap-2">
+            <Pencil size={14} />
+            Düzenle
+          </DropdownMenuItem>
+          <DropdownMenuItem className="flex items-center gap-2">
+            <Palette size={14} />
+            Renk Değiştir
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
