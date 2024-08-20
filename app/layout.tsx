@@ -7,6 +7,7 @@ import { trTR } from "@clerk/localizations";
 import { dark } from "@clerk/themes";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/toaster";
+import { ConvexClientProvider } from "./ConvexClientProvider";
 
 const dm_sans = DM_Sans({ subsets: ["latin"] });
 
@@ -43,6 +44,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <body className={dm_sans.className}>
+        <ConvexClientProvider>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -52,6 +54,7 @@ export default function RootLayout({
             <ModalProvider>{children}</ModalProvider>
             <Toaster />
           </ThemeProvider>
+          </ConvexClientProvider>
         </body>
       </html>
     </ClerkProvider>
