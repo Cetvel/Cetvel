@@ -27,7 +27,6 @@ export async function POST(request: NextRequest) {
     }
 
     if(!body.tag) return NextResponse.json({error: "Etiket gereklidir"}, {status: 400});
-    if(!body.title) return NextResponse.json({error: "Başlık gereklidir"}, {status: 400});
 
     // Todo oluştur
     const todo = new TodoModel({
