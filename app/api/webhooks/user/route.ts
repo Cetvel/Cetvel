@@ -2,6 +2,11 @@ import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
 import UserData from '@/lib/models/user.model'
+import { ConvexHttpClient } from 'convex/browser'
+import { api } from '@/convex/_generated/api'
+
+const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!)
+
 export async function POST(req: Request) {
 
 
@@ -47,7 +52,6 @@ export async function POST(req: Request) {
         })
     }
     const eventType = evt.type;
-
     switch (eventType) {
         case 'user.created': {
             const user = evt.data
@@ -57,6 +61,11 @@ export async function POST(req: Request) {
                 email: user.email_addresses[0].email_address,
             })
             await newUser.save()
+            await convex.mutation(api.user.crud.createUser, {
+                clerkId: user.id,
+                mongoId: newUser._id.toString(),
+                name: user.username!
+            })
             break
         }
         case 'user.updated': {
@@ -69,25 +78,23 @@ export async function POST(req: Request) {
             } else {
                 console.error('User not found for update:', userUpdated.id);
             }
+            await convex.mutation(api.user.crud.updateUser, {
+                clerkId: userUpdated.id!,
+                name: userUpdated.username!
+            })
             break;
         }
         case 'user.deleted': {
             const userDeleted = evt.data;
-            const deletedUser = await UserData.findOne({ clerkId: userDeleted.id });
-            if (deletedUser) {
-                await deletedUser.delete();
-            } else {
+            const deletedUser = await UserData.findOneAndDelete({ clerkId: userDeleted.id });
+            if (!deletedUser) {
                 console.error('User not found for deletion:', userDeleted.id);
             }
+            await convex.mutation(api.user.crud.deleteUser, {clerkId: userDeleted.id!})
             break
         }
-
-        
         default:
             console.log('Unhandled event type:', eventType);
     }
-
-
-
     return new Response('', { status: 200 })
 }
