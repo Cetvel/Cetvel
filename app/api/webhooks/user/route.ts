@@ -61,7 +61,7 @@ export async function POST(req: Request) {
                 email: user.email_addresses[0].email_address,
             })
             await newUser.save()
-            await convex.mutation(api.user.crud.createUser, {
+            await convex.action(api.user.crud.createUser, {
                 clerkId: user.id,
                 mongoId: newUser._id.toString(),
                 name: user.username!
