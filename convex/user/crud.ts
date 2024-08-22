@@ -1,15 +1,20 @@
 import { v } from "convex/values";
-import { mutation } from "../_generated/server";
-
-export const createUser = mutation({
+import { action, mutation } from "../_generated/server";
+import { internal } from "../_generated/api";
+export const createUser = action({
     args: { 
         clerkId: v.string(),
         mongoId: v.string(),
         name : v.string()
     },
     handler: async (ctx, { clerkId, mongoId, name }) => {
-        const newUser = await ctx.db.insert("user", {clerkId, mongoId, name})
-        return newUser
+        const newUser  = await ctx.runMutation(internal.user.userPreference.insertUser, { clerkId, mongoId, name });
+        console.log("new User" , newUser)
+        await ctx.runMutation(internal.user.userPreference.createUserPreference, { clerkId, userId: newUser });
+        if (!newUser) {
+            throw new Error("User could not be created")
+        }
+
     }
 }
 )
