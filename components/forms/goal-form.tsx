@@ -5,16 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GoalSchema } from "@/lib/schemas";
 import { z } from "zod";
-import { Form } from "../ui/form";
+import { Form } from "../ui/form";  
 import CustomFormField, { FormFieldType } from "../ui/custom-form-field";
 import SubmitButton from "./ui/submit-button";
-import { useTags } from "@/hooks/use-tags";
 import { GoalTypeOptions, GoalUnitOptions } from "@/constants";
 import { SelectItem } from "../ui/select";
 
 const GoalForm = () => {
-  const { tags } = useTags();
-
   const form = useForm<z.infer<typeof GoalSchema>>({
     resolver: zodResolver(GoalSchema),
     defaultValues: {
