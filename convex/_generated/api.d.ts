@@ -14,8 +14,13 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as crons from "../crons.js";
 import type * as notification from "../notification.js";
+import type * as notificationProduction from "../notificationProduction.js";
 import type * as todoReminder from "../todoReminder.js";
+import type * as todoReminderHelpers from "../todoReminderHelpers.js";
+import type * as user_crud from "../user/crud.js";
+import type * as user_userPreference from "../user/userPreference.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -26,8 +31,13 @@ import type * as todoReminder from "../todoReminder.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  crons: typeof crons;
   notification: typeof notification;
+  notificationProduction: typeof notificationProduction;
   todoReminder: typeof todoReminder;
+  todoReminderHelpers: typeof todoReminderHelpers;
+  "user/crud": typeof user_crud;
+  "user/userPreference": typeof user_userPreference;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
