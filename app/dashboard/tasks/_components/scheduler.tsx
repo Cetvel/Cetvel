@@ -11,7 +11,12 @@ import { Button } from "@/components/ui/button";
 import { VIEW_OPTIONS } from "@/constants";
 import TaskForm from "@/components/forms/task-form";
 import Modal from "@/components/global/modal";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, XCircle } from "lucide-react";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
 
 const DndCalendar = Calendar;
 
@@ -20,7 +25,8 @@ const localiser = momentLocalizer(moment);
 
 type Keys = keyof typeof Views;
 
-const Scheduler = ({ tags, events }: { tags: any; events: any }) => {
+const Scheduler = () => {
+  const { data: events, isLoading, error } = useSWR<Task[]>("/todo", fetcher);
   const { setOpen } = useModal();
 
   const handleSelectEvent = (event: Task) => {
@@ -69,6 +75,26 @@ const Scheduler = ({ tags, events }: { tags: any; events: any }) => {
   const onTodayClick = useCallback(() => {
     setDate(moment().toDate());
   }, []);
+
+  if (isLoading)
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <Skeleton className="h-96 rounded-xl" />
+        </CardContent>
+      </Card>
+    );
+
+  if (error)
+    return (
+      <Alert variant={"destructive"}>
+        <XCircle size={18} />
+        <AlertTitle>Bir hata oluştu.</AlertTitle>
+        <AlertDescription>
+          Sayfayı yenileyin ya da daha sonra tekrar deneyin.
+        </AlertDescription>
+      </Alert>
+    );
 
   return (
     <>

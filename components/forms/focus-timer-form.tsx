@@ -20,7 +20,7 @@ import { FocusTimeSchema } from "@/lib/schemas";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomFormField, { FormFieldType } from "../ui/custom-form-field";
-import { createPomodoro } from "@/lib/api/pomodoro";
+import { createPomodoro } from "@/lib/services/pomodoro-service";
 import { useToast } from "../ui/use-toast";
 
 type FocusTimerFormValues = z.infer<typeof FocusTimeSchema>;

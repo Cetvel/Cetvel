@@ -67,22 +67,19 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className="flex space-x-2 items-center mb-4">
-        <div className="border-card bg-card flex items-center px-4 h-11 rounded-xl">
-          <Search size={18} className="text-secondary-content" />{" "}
-          <Input
-            placeholder="Ara..."
-            value={
-              (table.getColumn(searchableColumn)?.getFilterValue() as string) ??
-              ""
-            }
-            onChange={(event) =>
-              table
-                .getColumn(searchableColumn)
-                ?.setFilterValue(event.target.value)
-            }
-            className="shad-input"
-          />
-        </div>
+        <Input
+          placeholder="Arama yap..."
+          value={
+            (table.getColumn(searchableColumn)?.getFilterValue() as string) ??
+            ""
+          }
+          onChange={(event) =>
+            table
+              .getColumn(searchableColumn)
+              ?.setFilterValue(event.target.value)
+          }
+          className="max-w-xs"
+        />
 
         <DatePickerWithRange
           onDateChange={(date) => {
@@ -148,7 +145,7 @@ export function DataTable<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          <ArrowRight className="mr-2" />
+          <ArrowLeft size={16} />
           Önceki
         </Button>
         <Button
@@ -158,7 +155,7 @@ export function DataTable<TData, TValue>({
           disabled={!table.getCanNextPage()}
         >
           Sonraki
-          <ArrowLeft className="ml-2" />
+          <ArrowRight size={16} />
         </Button>
       </div>
     </>

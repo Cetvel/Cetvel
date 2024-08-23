@@ -11,24 +11,18 @@ import CustomFormField, { FormFieldType } from "../ui/custom-form-field";
 import SubmitButton from "./ui/submit-button";
 import { SelectItem } from "../ui/select";
 import isEqual from "lodash/isEqual";
-import { axiosInstance, fetcher } from "@/lib/utils";
 import { useToast } from "../ui/use-toast";
 import { Button } from "../ui/button";
 import { useModal } from "@/providers/modal-provider";
 import { ArrowUpFromLine, Check, LoaderCircle, Trash, X } from "lucide-react";
 import useSWR from "swr";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
-import {
   createTask,
   deleteTask,
   toggleTaskComplete,
   updateTask,
-} from "@/lib/api/task";
+} from "@/lib/services/task-service";
+import { fetcher } from "@/lib/utils";
 
 type TaskFormProps = {
   type?: "edit" | "create";
@@ -43,7 +37,6 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
   } = useSWR<Tag[]>("/tag", fetcher);
   const { setClose } = useModal();
   const [loading, setLoading] = useState<boolean>(false);
-  const { toast } = useToast();
   const [isFormChanged, setIsFormChanged] = useState<boolean>(false);
 
   const defaultValues = {
@@ -153,15 +146,15 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
               </SelectItem>
             ))
           ) : isTagsLoading ? (
-            <SelectItem value="" disabled>
+            <SelectItem value="loading" disabled>
               <LoaderCircle size={16} className="animate-spin" />
             </SelectItem>
           ) : !tagsError ? (
-            <SelectItem value="" disabled>
+            <SelectItem value="empty" disabled>
               Etiket yok
             </SelectItem>
           ) : tagsError ? (
-            <SelectItem value="" disabled>
+            <SelectItem value="error" disabled>
               Etiketler yüklenemedi
             </SelectItem>
           ) : null}
