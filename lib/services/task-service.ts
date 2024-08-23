@@ -1,6 +1,6 @@
+import { mutate } from "swr";
 import { axiosInstance } from "@/lib/utils";
 import { toast } from "@/components/ui/use-toast";
-import { mutate } from "swr";
 
 interface TaskApiResponse {
   data: any;
@@ -18,7 +18,8 @@ const handleApiResponse = (
       title: `Görev ${action}`,
       description: "İşlem başarıyla tamamlandı.",
     });
-    mutate(`/todo/today`);
+    mutate("/todo/today");
+    mutate("/todo");
     return true;
   } else {
     toast({
@@ -79,7 +80,27 @@ export const deleteTask = async (taskId: string): Promise<boolean> => {
   }
 };
 
-export const toggleTaskComplete = async (task: any): Promise<boolean> => {
+export const toggleTaskComplete = async (task: Task): Promise<boolean> => {
   const newStatus = task.status === "completed" ? "incomplete" : "completed";
   return updateTask(task._id, { ...task, status: newStatus });
+};
+
+export const getTasks = async (): Promise<Task[]> => {
+  try {
+    const res = await axiosInstance.get("/todo");
+    return res.data;
+  } catch (error: any) {
+    console.error("Error fetching tasks:", error);
+    return [];
+  }
+};
+
+export const getTodayTasks = async (): Promise<Task[]> => {
+  try {
+    const res = await axiosInstance.get("/todo/today");
+    return res.data;
+  } catch (error: any) {
+    console.error("Error fetching today's tasks:", error);
+    return [];
+  }
 };

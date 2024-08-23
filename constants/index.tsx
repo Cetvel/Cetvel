@@ -3,6 +3,7 @@ import {
   Book,
   Calendar,
   LayoutGrid,
+  Logs,
   Rocket,
   Settings,
   Timer,
@@ -14,6 +15,12 @@ export const menuLinks = [
     label: "Panel",
     href: "/dashboard",
     icon: <LayoutGrid size={18} />,
+  },
+
+  {
+    label: "Görevler",
+    href: "/dashboard/tasks",
+    icon: <Logs size={18} />,
   },
   {
     label: "Planlama",

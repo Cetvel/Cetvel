@@ -1,6 +1,5 @@
 import { axiosInstance } from "@/lib/utils";
 import { toast } from "@/components/ui/use-toast";
-import { mutate } from "swr";
 
 interface PomodoroApiResponse {
   data: any;
@@ -16,7 +15,6 @@ const handleApiResponse = (
       title: `Pomodoro ${action}`,
       description: "İşlem başarıyla tamamlandı.",
     });
-    mutate("/pomodoro"); // SWR cache'ini güncelle
     return true;
   } else {
     toast({

@@ -25,4 +25,16 @@ declare type Tag = {
   value: string;
 };
 
+declare type Action = {
+  icon: React.ReactNode;
+  label: string;
+  onClick: () => void;
+  variant?: "default" | "destructive";
+};
+
+declare enum TaskStatus {
+  COMPLETED = "completed",
+  INCOMPLETE = "incomplete",
+}
+
 declare type studyField = "YKS" | "KPSS" | "LGS";
