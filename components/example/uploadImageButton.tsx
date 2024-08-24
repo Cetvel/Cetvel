@@ -1,10 +1,11 @@
-"use client"
+"use client";
 import React, { FormEvent, useRef, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Upload, Image as ImageIcon } from "lucide-react";
 import { useAuth } from "@clerk/clerk-react";
-type ImageType = 'cover' | 'timer';
+import Image from "next/image";
+type ImageType = "cover" | "timer";
 
 interface ImageUploadState {
   file: File | null;
@@ -12,9 +13,6 @@ interface ImageUploadState {
   isUploading: boolean;
   error: string | null;
 }
-
-
-
 
 export default function App() {
   const { userId } = useAuth();
@@ -31,53 +29,55 @@ export default function App() {
     timer: useRef<HTMLInputElement>(null),
   };
 
-  const handleImageSelect = (type: ImageType) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setImages(prev => ({
-        ...prev,
-        [type]: {
-          ...prev[type],
-          file,
-          previewUrl: URL.createObjectURL(file),
-          error: null,
-        },
-      }));
-    }
-  };
+  const handleImageSelect =
+    (type: ImageType) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        setImages((prev) => ({
+          ...prev,
+          [type]: {
+            ...prev[type],
+            file,
+            previewUrl: URL.createObjectURL(file),
+            error: null,
+          },
+        }));
+      }
+    };
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.currentTarget.classList.add('border-blue-500');
+    event.currentTarget.classList.add("border-blue-500");
   };
 
   const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    event.currentTarget.classList.remove('border-blue-500');
+    event.currentTarget.classList.remove("border-blue-500");
   };
 
-  const handleDrop = (type: ImageType) => (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.currentTarget.classList.remove('border-blue-500');
-    const file = event.dataTransfer.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      setImages(prev => ({
-        ...prev,
-        [type]: {
-          ...prev[type],
-          file,
-          previewUrl: URL.createObjectURL(file),
-          error: null,
-        },
-      }));
-    }
-  };
+  const handleDrop =
+    (type: ImageType) => (event: React.DragEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      event.currentTarget.classList.remove("border-blue-500");
+      const file = event.dataTransfer.files?.[0];
+      if (file && file.type.startsWith("image/")) {
+        setImages((prev) => ({
+          ...prev,
+          [type]: {
+            ...prev[type],
+            file,
+            previewUrl: URL.createObjectURL(file),
+            error: null,
+          },
+        }));
+      }
+    };
 
   async function handleSendImage(type: ImageType) {
     const imageState = images[type];
     if (!imageState.file) return;
 
-    setImages(prev => ({
+    setImages((prev) => ({
       ...prev,
       [type]: { ...prev[type], isUploading: true, error: null },
     }));
@@ -90,18 +90,27 @@ export default function App() {
         body: imageState.file,
       });
       const { storageId } = await result.json();
-      await sendImage({ storageId, clerkId : userId! });
+      await sendImage({ storageId, clerkId: userId! });
 
-      setImages(prev => ({
+      setImages((prev) => ({
         ...prev,
-        [type]: { file: null, previewUrl: null, isUploading: false, error: null },
+        [type]: {
+          file: null,
+          previewUrl: null,
+          isUploading: false,
+          error: null,
+        },
       }));
       if (fileInputRefs[type].current) fileInputRefs[type].current.value = "";
     } catch (error) {
       console.error(`Upload error for ${type}:`, error);
-      setImages(prev => ({
+      setImages((prev) => ({
         ...prev,
-        [type]: { ...prev[type], isUploading: false, error: "Upload failed. Please try again." },
+        [type]: {
+          ...prev[type],
+          isUploading: false,
+          error: "Upload failed. Please try again.",
+        },
       }));
     }
   }
@@ -119,7 +128,11 @@ export default function App() {
           onClick={() => fileInputRefs[type].current?.click()}
         >
           {previewUrl ? (
-            <img src={previewUrl} alt={`${type} Preview`} className="max-h-48 mx-auto rounded-lg" />
+            <Image
+              src={previewUrl}
+              alt={`${type} Preview`}
+              className="max-h-48 mx-auto rounded-lg"
+            />
           ) : (
             <div className="text-gray-500">
               <ImageIcon className="mx-auto h-12 w-12 mb-2" />
@@ -139,11 +152,13 @@ export default function App() {
           disabled={!file || isUploading}
           className={`w-full py-2 px-4 rounded-md text-white font-semibold flex items-center justify-center ${
             file && !isUploading
-              ? 'bg-blue-500 hover:bg-blue-600'
-              : 'bg-gray-300 cursor-not-allowed'
+              ? "bg-blue-500 hover:bg-blue-600"
+              : "bg-gray-300 cursor-not-allowed"
           } transition duration-300`}
         >
-          {isUploading ? 'Uploading...' : (
+          {isUploading ? (
+            "Uploading..."
+          ) : (
             <>
               <Upload className="mr-2" size={20} />
               Send {type.charAt(0).toUpperCase() + type.slice(1)} Image
@@ -157,9 +172,11 @@ export default function App() {
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl">
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Upload Images</h2>
-      {renderImageUploader('cover')}
-      {renderImageUploader('timer')}
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+        Upload Images
+      </h2>
+      {renderImageUploader("cover")}
+      {renderImageUploader("timer")}
     </div>
   );
 }

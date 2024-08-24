@@ -8,6 +8,7 @@ import { fetcher } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import AddTask from "@/components/global/add-task";
 
 const TasksTable = () => {
   const { data: tasks, isLoading, error } = useSWR("/todo", fetcher);
@@ -25,7 +26,16 @@ const TasksTable = () => {
       </Alert>
     );
 
-  return <DataTable data={tasks} columns={columns} searchableColumn="title" />;
+  return (
+    <>
+      <DataTable
+        data={tasks}
+        columns={columns}
+        searchableColumn="title"
+        dataType="task"
+      />
+    </>
+  );
 };
 
 export default TasksTable;

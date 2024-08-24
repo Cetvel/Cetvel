@@ -25,7 +25,6 @@ export const columns: ColumnDef<Focus>[] = [
   },
   {
     accessorKey: "date",
-    header: "Tarih",
     filterFn: (row, columnId, filterValue) => {
       const filter_from = filterValue.from;
       const filter_to = filterValue.to;
@@ -33,6 +32,39 @@ export const columns: ColumnDef<Focus>[] = [
       const date = new Date(row.original.date);
 
       return date >= filter_from && date <= filter_to;
+    },
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center space-x-2">
+          <span>Tarih</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon-sm">
+                <span className="sr-only">Menü</span>
+                <Ellipsis />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Yeniden sırala</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => {
+                  column.toggleSorting(column.getIsSorted() === "asc");
+                }}
+              >
+                En eski
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  column.toggleSorting(column.getIsSorted() === "desc");
+                }}
+              >
+                En yeni
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
     },
     cell: ({ row }) => {
       return format(new Date(row.original.date), "LLL, d yyyy", { locale: tr });

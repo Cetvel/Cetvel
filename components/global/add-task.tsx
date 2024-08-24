@@ -22,7 +22,7 @@ const AddTask = () => {
         }
         size={"sm"}
       >
-        <Plus className="mr-2" size={16} />
+        <Plus size={16} />
         Oluştur
       </Button>
     </>
