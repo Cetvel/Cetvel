@@ -13,13 +13,11 @@ interface ImageUploadState {
   error: string | null;
 }
 
-
-
-
 export default function App() {
   const { userId } = useAuth();
   const generateUploadUrl = useMutation(api.image.generateUploadUrl);
-  const sendImage = useMutation(api.image.sendImage);
+  const sendCoverImage = useMutation(api.image.sendCoverImage);
+  const sendTimerImage = useMutation(api.image.sendTimerImage);
 
   const [images, setImages] = useState<Record<ImageType, ImageUploadState>>({
     cover: { file: null, previewUrl: null, isUploading: false, error: null },
@@ -73,7 +71,15 @@ export default function App() {
     }
   };
 
-  async function handleSendImage(type: ImageType) {
+  async function handleSendCoverImage() {
+    await handleSendImage('cover', sendCoverImage);
+  }
+
+  async function handleSendTimerImage() {
+    await handleSendImage('timer', sendTimerImage);
+  }
+
+  async function handleSendImage(type: ImageType, sendImageMutation: typeof sendCoverImage | typeof sendTimerImage) {
     const imageState = images[type];
     if (!imageState.file) return;
 
@@ -90,7 +96,7 @@ export default function App() {
         body: imageState.file,
       });
       const { storageId } = await result.json();
-      await sendImage({ storageId, clerkId : userId! });
+      await sendImageMutation({ storageId, clerkId: userId! });
 
       setImages(prev => ({
         ...prev,
@@ -135,7 +141,7 @@ export default function App() {
           />
         </div>
         <button
-          onClick={() => handleSendImage(type)}
+          onClick={type === 'cover' ? handleSendCoverImage : handleSendTimerImage}
           disabled={!file || isUploading}
           className={`w-full py-2 px-4 rounded-md text-white font-semibold flex items-center justify-center ${
             file && !isUploading
