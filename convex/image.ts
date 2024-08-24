@@ -7,7 +7,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
     return url
 });
 
-export const sendImage = mutation({
+export const sendCoverImage = mutation({
     args: {
         storageId: v.id("_storage"),
         clerkId: v.string(),
@@ -36,6 +36,37 @@ export const sendImage = mutation({
 
     },
 });
+
+export const sendTimerImage = mutation({
+    args: {
+        storageId: v.id("_storage"),
+        clerkId: v.string(),
+    },
+    handler: async (ctx, args) => {
+        try {
+            console.log("args", args);
+            const userArray = await ctx.db
+                .query("user")
+                .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+                .collect();
+            const user = userArray[0];
+
+            console.log("user", user);
+            if (!user) {
+                throw new Error("User not found");
+            }
+            if (!(user.timerPhotoId == "kg20kj46syb4qhaatxyf2cyw196zcnp7")) {
+                await deleteById(ctx, { storageId: user.timerPhotoId! });
+            }
+            await ctx.db.patch(user._id, {timerPhotoId: args.storageId});
+        } catch (error: any) {
+            console.log("error", error);
+            throw new Error(error);
+        }
+
+    },
+});
+
 export const deleteById = mutation({
     args: {
         storageId: v.id("_storage"),

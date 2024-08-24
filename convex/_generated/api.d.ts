@@ -15,6 +15,8 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as crons from "../crons.js";
+import type * as image from "../image.js";
+import type * as imageList from "../imageList.js";
 import type * as notification from "../notification.js";
 import type * as notificationProduction from "../notificationProduction.js";
 import type * as todoReminder from "../todoReminder.js";
@@ -32,6 +34,8 @@ import type * as user_userPreference from "../user/userPreference.js";
  */
 declare const fullApi: ApiFromModules<{
   crons: typeof crons;
+  image: typeof image;
+  imageList: typeof imageList;
   notification: typeof notification;
   notificationProduction: typeof notificationProduction;
   todoReminder: typeof todoReminder;
