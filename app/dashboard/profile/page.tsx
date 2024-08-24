@@ -1,11 +1,8 @@
-import { useUser } from '@clerk/clerk-react';
+import { useUser } from "@clerk/nextjs";
 
 function UserProfile() {
   const { user } = useUser();
-  
-  // Kullanıcı kimliğini ve diğer bilgileri kullanarak işlemler yapabilirsiniz
-  console.log(user?.id);  // Kullanıcı kimliği
-  
+
   return (
     <div>
       {user?.firstName} {user?.lastName}
