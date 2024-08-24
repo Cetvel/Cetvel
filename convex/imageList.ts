@@ -1,0 +1,43 @@
+import { query } from "./_generated/server";
+import { v } from "convex/values";
+
+export const getCoverImageUrl = query({
+    args: { clerkId: v.string() },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("user")
+            .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+            .collect();
+        console.log("user", user);
+        
+        const storageId = user[0].coverPhotoId!
+        const url = await ctx.storage.getUrl(storageId);
+        return url
+    },
+});
+
+export const getTimerImageUrl = query({
+    args: { 
+        clerkId: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("user")
+            .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+            .collect();
+
+        const storageId = user[0].timerPhotoId!
+
+        const url = await ctx.storage.getUrl(storageId);
+        return url
+    },
+});
+
+// export const getImageUrl = query({
+//     args: {
+//         storageId: v.string()
+//     },
+//     handler: async (ctx, { storageId }) => {
+//         return await ctx.storage.getUrl(storageId);
+//     },
+// });
