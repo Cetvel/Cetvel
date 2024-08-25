@@ -1,65 +1,103 @@
 import { v } from "convex/values";
-import { action, mutation } from "../_generated/server";
+import { action, mutation, query } from "../_generated/server";
 import { internal } from "../_generated/api";
-export const createUser = action({
-    args: { 
+import { update } from "lodash";
+
+export const getUser = query({
+    args: {
+        clerkId: v.string()
+    },
+    handler: async (ctx, { clerkId }) => {
+        return await ctx.db
+            .query("user")
+            .filter((q) => q.eq(q.field("clerkId"), clerkId))
+            .first();
+    },
+});
+
+
+export const createUser = mutation({
+    args: {
         clerkId: v.string(),
         mongoId: v.string(),
-        name : v.string()
+        name: v.string()
     },
     handler: async (ctx, { clerkId, mongoId, name }) => {
-        const newUser  = await ctx.runMutation(internal.user.userPreference.insertUser, { clerkId, mongoId, name });
-        console.log("new User" , newUser)
-        await ctx.runMutation(internal.user.userPreference.createUserPreference, { clerkId, userId: newUser });
+        const newUser = await ctx.db.insert("user", { clerkId, mongoId, name })
         if (!newUser) {
             throw new Error("User could not be created")
         }
 
+        return newUser
     }
-}
-)
+}) 
 
 
 export const deleteUser = mutation({
-    args:{
+    args: {
         clerkId: v.string()
     },
-    handler: async (ctx, {clerkId}) => {
+    handler: async (ctx, { clerkId }) => {
         const userToDelete = await ctx.db
-        .query("user")
-        .filter((q) => q.eq(q.field("clerkId"), clerkId))
-        .first();
-  
-      // Eğer kullanıcı bulunamazsa, hata fırlat
-      if (!userToDelete) {
-        throw new Error(`User with clerkId ${clerkId} not found`);
-      }
-  
-      // Kullanıcıyı sil
-      await ctx.db.delete(userToDelete._id);
+            .query("user")
+            .filter((q) => q.eq(q.field("clerkId"), clerkId))
+            .first();
+
+        // Eğer kullanıcı bulunamazsa, hata fırlat
+        if (!userToDelete) {
+            throw new Error(`User with clerkId ${clerkId} not found`);
+        }
+
+        // Kullanıcıyı sil
+        await ctx.db.delete(userToDelete._id);
 
     }
 })
 
 export const updateUser = mutation({
-    args:{
-        clerkId: v.string(),
-        name: v.string()
+    args : {
+        clerkId : v.string(),
+        name : v.string()
     },
-    handler:  async (ctx, {clerkId , name } ) => {
-        const userToDelete = await ctx.db
-        .query("user")
-        .filter((q) => q.eq(q.field("clerkId"), clerkId))
-        .first();
-        
-        if (!userToDelete) {
+    handler : async (ctx, {clerkId, name}) => {
+        const user = await ctx.db
+            .query("user")
+            .filter((q) => q.eq(q.field("clerkId"), clerkId))
+            .first();
+
+        if (!user) {
             throw new Error(`User with clerkId ${clerkId} not found`);
-          }
+        }
 
-        userToDelete.name = name;
+        user.name = name
+        await ctx.db.replace(user._id, user);
+        return user
+    }
+})
 
-        await ctx.db.replace(userToDelete._id, userToDelete);
-},
+export const updateUserImages = mutation({
+    args: {
+        clerkId: v.string(),
+        defaultTemplate: v.optional(v.object({
+            coverPhotoId: v.id("_storage"),
+            timerPhotoId: v.id("_storage"),
+        })),
+    },
+    handler: async (ctx, {clerkId , defaultTemplate}) => {
+        const user = await ctx.db
+            .query("user")
+            .filter((q) => q.eq(q.field("clerkId"), clerkId))
+            .first();
+
+        if (!user) {
+            throw new Error(`User with clerkId ${clerkId} not found`);
+        }
+        user.coverPhotoId = defaultTemplate!.coverPhotoId!
+        user.timerPhotoId = defaultTemplate!.timerPhotoId!
+        console.log("Convex server user", user)
+        await ctx.db.replace(user._id, user);
+        return user
+    },
 
 
 }) 
