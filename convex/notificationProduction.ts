@@ -9,6 +9,7 @@ export const produceNotifications = internalAction({
         const currentTime = Date.now();
 
         for (const userPref of allPreferences) {
+            if(!userPref.notification) return 
             if (userPref.todoReminder) {
                 await ctx.runAction(internal.todoReminder.checkAndProduceTodoReminder, {
                     userId: userPref.clerkId,
