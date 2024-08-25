@@ -5,6 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { Upload, Image as ImageIcon } from "lucide-react";
 import { useAuth } from "@clerk/clerk-react";
 import Image from "next/image";
+
 type ImageType = "cover" | "timer";
 
 interface ImageUploadState {
@@ -102,7 +103,7 @@ export default function App() {
         body: imageState.file,
       });
       const { storageId } = await result.json();
-      await sendImage({ storageId, clerkId: userId! });
+      await sendImageMutation({ storageId, clerkId: userId! });
 
       setImages((prev) => ({
         ...prev,
@@ -143,7 +144,10 @@ export default function App() {
             <Image
               src={previewUrl}
               alt={`${type} Preview`}
-              className="max-h-48 mx-auto rounded-lg"
+              width={200}
+              height={150}
+              layout="responsive"
+              objectFit="contain"
             />
           ) : (
             <div className="text-gray-500">
