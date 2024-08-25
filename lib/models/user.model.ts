@@ -6,15 +6,6 @@ interface IUser {
     name: string;
     email: string;
     password: string;
-    notificationPreferences: {
-        pomodoroReminder: { type: Boolean, default: true },
-        upcomingTasks: { type: Boolean, default: true },
-      }
-    pictures: {
-        profilePicture: string;
-        coverPicture: string;
-        clockPicture: string
-    }
 }
 
 export interface IUserDocument extends IUser, Document, IUserMethods {
@@ -47,15 +38,6 @@ const userSchema = new Schema<IUserDocument, UserModel>({
         trim: true,
         minlength: 4
     },
-    notificationPreferences: {
-        pomodoroReminder: { type: Boolean, default: true },
-        upcomingTasks: { type: Boolean, default: true },
-      },
-    pictures : {
-        profilePicture: String,
-        coverPicture: String,
-        clockPicture: String
-    }
 }, {
     timestamps: true,
 });
