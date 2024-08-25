@@ -17,6 +17,7 @@ interface ImageUploadState {
 
 export default function App() {
   const { userId } = useAuth();
+  if (!userId) return (<div className="text-center py-4">Foto yuklemek icin giris yap kardes</div>);
   const generateUploadUrl = useMutation(api.image.generateUploadUrl);
   const sendCoverImage = useMutation(api.image.sendCoverImage);
   const sendTimerImage = useMutation(api.image.sendTimerImage);
@@ -31,19 +32,34 @@ export default function App() {
     timer: useRef<HTMLInputElement>(null),
   };
 
+  const isValidFileType = (file: File) => {
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+    return allowedTypes.includes(file.type);
+  };
+
   const handleImageSelect =
     (type: ImageType) => (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
       if (file) {
-        setImages((prev) => ({
-          ...prev,
-          [type]: {
-            ...prev[type],
-            file,
-            previewUrl: URL.createObjectURL(file),
-            error: null,
-          },
-        }));
+        if (isValidFileType(file)) {
+          setImages((prev) => ({
+            ...prev,
+            [type]: {
+              ...prev[type],
+              file,
+              previewUrl: URL.createObjectURL(file),
+              error: null,
+            },
+          }));
+        } else {
+          setImages((prev) => ({
+            ...prev,
+            [type]: {
+              ...prev[type],
+              error: "PNG files are not allowed. Please use JPEG, JPG, GIF, or WebP formats.",
+            },
+          }));
+        }
       }
     };
 
@@ -62,16 +78,26 @@ export default function App() {
       event.preventDefault();
       event.currentTarget.classList.remove("border-blue-500");
       const file = event.dataTransfer.files?.[0];
-      if (file && file.type.startsWith("image/")) {
-        setImages((prev) => ({
-          ...prev,
-          [type]: {
-            ...prev[type],
-            file,
-            previewUrl: URL.createObjectURL(file),
-            error: null,
-          },
-        }));
+      if (file) {
+        if (isValidFileType(file)) {
+          setImages((prev) => ({
+            ...prev,
+            [type]: {
+              ...prev[type],
+              file,
+              previewUrl: URL.createObjectURL(file),
+              error: null,
+            },
+          }));
+        } else {
+          setImages((prev) => ({
+            ...prev,
+            [type]: {
+              ...prev[type],
+              error: "PNG files are not allowed. Please use JPEG, JPG, GIF, or WebP formats.",
+            },
+          }));
+        }
       }
     };
 
@@ -153,11 +179,12 @@ export default function App() {
             <div className="text-gray-500">
               <ImageIcon className="mx-auto h-12 w-12 mb-2" />
               <p>Drag and drop {type} image here, or click to select</p>
+              <p className="text-sm mt-2">(JPEG, JPG, GIF, or WebP only)</p>
             </div>
           )}
           <input
             type="file"
-            accept="image/*"
+            accept="image/jpeg,image/jpg,image/gif,image/webp"
             ref={fileInputRefs[type]}
             onChange={handleImageSelect(type)}
             className="hidden"
