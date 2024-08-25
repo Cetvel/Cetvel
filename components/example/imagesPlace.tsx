@@ -67,10 +67,10 @@ function Image({ url, onDelete, type }: ImageProps) {
 export default function ConvexImageDisplay() {
   const { userId } = useAuth();
   if(!userId) return (<div className="text-center py-4">Fotolari gormek icin giris yap kardes</div>);
-  const coverUrl = useQuery(api.imageList.getCoverImageUrl, { clerkId: userId as string });
-  const timerUrl = useQuery(api.imageList.getTimerImageUrl, { clerkId: userId as string });
-  const deleteCoverImage = useMutation(api.image.deleteCoverImage);
-  const deleteTimerImage = useMutation(api.image.deleteTimerImage);
+  const coverUrl = useQuery(api.image.imageList.getCoverImageUrl, { clerkId: userId as string });
+  const timerUrl = useQuery(api.image.imageList.getTimerImageUrl, { clerkId: userId as string });
+  const deleteCoverImage = useMutation(api.image.image.deleteCoverImage);
+  const deleteTimerImage = useMutation(api.image.image.deleteTimerImage);
 
   const handleDeleteCover = async () => {
     if (userId) {
