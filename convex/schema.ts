@@ -10,13 +10,14 @@ export default defineSchema({
         read: v.boolean(),
     }),
     user: defineTable({
-        name: v.string(),
+        name: v.optional(v.string()),
         clerkId: v.string(),
         mongoId: v.string(),
         coverPhotoId: v.optional(v.id("_storage")),
         timerPhotoId: v.optional(v.id("_storage")),
     }),
     userPreferences: defineTable({
+        notification : v.boolean(),
         clerkId: v.string(),
         userId: v.string(),
         todoReminder: v.boolean(),
