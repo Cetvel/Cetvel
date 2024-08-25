@@ -25,10 +25,13 @@ export const sendCoverImage = mutation({
             if (!user) {
                 throw new Error("User not found");
             }
-            if (!(user.coverPhotoId == "kg27azpz0nzwts5bfdtm3gpek56zcvzx")) {
+            if (
+                !(user.coverPhotoId == "kg20a9gfvnh7zfy2qjja3hxsvh6zhesn" ||
+                user.coverPhotoId =="kg2fvr6vzr9j12377w24d4an0n6zgce1")
+            ) {
                 await deleteById(ctx, { storageId: user.coverPhotoId! });
             }
-            await ctx.db.patch(user._id, {coverPhotoId: args.storageId});
+            await ctx.db.patch(user._id, { coverPhotoId: args.storageId });
         } catch (error: any) {
             console.log("error", error);
             throw new Error(error);
@@ -55,10 +58,16 @@ export const sendTimerImage = mutation({
             if (!user) {
                 throw new Error("User not found");
             }
-            if (!(user.timerPhotoId == "kg20kj46syb4qhaatxyf2cyw196zcnp7")) {
+            console.log("user.timerPhotoId", user.timerPhotoId);
+            console.log("firstiamge: " , process.env.DEFAULT_FIRST_COVER_IMAGE_ID as string)
+            console.log("secondimage: " , process.env.DEFAULT_SECOND_TIMER_IMAGE_ID)
+            if (
+                !((user.timerPhotoId == "kg23sjfbz7d3qfh1t4kcssv62d6zhser") ||
+                (user.timerPhotoId == "kg2efvd54t4rcscty321frvzbx6zg7md"))
+            ) {
                 await deleteById(ctx, { storageId: user.timerPhotoId! });
             }
-            await ctx.db.patch(user._id, {timerPhotoId: args.storageId});
+            await ctx.db.patch(user._id, { timerPhotoId: args.storageId });
         } catch (error: any) {
             console.log("error", error);
             throw new Error(error);
