@@ -1,6 +1,6 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
-import { Id } from "./_generated/dataModel";
+import { mutation, query } from "../_generated/server";
+import { Id } from "../_generated/dataModel";
 
 export const generateUploadUrl = mutation(async (ctx) => {
     const url = await ctx.storage.generateUploadUrl();
@@ -100,11 +100,11 @@ export const deleteCoverImage = mutation({
     args: {
         clerkId: v.string(),
     },
-    handler: async (ctx, args) => {
+    handler: async (ctx:any, args:any) => {
         try {
             const userArray = await ctx.db
                 .query("user")
-                .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+                .filter((q:any) => q.eq(q.field("clerkId"), args.clerkId))
                 .collect();
             const user = userArray[0];
 
@@ -134,11 +134,11 @@ export const deleteTimerImage = mutation({
     args: {
         clerkId: v.string(),
     },
-    handler: async (ctx, args) => {
+    handler: async (ctx:any, args:any) => {
         try {
             const userArray = await ctx.db
                 .query("user")
-                .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+                .filter((q:any) => q.eq(q.field("clerkId"), args.clerkId))
                 .collect();
             const user = userArray[0];
 

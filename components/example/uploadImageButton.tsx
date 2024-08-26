@@ -18,9 +18,9 @@ interface ImageUploadState {
 export default function App() {
   const { userId } = useAuth();
   if (!userId) return (<div className="text-center py-4">Foto yuklemek icin giris yap kardes</div>);
-  const generateUploadUrl = useMutation(api.image.generateUploadUrl);
-  const sendCoverImage = useMutation(api.image.sendCoverImage);
-  const sendTimerImage = useMutation(api.image.sendTimerImage);
+  const generateUploadUrl = useMutation(api.image.image.generateUploadUrl);
+  const sendCoverImage = useMutation(api.image.image.sendCoverImage);
+  const sendTimerImage = useMutation(api.image.image.sendTimerImage);
 
   const [images, setImages] = useState<Record<ImageType, ImageUploadState>>({
     cover: { file: null, previewUrl: null, isUploading: false, error: null },
