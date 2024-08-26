@@ -46,6 +46,7 @@ export const useTaskActions = (task: Task): Action[] => {
       label: "Sil",
       onClick: handleDelete,
       variant: "destructive",
+      alert: true,
     },
   ];
 };

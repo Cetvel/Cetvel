@@ -66,14 +66,12 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
   ) => {
     if (!tooltipContent) return button;
     return (
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>{button}</TooltipTrigger>
-          <TooltipContent>
-            <p>{tooltipContent}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger>{button}</TooltipTrigger>
+        <TooltipContent>
+          <p>{tooltipContent}</p>
+        </TooltipContent>
+      </Tooltip>
     );
   };
 
@@ -106,10 +104,12 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
   };
 
   return (
-    <div className="flex items-center gap-2 justify-end">
-      {renderAdditionalButtons()}
-      {wrappedMainButton}
-    </div>
+    <TooltipProvider>
+      <div className="flex items-center gap-2 justify-end">
+        {renderAdditionalButtons()}
+        {wrappedMainButton}
+      </div>
+    </TooltipProvider>
   );
 };
 

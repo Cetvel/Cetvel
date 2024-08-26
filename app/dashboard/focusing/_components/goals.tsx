@@ -13,33 +13,66 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useModal } from "@/providers/modal-provider";
 import GoalForm from "@/components/forms/goal-form";
 import Modal from "@/components/global/modal";
-import { Disc } from "lucide-react";
+import { AlertCircle, CircleSlash2 } from "lucide-react";
+import useSWR from "swr";
+import { fetcher } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const Goals = () => {
   const { setOpen } = useModal();
+  const { data: goals, isLoading, error } = useSWR("/goal", fetcher);
+
+  if (isLoading) {
+    return (
+      <CardContent className="flex flex-col gap-2">
+        <Skeleton className="h-4" />
+        <Skeleton className="h-4" />
+        <Skeleton className="h-4" />
+        <Skeleton className="h-4" />
+        <Skeleton className="h-4" />
+        <Skeleton className="h-4" />
+      </CardContent>
+    );
+  }
+
+  if (error && !isLoading) {
+    return (
+      <CardContent className="flex flex-col gap-2">
+        <Alert variant={"destructive"}>
+          <AlertCircle size={18} />
+          <AlertTitle>Bir hata oluştu.</AlertTitle>
+          <AlertDescription>
+            Lütfen sayfayı yenileyin ya da daha sonra tekrar deneyin.
+          </AlertDescription>
+        </Alert>
+      </CardContent>
+    );
+  }
 
   return (
-    <Card>
-      <CardHeader>
-        <h3 className="flex items-center gap-3 header-3">
-          <span className="text-primary">
-            <Disc size={30} />
-          </span>
-          Hedefler
-        </h3>
-      </CardHeader>
+    <>
       <CardContent>
         <ScrollArea className="h-[300px]">
           <div className="flex flex-col space-y-4">
-            <Goal goal="Kodlama" progress={3} max={5} />
-            <Goal goal="Ders Çalışma" progress={2} max={5} />
-            <Goal goal="Kitap Okuma" progress={1} max={5} />
-            <Goal goal="Kodlama" progress={3} max={5} />
-            <Goal goal="Ders Çalışma" progress={2} max={5} />
-            <Goal goal="Kitap Okuma" progress={1} max={5} />
-            <Goal goal="Kodlama" progress={3} max={5} />
-            <Goal goal="Ders Çalışma" progress={2} max={5} />
-            <Goal goal="Kitap Okuma" progress={1} max={5} />
+            {goals.length ? (
+              goals?.map((goal: any) => (
+                <Goal
+                  key={goal.id}
+                  goal={goal.title}
+                  progress={goal.progress}
+                  max={goal.target}
+                />
+              ))
+            ) : (
+              <Alert>
+                <CircleSlash2 size={18} />
+                <AlertTitle>Hedef yok.</AlertTitle>
+                <AlertDescription>
+                  Yeni bir hedef eklemek için butona tıklayın.
+                </AlertDescription>
+              </Alert>
+            )}
           </div>
         </ScrollArea>
       </CardContent>
@@ -57,7 +90,7 @@ const Goals = () => {
           Yeni hedef ekle
         </Button>
       </CardFooter>
-    </Card>
+    </>
   );
 };
 

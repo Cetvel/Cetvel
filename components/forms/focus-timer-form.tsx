@@ -84,6 +84,7 @@ const FocusTimerForm = () => {
   };
 
   const handleSubmit = form.handleSubmit(async (data: FocusTimerFormValues) => {
+    handlePause(true);
     if (!startDate) {
       toast({
         title: "Hata",

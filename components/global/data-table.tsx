@@ -96,7 +96,7 @@ export function DataTable<TData, TValue>({
         {dataType === "pomodoro" && (
           <DatePickerWithRange
             onDateChange={(date) => {
-              table.getColumn("date")?.setFilterValue(date);
+              table.getColumn("startsAt")?.setFilterValue(date);
             }}
           />
         )}

@@ -14,9 +14,10 @@ declare type Task = {
 
 declare type Focus = {
   _id: string;
-  description: string;
-  time: string;
-  date: Date;
+  title: string;
+  duration: number;
+  startsAt: Date;
+  endsAt: Date;
 };
 
 declare type Tag = {
@@ -25,11 +26,22 @@ declare type Tag = {
   value: string;
 };
 
+declare type Goal = {
+  _id: string;
+  title: string;
+  type: string;
+  unit: string;
+  target: number;
+  startsAt: Date;
+  endsAt: Date;
+};
+
 declare type Action = {
   icon: React.ReactNode;
   label: string;
   onClick: () => void;
   variant?: "default" | "destructive";
+  alert?: boolean;
 };
 
 declare enum TaskStatus {

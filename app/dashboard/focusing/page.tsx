@@ -5,6 +5,7 @@ import React from "react";
 import Statistics from "./_components/stats";
 import FocusingHistory from "./_components/focusing-history";
 import Goals from "./_components/goals";
+import { Disc, TrendingUp } from "lucide-react";
 
 const Focusing = () => {
   return (
@@ -19,8 +20,28 @@ const Focusing = () => {
             <FocusTimerForm />
           </CardContent>
         </Card>
-        <Statistics />
-        <Goals />
+        <Card className="flex flex-col justify-between">
+          <CardHeader>
+            <h3 className="header-3 flex items-center gap-3">
+              <div className="border rounded-md p-1.5">
+                <TrendingUp size={22} className="text-muted-foreground" />
+              </div>
+              Odaklanma İstatistikleri
+            </h3>
+          </CardHeader>
+          <Statistics />
+        </Card>
+        <Card className="flex flex-col justify-between">
+          <CardHeader>
+            <h3 className="header-3 flex items-center gap-3">
+              <div className="border rounded-md p-1.5">
+                <Disc size={22} className="text-muted-foreground" />
+              </div>
+              Hedefler
+            </h3>
+          </CardHeader>
+          <Goals />
+        </Card>
       </div>
       <FocusingHistory />
     </>

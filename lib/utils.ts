@@ -26,3 +26,13 @@ export const fetcher = async (url: string) => {
     throw new Error(error.response.data);
   }
 };
+
+export const formatMinutesToHours = (minutes: number) => {
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  if (hours < 1) {
+    return `${remainingMinutes} Dakika`;
+  } else {
+    return `${hours} Saat ${remainingMinutes} Dakika`;
+  }
+};
