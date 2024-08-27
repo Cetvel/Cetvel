@@ -4,7 +4,8 @@ interface Exam {
     userId: mongoose.Types.ObjectId,
     clerkId: string,
     examName: string,
-    examDate?: Date,
+    examDate: Date,
+    solvingDate: Date
 }
 
 export interface ExamDocument extends Exam, Document {
@@ -24,6 +25,7 @@ const examSchema = new mongoose.Schema<ExamDocument, ExamModel>({
         required: false
     },
     examName: { type: String, required: true },
+    solvingDate: { type: Date, required: true }
 }, {
     discriminatorKey: 'examType',
     timestamps: true
