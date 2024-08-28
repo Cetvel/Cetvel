@@ -6,6 +6,8 @@ interface IUser {
     name: string;
     email: string;
     password: string;
+    class : string;
+    studyField : string;
 }
 
 export interface IUserDocument extends IUser, Document, IUserMethods {
@@ -26,6 +28,17 @@ const userSchema = new Schema<IUserDocument, UserModel>({
         required: true,
         trim: true,
     },
+    class: {
+        type: String,
+        required: true,
+        trim: false,
+    },
+    studyField: {
+        type: String,
+        required: true,
+        trim: false,
+    },
+    
     email: {
         type: String,
         required: true,
@@ -46,7 +59,7 @@ userPlugins(userSchema);
 userSchema.methods = userMethods;
 Object.assign(userSchema.statics, userStaticMethods);
 
-// Use `mongoose.models` to avoid overwriting the model if it already exists
+
 const User = mongoose.models.User || mongoose.model<IUserDocument, UserModel>('User', userSchema);
 
 export default User;
