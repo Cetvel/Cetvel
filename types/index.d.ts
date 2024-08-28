@@ -49,4 +49,23 @@ declare enum TaskStatus {
   INCOMPLETE = "incomplete",
 }
 
-declare type studyField = "YKS" | "KPSS" | "LGS";
+declare type UserClass = "9" | "10" | "11" | "12" | "Mezun";
+declare type ExamType = "TYT" | "AYT";
+
+declare interface FieldBase {
+  name: string;
+  label: string;
+  placeholder: string;
+}
+
+declare interface NumberField extends FieldBase {
+  type: "number";
+  max: number;
+}
+
+declare interface SelectField extends FieldBase {
+  type: "select";
+  options: { value: string; label: string }[];
+}
+
+declare type FormField = NumberField | SelectField;

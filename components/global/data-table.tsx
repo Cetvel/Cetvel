@@ -28,6 +28,7 @@ import { DatePickerWithRange } from "./date-range-picker";
 import { ArrowLeft, ArrowRight, Search } from "lucide-react";
 import AddTask from "./add-task";
 import { SelectedTaskActions } from "@/app/dashboard/tasks/_components/selected-task-actions";
+import AddPomodoro from "./add-pomodoro";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -94,11 +95,15 @@ export function DataTable<TData, TValue>({
         />
 
         {dataType === "pomodoro" && (
-          <DatePickerWithRange
-            onDateChange={(date) => {
-              table.getColumn("startsAt")?.setFilterValue(date);
-            }}
-          />
+          <>
+            <DatePickerWithRange
+              onDateChange={(date) => {
+                table.getColumn("startsAt")?.setFilterValue(date);
+              }}
+            />
+
+            <AddPomodoro />
+          </>
         )}
 
         {dataType === "task" && <AddTask />}
