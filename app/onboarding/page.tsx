@@ -11,10 +11,9 @@ import {
 import CustomFormField, {
   FormFieldType,
 } from "@/components/ui/custom-form-field";
-import { FormControl, FormDescription, FormLabel } from "@/components/ui/form";
+import { FormDescription, FormLabel } from "@/components/ui/form";
 import FormStepper from "@/components/ui/form-stepper";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { SelectItem } from "@/components/ui/select";
 import { onboardingSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,13 +22,9 @@ import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
-const educationLevels = ["İlkokul", "Ortaokul", "Lise"];
-const courseSubjects = {
-  İlkokul: ["Genel müfredat"],
-  Ortaokul: ["LGS hazırlık", "Genel müfredat"],
-  Lise: ["TYT/AYT hazırlık", "Genel müfredat"],
-};
+const educationLevels = ["İlkokul", "Ortaokul", "Lise", "Mezun"];
 const fields = ["Sayısal", "Sözel", "Eşit Ağırlık", "Dil"];
+const exams = ["YKS", "KPSS", "DGS", "ALES", "YDS"];
 const steps = [
   {
     label: "Eğitim bilgilerin",
@@ -50,19 +45,15 @@ const Onboarding = () => {
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
       educationLevel: "Lise",
-      courseSubjects: "",
+      courseSubjects: "KPSS",
       field: "Sayısal",
     },
   });
 
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [step, setStep] = useState<number>(0);
 
   async function onSubmit(values: z.infer<typeof onboardingSchema>) {
-    setError(null);
-    setSuccess(null);
     setLoading(true);
   }
 
@@ -90,99 +81,47 @@ const Onboarding = () => {
             {step === 0 && (
               <>
                 <CustomFormField
-                  fieldType={FormFieldType.SKELETON}
+                  fieldType={FormFieldType.SELECT}
                   control={form.control}
                   name="educationLevel"
                   label="Eğitim seviyen"
-                  renderSkeleton={(field) => (
-                    <FormControl>
-                      <RadioGroup
-                        className="flex gap-6"
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        {educationLevels.map((level, i) => (
-                          <div key={level + i} className="radio-group">
-                            <RadioGroupItem
-                              className="radio-group-item"
-                              value={level}
-                              id={level}
-                            />
-                            <Label htmlFor={level} className="cursor-pointer">
-                              {level}
-                            </Label>
-                          </div>
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  )}
-                />
+                >
+                  {educationLevels.map((level, i) => (
+                    <SelectItem key={i} value={level}>
+                      {level}
+                    </SelectItem>
+                  ))}
+                </CustomFormField>
 
-                <CustomFormField
-                  fieldType={FormFieldType.SKELETON}
-                  control={form.control}
-                  name="courseSubjects"
-                  label="Hazırlık türün"
-                  renderSkeleton={(field) => (
-                    <FormControl>
-                      <RadioGroup
-                        className="flex gap-6"
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        {courseSubjects[form.watch("educationLevel")].map(
-                          (type, i) => (
-                            <div key={type + i} className="radio-group">
-                              <RadioGroupItem
-                                className="radio-group-item"
-                                value={type}
-                                id={type}
-                              />
-                              <Label htmlFor={type} className="cursor-pointer">
-                                {type}
-                              </Label>
-                            </div>
-                          )
-                        )}
-                      </RadioGroup>
-                    </FormControl>
-                  )}
-                />
+                {form.watch("educationLevel") === "Lise" && (
+                  <CustomFormField
+                    fieldType={FormFieldType.SELECT}
+                    control={form.control}
+                    name="field"
+                    label="Alanın"
+                  >
+                    {fields.map((field, i) => (
+                      <SelectItem key={i} value={field}>
+                        {field}
+                      </SelectItem>
+                    ))}
+                  </CustomFormField>
+                )}
 
-                {form.watch("educationLevel") === "Lise" &&
-                  form.watch("courseSubjects") === courseSubjects.Lise[0] && (
-                    <CustomFormField
-                      fieldType={FormFieldType.SKELETON}
-                      control={form.control}
-                      name="field"
-                      label="Alanın"
-                      renderSkeleton={(field) => (
-                        <FormControl>
-                          <RadioGroup
-                            className="flex gap-6"
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            {fields.map((field, i) => (
-                              <div key={field + i} className="radio-group">
-                                <RadioGroupItem
-                                  className="radio-group-item"
-                                  value={field}
-                                  id={field}
-                                />
-                                <Label
-                                  htmlFor={field}
-                                  className="cursor-pointer"
-                                >
-                                  {field}
-                                </Label>
-                              </div>
-                            ))}
-                          </RadioGroup>
-                        </FormControl>
-                      )}
-                    />
-                  )}
+                {form.watch("educationLevel") === "Mezun" && (
+                  <CustomFormField
+                    fieldType={FormFieldType.SELECT}
+                    control={form.control}
+                    name="courseSubjects"
+                    label="Sınav türün"
+                  >
+                    {exams.map((exam, i) => (
+                      <SelectItem key={i} value={exam}>
+                        {exam}
+                      </SelectItem>
+                    ))}
+                  </CustomFormField>
+                )}
               </>
             )}
 

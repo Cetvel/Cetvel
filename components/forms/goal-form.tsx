@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GoalSchema } from "@/lib/schemas";
 import { z } from "zod";
-import { Form } from "../ui/form";  
+import { Form } from "../ui/form";
 import CustomFormField, { FormFieldType } from "../ui/custom-form-field";
 import SubmitButton from "./ui/submit-button";
 import { GoalTypeOptions, GoalUnitOptions } from "@/constants";
@@ -24,13 +24,9 @@ const GoalForm = () => {
     },
   });
 
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   async function onSubmit(values: z.infer<typeof GoalSchema>) {
-    setError(null);
-    setSuccess(null);
     setLoading(true);
   }
 

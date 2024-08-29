@@ -36,6 +36,9 @@ interface CustomProps {
   disabled?: boolean;
   dateFormat?: string;
   showTimeSelect?: boolean;
+  max?: number;
+  min?: number;
+  onValueChange?: (value: string) => void;
   children?: React.ReactNode;
   renderSkeleton?: (field: any) => React.ReactNode;
   fieldType: FormFieldType;
@@ -58,7 +61,13 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.NUMBER:
       return (
         <FormControl>
-          <Input type="number" placeholder={props.placeholder} {...field} />
+          <Input
+            type="number"
+            max={props.max}
+            min={props.min}
+            placeholder={props.placeholder}
+            {...field}
+          />
         </FormControl>
       );
     case FormFieldType.TEXTAREA:
@@ -95,7 +104,13 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.SELECT:
       return (
         <FormControl>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <Select
+            onValueChange={(value: string) => {
+              field.onChange(value);
+              props.onValueChange && props.onValueChange(value);
+            }}
+            defaultValue={field.value}
+          >
             <FormControl>
               <SelectTrigger className="shad-select-trigger">
                 <SelectValue placeholder={props.placeholder} />

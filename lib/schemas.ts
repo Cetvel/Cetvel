@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const onboardingSchema = z.object({
-  educationLevel: z.enum(["İlkokul", "Ortaokul", "Lise"], {
+  educationLevel: z.enum(["İlkokul", "Ortaokul", "Lise", "Mezun"], {
     required_error: "Eğitim seviyesi seçmek zorunludur",
   }),
   courseSubjects: z.string({
@@ -72,4 +72,24 @@ export const FocusTimeSchema = z.object({
       required_error: "Etiket seçmek zorunludur",
     })
     .min(2, { message: "Etiket en az 2 karakter uzunluğunda olmalı" }),
+});
+
+export const PomodoroSchema = z.object({
+  title: z
+    .string({
+      required_error: "Başlık girmek zorunludur",
+    })
+    .min(2, { message: "Başlık en az 2 karakter uzunluğunda olmalı" }),
+  tag: z
+    .string({
+      required_error: "Etiket seçmek zorunludur",
+    })
+    .min(2, { message: "Etiket en az 2 karakter uzunluğunda olmalı" }),
+  duration: z.coerce.number({
+    required_error: "Süre girmek zorunludur",
+    invalid_type_error: "Bir sayı girişi yapmalısın",
+  }),
+  date: z.date({
+    required_error: "Tarih girmek zorunludur",
+  }),
 });

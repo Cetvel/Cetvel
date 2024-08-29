@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { mutate } from "swr";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TaskSchema } from "@/lib/schemas";
 import { z } from "zod";
@@ -11,7 +10,6 @@ import CustomFormField, { FormFieldType } from "../ui/custom-form-field";
 import SubmitButton from "./ui/submit-button";
 import { SelectItem } from "../ui/select";
 import isEqual from "lodash/isEqual";
-import { useToast } from "../ui/use-toast";
 import { Button } from "../ui/button";
 import { useModal } from "@/providers/modal-provider";
 import { ArrowUpFromLine, Check, LoaderCircle, Trash, X } from "lucide-react";
@@ -70,7 +68,7 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
       endsAt: values.endsAt.toISOString(),
     };
 
-    const success =
+    const success: any =
       type === "create"
         ? await createTask(data)
         : await updateTask(task?._id!, data);
