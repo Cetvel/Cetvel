@@ -29,7 +29,6 @@ export async function GET(request: NextRequest) {
     });
 
     const count = todos.length;
-    console.log('Todos:', todos);
     return NextResponse.json({ count },{ status: 200});
     } catch (error) {
     console.error("Error fetching todos:", error);

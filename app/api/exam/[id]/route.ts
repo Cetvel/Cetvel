@@ -11,13 +11,16 @@ export async function PUT(request:NextRequest , { params }: { params: { id: stri
     
     const { id } = params;
     if (!id) {
-        return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
+        return NextResponse.json({ error: "Request paramater is empty" }, { status: 400 });
     }
     
     const body = await request.json();
+    if (!body) {
+        return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
+    }
     const exam = await ExamModel.findOneAndUpdate({ _id: id }, body, { new: true });
     if (!exam) {
-        return NextResponse.json({ error: "exam not found" }, { status: 404 });
+        return NextResponse.json({ error: "Denemeniz güncellenemedi." }, { status: 404 });
     }
     return NextResponse.json(exam);
 }
@@ -31,12 +34,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     
     const { id } = params;
     if (!id) {
-        return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
+        return NextResponse.json({ error: "Silmek istediğiniz deneme bulunamadı." }, { status: 400 });
     }
     
     const exam = await ExamModel.findOneAndDelete({ _id: id});
     if (!exam) {
-        return NextResponse.json({ error: "exam not found" }, { status: 404 });
+        return NextResponse.json({ error: "Silmek istediğiniz deneme bulunamadı." }, { status: 404 });
     }
-    return NextResponse.json({ message: "exam deleted successfully" });
+    return NextResponse.json({ message: "Denemeniz başarı ile silindi" });
 }
