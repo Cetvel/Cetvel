@@ -42,25 +42,21 @@ const TytSchema = new Schema<ITytDocument>({
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
         wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
     },
     science: {
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 20 },
         wrong: { type: Number, required: true, min: 0, max: 20 },
-        empty: { type: Number, required: true, min: 0, max: 20 }
     },
     turkish: {
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
         wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
     },
     social: {
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 20 },
         wrong: { type: Number, required: true, min: 0, max: 20 },
-        empty: { type: Number, required: true, min: 0, max: 20 }
     }
 });
 
