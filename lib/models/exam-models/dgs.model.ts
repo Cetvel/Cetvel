@@ -8,13 +8,11 @@ export interface IDGS {
         solvingTime?: number,
         correct: number,
         wrong: number,
-        empty: number,
     },
     turkish: {
         solvingTime?: number,
         correct: number,
         wrong: number,
-        empty: number,
     }
 }
 
@@ -27,14 +25,12 @@ const DgsSchema = new Schema<IDGSDocument>({
     math: { 
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
-        wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
+        wrong: { type: Number, required: true, min: 0, max: 40 }
     },
     turkish: {
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
-        wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
+        wrong: { type: Number, required: true, min: 0, max: 40 }
     },
 });
 

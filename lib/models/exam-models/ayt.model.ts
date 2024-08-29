@@ -9,61 +9,61 @@ import Exam from "../exam.model";
 */
 
 export interface Section {
-    math?: { solvingTime?: number, correct: number, wrong: number, empty: number },
-    physics?: { solvingTime?: number, correct: number, wrong: number, empty: number, },
+    math?: { solvingTime?: number, correct: number, wrong: number, },
+    physics?: { solvingTime?: number, correct: number, wrong: number,  },
     chemistry?: {
         solvingTime?: number
         correct: number,
         wrong: number,
-        empty: number,
+        
     },
     biology?: {
         solvingTime?: number
         correct: number,
         wrong: number,
-        empty: number,
+        
     },
     literature?: {
         solvingTime?: number
         correct: number,
         wrong: number,
-        empty: number,
+        
     },
     history1?: {
         solvingTime?: number
         correct: number,
         wrong: number,
-        empty: number,
+        
     },
     geography1?: {
         solvingTime?: number
         correct: number,
         wrong: number,
-        empty: number,
+        
     },
     history2?: {
         solvingTime?: number
         correct: number,
         wrong: number,
-        empty: number,
+        
     },
     geography2?: {
         solvingTime?: number
         correct: number,
         wrong: number,
-        empty: number,
+        
     },
     philosophy?: {
         solvingTime?: number
         correct: number,
         wrong: number,
-        empty: number,
+        
     },
     religion?: {
         solvingTime?: number
         correct: number,
         wrong: number,
-        empty: number,
+        
     }
 }
 
@@ -102,10 +102,6 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 40
         },
-        empty: {
-            type: Number,
-            max: 40
-        }
     },
     //Say icin alanlar
     physics: {
@@ -120,12 +116,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
         wrong: {
             type: Number,
             max: 14
-        },
-        empty: {
-            type: Number,
-            max: 14
-        },
-        totalNet: {}
+        }
     },
     chemistry: {
         solvingTime: {
@@ -137,10 +128,6 @@ const AytSchema: Schema<AytDocument> = new Schema({
             max: 13
         },
         wrong: {
-            type: Number,
-            max: 13
-        },
-        empty: {
             type: Number,
             max: 13
         },
@@ -156,10 +143,6 @@ const AytSchema: Schema<AytDocument> = new Schema({
             max: 13
         },
         wrong: {
-            type: Number,
-            max: 13
-        },
-        empty: {
             type: Number,
             max: 13
         },
@@ -180,10 +163,6 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 24
         },
-        empty: {
-            type: Number,
-            max: 24
-        },
 
     },
 
@@ -200,10 +179,6 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 10
         },
-        empty: {
-            type: Number,
-            max: 10
-        },
 
     },
     geography1: {
@@ -216,10 +191,6 @@ const AytSchema: Schema<AytDocument> = new Schema({
             max: 6
         },
         wrong: {
-            type: Number,
-            max: 6
-        },
-        empty: {
             type: Number,
             max: 6
         },
@@ -241,10 +212,6 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 12
         },
-        empty: {
-            type: Number,
-            max: 12
-        },
 
     },
     religion: {
@@ -257,10 +224,6 @@ const AytSchema: Schema<AytDocument> = new Schema({
             max: 6
         },
         wrong: {
-            type: Number,
-            max: 6
-        },
-        empty: {
             type: Number,
             max: 6
         },
@@ -279,10 +242,6 @@ const AytSchema: Schema<AytDocument> = new Schema({
             type: Number,
             max: 11
         },
-        empty: {
-            type: Number,
-            max: 11
-        },
 
     },
     geography2: {
@@ -295,10 +254,6 @@ const AytSchema: Schema<AytDocument> = new Schema({
             max: 11
         },
         wrong: {
-            type: Number,
-            max: 11
-        },
-        empty: {
             type: Number,
             max: 11
         },

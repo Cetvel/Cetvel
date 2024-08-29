@@ -7,38 +7,32 @@ export interface IKPSS {
     math: {
         solvingTime?: number,
         correct: number,
-        wrong: number,
-        empty: number,
+        wrong: number
     },
     turkish: {
         solvingTime?: number,
         correct: number,
-        wrong: number,
-        empty: number,
+        wrong: number
     },
     history: {
         solvingTime?: number,
         correct: number,
-        wrong: number,
-        empty: number,
+        wrong: number
     },
     geography: {
         solvingTime?: number,
         correct: number,
-        wrong: number,
-        empty: number,
+        wrong: number
     },
     citizenship:{
         solvingTime?: number,
         correct: number,
-        wrong: number,
-        empty: number,
+        wrong: number
     },
     currentEvents:{
         solvingTime?: number,
         correct: number,
-        wrong: number,
-        empty: number,
+        wrong: number
     },
 
     point: number
@@ -54,37 +48,31 @@ const KpssSchema = new Schema<IKPSSDocument>({
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
         wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
     },
     turkish: {
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
         wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
     },
     history: {
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
         wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
     },
     geography: {
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
         wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
     },
     citizenship: {
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
         wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
     },
     currentEvents: {
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
         wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
     },
     point: { type: Number, required: false, min: 0, max: 100 }
 });
