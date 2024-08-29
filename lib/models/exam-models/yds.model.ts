@@ -8,8 +8,7 @@ export interface IYDS{
     english: { 
             solvingTime: { type: Number, required: false, max: 135 },
             correct: { type: Number, required: true, min: 0, max: 40 },
-            wrong: { type: Number, required: true, min: 0, max: 40 },
-            empty: { type: Number, required: true, min: 0, max: 40 }
+            wrong: { type: Number, required: true, min: 0, max: 40 }
     },
     point: number
 }
@@ -23,8 +22,7 @@ const YdsSchema = new Schema<IYDSDocument>({
     english: { 
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
-        wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
+        wrong: { type: Number, required: true, min: 0, max: 40 }
     },
     point: Number 
 });

@@ -7,14 +7,12 @@ export interface IALES {
     say: {
         solvingTime?: number,
         correct: number,
-        wrong: number,
-        empty: number,
+        wrong: number
     },
     soz: {
         solvingTime?: number,
         correct: number,
-        wrong: number,
-        empty: number,
+        wrong: number
     },
     point: number
 }
@@ -28,14 +26,12 @@ const AlesSchema = new Schema<IALESDocument>({
     say: { 
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
-        wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
+        wrong: { type: Number, required: true, min: 0, max: 40 }
     },
     soz: {
         solvingTime: { type: Number, required: false, max: 135 },
         correct: { type: Number, required: true, min: 0, max: 40 },
-        wrong: { type: Number, required: true, min: 0, max: 40 },
-        empty: { type: Number, required: true, min: 0, max: 40 }
+        wrong: { type: Number, required: true, min: 0, max: 40 }
     },
     point: { type: Number, required: false, min: 0, max: 100 }
 });

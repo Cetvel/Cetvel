@@ -27,7 +27,6 @@ export interface IBranchDocument extends Document {
     solvingTime?: number;
     correct: number;
     wrong: number;
-    empty: number;
     getTotal(): number;
 }
 
@@ -38,8 +37,7 @@ const BranchExamSchema = new Schema<IBranchDocument, IBranchModel>({
     type: { type: String, enum: ["tyt-mat", "tyt-tr", "tyt-science", "tyt-social", "ayt-mat", "ayt-science", "ayt-sos1", "ayt-sos2", "ayt-phy", "ayt-chem", "ayt-bio", "ayt-literature", "ayt-his1", "ayt-his2", "ayt-geo1", "ayt-geo2", "ayt-religion", "ayt-philosophy"], required: true },
     solvingTime: { type: Number, required: false },
     correct: { type: Number, required: true, min: 0, max: 40 },
-    wrong: { type: Number, required: true, min: 0, max: 40 },
-    empty: { type: Number, required: true, min: 0, max: 40 }
+    wrong: { type: Number, required: true, min: 0, max: 40 }
 });
 
 
