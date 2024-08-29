@@ -42,9 +42,9 @@ const Sidebar = () => {
                 key={index}
                 href={link.href}
                 className={cn(
-                  "flex items-center rounded-xl px-4 gap-[0.65rem] md:w-[290px] py-2.5",
+                  "flex items-center text-muted-foreground rounded-xl px-4 gap-[0.65rem] md:w-[290px] py-2.5",
                   {
-                    "!text-white bg-primary": path === link.href,
+                    "text-white bg-primary": path === link.href,
                   }
                 )}
               >

@@ -28,11 +28,7 @@ const TagForm = () => {
     },
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
-
   async function onSubmit(values: z.infer<typeof TagSchema>) {
-    setLoading(true);
-
     toast({
       title: values.label,
       description: "Etiket oluşturuluyor...",
@@ -61,8 +57,6 @@ const TagForm = () => {
         variant: "destructive",
       });
       console.error(error);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -85,7 +79,11 @@ const TagForm = () => {
           )}
         />
 
-        <SubmitButton text="Ekle" className="ml-auto" loading={loading} />
+        <SubmitButton
+          text="Ekle"
+          className="ml-auto"
+          loading={form.formState.isSubmitting}
+        />
       </form>
     </Form>
   );

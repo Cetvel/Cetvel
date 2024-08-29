@@ -34,7 +34,6 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
     error: tagsError,
   } = useSWR<Tag[]>("/tag", fetcher);
   const { setClose } = useModal();
-  const [loading, setLoading] = useState<boolean>(false);
   const [isFormChanged, setIsFormChanged] = useState<boolean>(false);
 
   const defaultValues = {
@@ -60,8 +59,6 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
   }, [formValues, type]);
 
   async function onSubmit(values: z.infer<typeof TaskSchema>) {
-    setLoading(true);
-
     const data = {
       ...values,
       startsAt: values.startsAt.toISOString(),
@@ -79,26 +76,20 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
       }
       setClose();
     }
-
-    setLoading(false);
   }
 
   async function onDelete() {
-    setLoading(true);
     const success = await deleteTask(task?._id!);
     if (success) {
       setClose();
     }
-    setLoading(false);
   }
 
   async function toggleComplete() {
-    setLoading(true);
     const success = await toggleTaskComplete(task!);
     if (success) {
       setClose();
     }
-    setLoading(false);
   }
 
   return (
@@ -162,7 +153,7 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
           <div className="flex justify-center">
             <SubmitButton
               icon={<ArrowUpFromLine size={16} />}
-              loading={loading}
+              loading={form.formState.isSubmitting}
               additionalButtons={[
                 ({ loading }) => ({
                   button: (
@@ -197,7 +188,9 @@ const TaskForm = ({ type = "create", task }: TaskFormProps) => {
             />
           </div>
         )}
-        {type === "create" && <SubmitButton text="Oluştur" loading={loading} />}
+        {type === "create" && (
+          <SubmitButton text="Oluştur" loading={form.formState.isSubmitting} />
+        )}
       </form>
     </Form>
   );
