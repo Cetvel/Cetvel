@@ -12,9 +12,7 @@ export async function GET(request: NextRequest) {
     }
 
     const exams = await AlesModel.find({ clerkId : userId });
-    if (!exams) {
-      return NextResponse.json({ error: "Kullanıcının Ales denemeleri bulunmuyor." }, { status: 404 });
-    }
+    
     return NextResponse.json(exams);
   } catch (error) {
     console.error("Error processing request:", error);
@@ -39,8 +37,7 @@ export async function POST(request: NextRequest) {
     const exam = new AlesModel({
       clerkId: userId,
       ...body
-    });
-    
+    })
     await exam.save();
     return NextResponse.json(exam, { status: 201 });
   } catch (error) {
