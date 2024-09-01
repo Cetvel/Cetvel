@@ -1,6 +1,8 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, query } from "../_generated/server";
 import { Id } from "../_generated/dataModel";
+import { throwDeprecation } from "process";
+
 
 export const generateUploadUrl = mutation(async (ctx) => {
     const url = await ctx.storage.generateUploadUrl();
@@ -55,11 +57,9 @@ export const sendTimerImage = mutation({
                 .collect();
             const user = userArray[0];
 
-            console.log("user", user);
             if (!user) {
                 throw new Error("User not found");
             }
-            console.log("user.timerPhotoId", user.timerPhotoId);
             if (
                 !((user.timerPhotoId == "kg23sjfbz7d3qfh1t4kcssv62d6zhser") ||
                     (user.timerPhotoId == "kg2efvd54t4rcscty321frvzbx6zg7md"))
@@ -116,14 +116,13 @@ export const deleteCoverImage = mutation({
                 ((user.coverPhotoId == "kg20a9gfvnh7zfy2qjja3hxsvh6zhesn") ||
                     (user.coverPhotoId == "kg2fvr6vzr9j12377w24d4an0n6zgce1"))
             ) {
-                throw Error ("Varsayılan resimler silinemez.")
+                return Error ("Varsayılan resimler silinemez.")
             }
             await deleteById(ctx, { storageId: user.coverPhotoId! });
             const defaultCoverImage = "kg20a9gfvnh7zfy2qjja3hxsvh6zhesn";
             await ctx.db.patch(user._id, { coverPhotoId: defaultCoverImage as Id<"_storage">});
         
         } catch (error: any) {
-            console.log("error", error);
             throw new Error(error);
         }
 
@@ -143,7 +142,7 @@ export const deleteTimerImage = mutation({
             const user = userArray[0];
 
             if (!user) {
-                throw new Error("User not found");
+                throw new Error("Kullanıcı bulunamadı.");
             }
 
             if (
@@ -157,7 +156,6 @@ export const deleteTimerImage = mutation({
             await ctx.db.patch(user._id, { timerPhotoId: defaultTimerImage as Id<"_storage">});
         
         } catch (error: any) {
-            console.log("error", error);
             throw new Error(error);
         }
 

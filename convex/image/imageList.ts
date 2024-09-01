@@ -4,12 +4,13 @@ import { v } from "convex/values";
 export const getCoverImageUrl = query({
     args: { clerkId: v.string() },
     handler: async (ctx, args) => {
+
         const user = await ctx.db
             .query("user")
             .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
             .collect();
         console.log("user", user);
-        
+
         const storageId = user[0].coverPhotoId!
         const url = await ctx.storage.getUrl(storageId);
         return url
@@ -17,19 +18,23 @@ export const getCoverImageUrl = query({
 });
 
 export const getTimerImageUrl = query({
-    args: { 
+    args: {
         clerkId: v.string(),
     },
     handler: async (ctx, args) => {
-        const user = await ctx.db
-            .query("user")
-            .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
-            .collect();
+        try {
+            const user = await ctx.db
+                .query("user")
+                .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+                .collect();
+            if(!user) throw new Error("Kullanıcı bulunamadı")
+            const storageId = user[0].timerPhotoId!
+            const url = await ctx.storage.getUrl(storageId);
+            return url
+        } catch (error:any) {
+            throw new Error(error);
+        }
 
-        const storageId = user[0].timerPhotoId!
-
-        const url = await ctx.storage.getUrl(storageId);
-        return url
     },
 });
 
