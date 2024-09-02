@@ -13,16 +13,16 @@ const NotFound = () => {
           </AspectRatio>
         </div>
         <div className="mt-12 flex-1 max-w-lg space-y-3 md:mt-0">
-          <h3 className="header-3">Hata 404</h3>
-          <h1 className="header-1">Sayfa Bulunamadı</h1>
-          <p className="">
+          <h3 className="text-primary font-semibold">Hata 404</h3>
+          <h1 className="text-2xl font-semibold">Sayfa Bulunamadı</h1>
+          <p className="text-muted-foreground">
             Aradığınız sayfa bulunamadı. Lütfen tekrar deneyin ya da geri dönün.
           </p>
           <Link
             href="/"
-            className="text-primary duration-150 hover:text-primary/50 font-medium inline-flex items-center gap-x-1"
+            className="text-primary text-lg duration-150 hover:text-primary/50 font-medium inline-flex items-center gap-x-1"
           >
-            <ArrowLeft />
+            <ArrowLeft size={16} />
             Geri dön
           </Link>
         </div>

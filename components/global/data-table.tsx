@@ -1,51 +1,98 @@
-"use client";
-
+import React, { useEffect, useState } from 'react';
 import {
   ColumnDef,
-  SortingState,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-
+  getPaginationRowModel,
+  SortingState,
+  getSortedRowModel,
+  ColumnFiltersState,
+  getFilteredRowModel,
+} from '@tanstack/react-table';
 import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { DatePickerWithRange } from "./date-range-picker";
-import { ArrowLeft, ArrowRight, Search } from "lucide-react";
-import AddTask from "./add-task";
-import { SelectedTaskActions } from "@/app/dashboard/tasks/_components/selected-task-actions";
-import AddPomodoro from "./add-pomodoro";
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { DatePickerWithRange } from './date-range-picker';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  searchableColumn: string;
-  dataType: "pomodoro" | "task";
+interface BaseDataTableProps<T> {
+  data: T[];
+  columns: ColumnDef<T>[];
+  searchableColumn?: string;
+  filterComponent?: React.ReactNode;
+  dateColumn?: string;
+  dateRangeColumns?: {
+    placeholder?: string;
+    start: string;
+    end: string;
+  }[];
+  selectColumn?: string;
+  selectColumnOptions?: {
+    value: string;
+    label: string;
+  }[];
+  selectColumnDefautSelected?: boolean;
+  onSelectChange?: (value: string) => void;
+  createColumnsFunction?: (type: string) => ColumnDef<T>[];
+  initialSortColumn?: string;
+  initialSortDirection?: 'asc' | 'desc';
+  pageSize?: number;
+  showColumnToggle?: boolean;
+  showGlobalFilter?: boolean;
+  customRowActions?: (row: T) => React.ReactNode;
 }
 
-export function DataTable<TData, TValue>({
-  columns,
+export function BaseDataTable<T>({
   data,
+  columns: initialColumns,
   searchableColumn,
-  dataType,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  filterComponent,
+  dateColumn,
+  dateRangeColumns,
+  selectColumn,
+  selectColumnOptions,
+  selectColumnDefautSelected,
+  initialSortColumn,
+  initialSortDirection = 'desc',
+  pageSize = 10,
+  showColumnToggle = false,
+  showGlobalFilter = false,
+  createColumnsFunction,
+  onSelectChange,
+  customRowActions,
+}: BaseDataTableProps<T>) {
+  const [sorting, setSorting] = useState<SortingState>(
+    initialSortColumn
+      ? [{ id: initialSortColumn, desc: initialSortDirection === 'desc' }]
+      : []
+  );
+  const [columns, setColumns] = useState<ColumnDef<T>[]>(initialColumns);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [rowSelection, setRowSelection] = useState({});
+  const [globalFilter, setGlobalFilter] = useState('');
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [selectedValue, setSelectedValue] = useState(
+    selectColumnOptions?.[0]?.value || ''
+  );
 
   const table = useReactTable({
     data,
@@ -56,79 +103,133 @@ export function DataTable<TData, TValue>({
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
       sorting,
       columnFilters,
-      rowSelection,
+      globalFilter,
+      columnVisibility,
     },
     initialState: {
       pagination: {
-        pageSize: 5,
+        pageSize,
       },
     },
   });
 
-  const selectedTasks = table
-    .getFilteredSelectedRowModel()
-    .rows.map((row) => row.original as Task);
+  useEffect(() => {
+    if (createColumnsFunction && selectedValue) {
+      const newColumns = createColumnsFunction(selectedValue);
+      setColumns(newColumns);
+    }
+  }, [selectedValue, createColumnsFunction]);
 
-  const handleActionComplete: () => void = () => {
-    table.resetRowSelection();
+  const handleSelectChange = (value: string) => {
+    setSelectedValue(value);
+    table.getColumn(selectColumn!)?.setFilterValue(value);
+    if (onSelectChange) {
+      onSelectChange(value);
+    }
   };
 
   return (
-    <>
-      <div className="flex space-x-2 items-center mb-4">
-        <Input
-          placeholder="Arama yap..."
-          value={
-            (table.getColumn(searchableColumn)?.getFilterValue() as string) ??
-            ""
-          }
-          onChange={(event) =>
-            table
-              .getColumn(searchableColumn)
-              ?.setFilterValue(event.target.value)
-          }
-          className="max-w-xs"
-        />
-
-        {dataType === "pomodoro" && (
-          <>
+    <div>
+      <div className='flex items-center pb-4 gap-4'>
+        {showGlobalFilter && (
+          <Input
+            placeholder='Global arama...'
+            value={globalFilter}
+            onChange={(e) => setGlobalFilter(e.target.value)}
+            className='max-w-sm'
+          />
+        )}
+        {searchableColumn && (
+          <Input
+            placeholder='Arama yap...'
+            value={
+              (table.getColumn(searchableColumn)?.getFilterValue() as string) ??
+              ''
+            }
+            onChange={(event) =>
+              table
+                .getColumn(searchableColumn)
+                ?.setFilterValue(event.target.value)
+            }
+            className='max-w-sm'
+          />
+        )}
+        {dateColumn && (
+          <DatePickerWithRange
+            onDateChange={(range) => {
+              table.getColumn(dateColumn)?.setFilterValue(range);
+            }}
+          />
+        )}
+        {dateRangeColumns &&
+          dateRangeColumns.map((range, index) => (
             <DatePickerWithRange
-              onDateChange={(date) => {
-                table.getColumn("startsAt")?.setFilterValue(date);
+              key={index}
+              placeholder={range.placeholder}
+              onDateChange={(dateRange) => {
+                table.getColumn(range.start)?.setFilterValue(dateRange);
+                table.getColumn(range.end)?.setFilterValue(dateRange);
               }}
             />
-
-            <AddPomodoro />
-          </>
+          ))}
+        {selectColumn && selectColumnOptions && (
+          <Select value={selectedValue} onValueChange={handleSelectChange}>
+            <SelectTrigger className='w-[180px]'>
+              {selectColumnDefautSelected && (
+                <SelectValue>
+                  {selectedValue &&
+                    selectColumnOptions.find(
+                      (option) => option.value === selectedValue
+                    )?.label}
+                </SelectValue>
+              )}
+            </SelectTrigger>
+            <SelectContent>
+              {selectColumnOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         )}
-
-        {dataType === "task" && <AddTask />}
+        {filterComponent}
       </div>
 
-      {selectedTasks.length > 0 && dataType === "task" && (
-        <SelectedTaskActions
-          selectedTasks={selectedTasks}
-          onActionComplete={handleActionComplete}
-        />
+      {showColumnToggle && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='outline' className='ml-auto'>
+              Sütunlar
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            {table.getAllColumns().map((column) => {
+              return (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className='capitalize'
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              );
+            })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
-
-      {table.getFilteredSelectedRowModel().rows.length > 0 && (
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredRowModel().rows.length} sonuçtan{" "}
-          {table.getFilteredSelectedRowModel().rows.length} tanesi seçildi.
-        </div>
-      )}
-
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
+      <div className='rounded-md border'>
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
@@ -137,54 +238,58 @@ export function DataTable<TData, TValue>({
                           header.getContext()
                         )}
                   </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <div className="flex items-center justify-end space-x-4 mt-4">
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className='h-24 text-center'
+                >
+                  Sonuç bulunamadı.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className='flex items-center justify-end space-x-2 py-4'>
         <Button
-          variant={"secondary"}
-          size={"sm"}
+          variant='outline'
+          size='sm'
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          <ArrowLeft size={16} />
           Önceki
         </Button>
         <Button
-          variant={"secondary"}
-          size={"sm"}
+          variant='outline'
+          size='sm'
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           Sonraki
-          <ArrowRight size={16} />
         </Button>
       </div>
-    </>
+    </div>
   );
 }

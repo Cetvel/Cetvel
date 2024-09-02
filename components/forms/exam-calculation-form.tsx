@@ -1,19 +1,18 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import CustomFormField, { FormFieldType } from "../ui/custom-form-field";
-import { Form } from "../ui/form";
-import { SelectItem } from "../ui/select";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import FormError from "./ui/form-error";
-import SubmitButton from "./ui/submit-button";
-import { createExam } from "@/lib/services/exam-service";
-import Modal from "../global/modal";
-import { DialogFooter } from "../ui/dialog";
+import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
+import { Form } from '../ui/form';
+import { SelectItem } from '../ui/select';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader } from '../ui/card';
+import FormError from './ui/form-error';
+import { createExam } from '@/lib/services/exam-service';
+import Modal from '../global/modal';
+import { DialogFooter } from '../ui/dialog';
 import {
   Table,
   TableBody,
@@ -21,10 +20,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
-import { useModal } from "@/providers/modal-provider";
+} from '../ui/table';
+import { useModal } from '@/providers/modal-provider';
 
-type SubjectConfig = {
+export type SubjectConfig = {
   name: string;
   label: string;
   maxQuestions: number;
@@ -37,7 +36,7 @@ type FieldConfig = {
   options: string[];
 };
 
-type ExamConfig = {
+export type ExamConfig = {
   type: string;
   label: string;
   fields?: FieldConfig[];
@@ -45,171 +44,164 @@ type ExamConfig = {
   totalTime?: number;
 };
 
-type ExamType = "tyt" | "ayt" | "lgs" | "dgs" | "yds" | "ales" | "kpss";
-type AYTField = "say" | "ea" | "soz";
+type ExamType = 'tyt' | 'ayt' | 'lgs' | 'dgs' | 'yds' | 'ales' | 'kpss';
+type AYTField = 'say' | 'ea' | 'soz';
 
-const examConfigs: ExamConfig[] = [
+export const examConfigs: ExamConfig[] = [
   {
-    type: "tyt",
-    label: "TYT (Temel Yeterlilik Testi)",
+    type: 'tyt',
+    label: 'TYT (Temel Yeterlilik Testi)',
     subjects: [
-      { name: "turkish", label: "Türkçe", maxQuestions: 40 },
-      { name: "math", label: "Temel Matematik", maxQuestions: 40 },
-      { name: "social", label: "Sosyal Bilimler", maxQuestions: 20 },
-      { name: "science", label: "Fen Bilimleri", maxQuestions: 20 },
+      { name: 'turkish', label: 'Türkçe', maxQuestions: 40 },
+      { name: 'math', label: 'Temel Matematik', maxQuestions: 40 },
+      { name: 'social', label: 'Sosyal Bilimler', maxQuestions: 20 },
+      { name: 'science', label: 'Fen Bilimleri', maxQuestions: 20 },
     ],
     totalTime: 135,
   },
   {
-    type: "ayt",
-    label: "AYT (Alan Yeterlilik Testi)",
+    type: 'ayt',
+    label: 'AYT (Alan Yeterlilik Testi)',
     fields: [
       {
-        name: "field",
-        label: "Alan",
-        options: ["say", "ea", "soz"],
+        name: 'field',
+        label: 'Alan',
+        options: ['say', 'ea', 'soz'],
       },
     ],
     subjects: [
       {
-        name: "turkish",
-        label: "Türk Dili ve Edebiyatı",
+        name: 'literature',
+        label: 'Türk Dili ve Edebiyatı',
         maxQuestions: 24,
-        forFields: ["ea", "soz"],
+        forFields: ['ea', 'soz'],
       },
       {
-        name: "social1",
-        label: "Tarih-1",
-        maxQuestions: 10,
-        forFields: ["ea", "soz"],
+        name: 'history1',
+        label: 'Tarih-1',
+        maxQuestions: 13,
+        forFields: ['ea'],
       },
       {
-        name: "geography1",
-        label: "Coğrafya-1",
+        name: 'history2',
+        label: 'Tarih-2',
+        maxQuestions: 13,
+        forFields: ['soz'],
+      },
+      {
+        name: 'geography1',
+        label: 'Coğrafya-1',
         maxQuestions: 6,
-        forFields: ["ea", "soz"],
+        forFields: ['ea'],
       },
       {
-        name: "math",
-        label: "Matematik",
+        name: 'math',
+        label: 'Matematik',
         maxQuestions: 40,
-        forFields: ["say", "ea"],
+        forFields: ['say', 'ea'],
       },
-      { name: "physics", label: "Fizik", maxQuestions: 14, forFields: ["say"] },
+      { name: 'physics', label: 'Fizik', maxQuestions: 14, forFields: ['say'] },
       {
-        name: "chemistry",
-        label: "Kimya",
+        name: 'chemistry',
+        label: 'Kimya',
         maxQuestions: 13,
-        forFields: ["say"],
+        forFields: ['say'],
       },
       {
-        name: "biology",
-        label: "Biyoloji",
+        name: 'biology',
+        label: 'Biyoloji',
         maxQuestions: 13,
-        forFields: ["say"],
+        forFields: ['say'],
       },
       {
-        name: "social2",
-        label: "Tarih-2",
+        name: 'geography2',
+        label: 'Coğrafya-2',
         maxQuestions: 11,
-        forFields: ["soz"],
+        forFields: ['soz'],
       },
       {
-        name: "geography2",
-        label: "Coğrafya-2",
-        maxQuestions: 11,
-        forFields: ["soz"],
-      },
-      {
-        name: "philosophy",
-        label: "Felsefe",
+        name: 'philosophy',
+        label: 'Felsefe',
         maxQuestions: 12,
-        forFields: ["ea", "soz"],
+        forFields: ['soz'],
       },
       {
-        name: "religion",
-        label: "Din Kültürü",
+        name: 'religion',
+        label: 'Din Kültürü',
         maxQuestions: 6,
-        forFields: ["ea", "soz"],
+        forFields: ['soz'],
       },
       {
-        name: "language",
-        label: "Yabancı Dil",
+        name: 'language',
+        label: 'Yabancı Dil',
         maxQuestions: 80,
-        forFields: ["dil"],
+        forFields: ['dil'],
       },
     ],
     totalTime: 180,
   },
   {
-    type: "lgs",
-    label: "LGS (Liselere Geçiş Sınavı)",
+    type: 'lgs',
+    label: 'LGS (Liselere Geçiş Sınavı)',
     fields: [
       {
-        name: "educationStyle",
-        label: "Eğitim Stili",
-        options: ["Din Kültürü ve Ahlak Bilgisi", "Yabancı Dil"],
+        name: 'educationStyle',
+        label: 'Eğitim Stili',
+        options: ['Din Kültürü ve Ahlak Bilgisi', 'Yabancı Dil'],
       },
     ],
     subjects: [
-      { name: "turkish", label: "Türkçe", maxQuestions: 20 },
-      { name: "math", label: "Matematik", maxQuestions: 20 },
-      { name: "science", label: "Fen Bilimleri", maxQuestions: 20 },
+      { name: 'turkish', label: 'Türkçe', maxQuestions: 20 },
+      { name: 'math', label: 'Matematik', maxQuestions: 20 },
+      { name: 'science', label: 'Fen Bilimleri', maxQuestions: 20 },
       {
-        name: "revolution",
-        label: "T.C. İnkılap Tarihi ve Atatürkçülük",
+        name: 'social',
+        label: 'T.C. İnkılap Tarihi ve Atatürkçülük',
         maxQuestions: 10,
       },
       {
-        name: "religion",
-        label: "Din Kültürü ve Ahlak Bilgisi",
+        name: 'religion',
+        label: 'Din Kültürü ve Ahlak Bilgisi',
         maxQuestions: 10,
       },
-      { name: "language", label: "Yabancı Dil", maxQuestions: 10 },
+      { name: 'english', label: 'Yabancı Dil', maxQuestions: 10 },
     ],
     totalTime: 120,
   },
   {
-    type: "dgs",
-    label: "DGS (Dikey Geçiş Sınavı)",
+    type: 'dgs',
+    label: 'DGS (Dikey Geçiş Sınavı)',
     subjects: [
-      { name: "verbal", label: "Sözel Bölüm", maxQuestions: 60 },
-      { name: "quantitative", label: "Sayısal Bölüm", maxQuestions: 60 },
+      { name: 'turkish', label: 'Sözel Bölüm', maxQuestions: 60 },
+      { name: 'math', label: 'Sayısal Bölüm', maxQuestions: 60 },
     ],
     totalTime: 150,
   },
   {
-    type: "yds",
-    label: "YDS (Yabancı Dil Sınavı)",
-    subjects: [{ name: "language", label: "Yabancı Dil", maxQuestions: 80 }],
+    type: 'yds',
+    label: 'YDS (Yabancı Dil Sınavı)',
+    subjects: [{ name: 'english', label: 'Yabancı Dil', maxQuestions: 80 }],
     totalTime: 180,
   },
   {
-    type: "ales",
-    label: "ALES (Akademik Personel ve Lisansüstü Eğitimi Giriş Sınavı)",
+    type: 'ales',
+    label: 'ALES (Akademik Personel ve Lisansüstü Eğitimi Giriş Sınavı)',
     subjects: [
-      { name: "verbal", label: "Sözel Bölüm", maxQuestions: 50 },
-      { name: "quantitative", label: "Sayısal Bölüm", maxQuestions: 50 },
+      { name: 'soz', label: 'Sözel Bölüm', maxQuestions: 50 },
+      { name: 'say', label: 'Sayısal Bölüm', maxQuestions: 50 },
     ],
-    totalTime: 150,
+    totalTime: 135,
   },
   {
-    type: "kpss",
-    label: "KPSS (Kamu Personeli Seçme Sınavı)",
-    fields: [
-      {
-        name: "level",
-        label: "Düzey",
-        options: ["Lisans", "Önlisans", "Ortaöğretim"],
-      },
-    ],
+    type: 'kpss',
+    label: 'KPSS (Kamu Personeli Seçme Sınavı)',
     subjects: [
-      { name: "turkish", label: "Türkçe", maxQuestions: 40 },
-      { name: "math", label: "Matematik", maxQuestions: 40 },
-      { name: "history", label: "Tarih", maxQuestions: 20 },
-      { name: "geography", label: "Coğrafya", maxQuestions: 20 },
-      { name: "citizenship", label: "Vatandaşlık", maxQuestions: 10 },
-      { name: "currentEvents", label: "Güncel Olaylar", maxQuestions: 10 },
+      { name: 'turkish', label: 'Türkçe', maxQuestions: 40 },
+      { name: 'math', label: 'Matematik', maxQuestions: 40 },
+      { name: 'history', label: 'Tarih', maxQuestions: 20 },
+      { name: 'geography', label: 'Coğrafya', maxQuestions: 20 },
+      { name: 'citizenship', label: 'Vatandaşlık', maxQuestions: 10 },
+      { name: 'currentEvents', label: 'Güncel Olaylar', maxQuestions: 10 },
     ],
     totalTime: 130,
   },
@@ -232,15 +224,15 @@ const createDynamicSchema = (config: ExamConfig) => {
       });
 
   const schemaFields: Record<string, z.ZodTypeAny> = {
-    examName: z.string().min(1, "Sınav adı gereklidir."),
+    examName: z.string().min(1, 'Sınav adı gereklidir.'),
     solvingTime: z.coerce
       .number()
       .min(0)
       .max(config.totalTime || 180)
       .optional(),
     solvingDate: z.date({
-      required_error: "Lütfen sınav tarihini seçin",
-      invalid_type_error: "Geçersiz tarih formatı",
+      required_error: 'Lütfen sınav tarihini seçin',
+      invalid_type_error: 'Geçersiz tarih formatı',
     }),
   };
 
@@ -263,36 +255,36 @@ const SubjectField: React.FC<SubjectConfig & { control: any }> = ({
 }) => (
   <Card>
     <CardHeader>
-      <h3 className="font-semibold">{label}</h3>
+      <h3 className='font-semibold'>{label}</h3>
     </CardHeader>
     <CardContent>
-      <div className="grid grid-cols-3 gap-4">
+      <div className='grid grid-cols-3 gap-4'>
         <CustomFormField
           fieldType={FormFieldType.NUMBER}
           control={control}
           name={`${name}.solvingTime`}
-          label="Çözüm Süresi (dk)"
+          label='Çözüm Süresi'
           min={0}
           max={180}
-          placeholder="Dakika"
+          placeholder='Dakika'
         />
         <CustomFormField
           fieldType={FormFieldType.NUMBER}
           control={control}
           name={`${name}.correct`}
-          label="Doğru"
+          label='Doğru'
           min={0}
           max={maxQuestions}
-          placeholder="0"
+          placeholder='0'
         />
         <CustomFormField
           fieldType={FormFieldType.NUMBER}
           control={control}
           name={`${name}.wrong`}
-          label="Yanlış"
+          label='Yanlış'
           min={0}
           max={maxQuestions}
-          placeholder="0"
+          placeholder='0'
         />
       </div>
     </CardContent>
@@ -304,10 +296,11 @@ const calculateNet = (correct: number, wrong: number) => {
 };
 
 const NetCalculationModal: React.FC<{
-  onConfirm: any;
+  onConfirm: (data: any) => void;
   data: any;
   currentConfig: ExamConfig;
-}> = ({ onConfirm, data, currentConfig }) => {
+  errors: any;
+}> = ({ onConfirm, data, currentConfig, errors }) => {
   const { setClose } = useModal();
   const totalNet = currentConfig.subjects.reduce((acc, subject) => {
     const subjectData = data[subject.name];
@@ -315,7 +308,7 @@ const NetCalculationModal: React.FC<{
   }, 0);
 
   return (
-    <Modal title="Net hesaplama sonuçları">
+    <Modal title='Net hesaplama sonuçları'>
       <Table>
         <TableHeader>
           <TableRow>
@@ -340,11 +333,23 @@ const NetCalculationModal: React.FC<{
           })}
         </TableBody>
       </Table>
-      <p className="mt-4 font-bold text-lg">
+      <p className='mt-4 font-bold text-lg'>
         Toplam Net: {totalNet.toFixed(2)}
       </p>
+
+      {Object.keys(errors).length > 0 && (
+        <div className='text-red-500 mt-4'>
+          <p>Lütfen aşağıdaki hataları düzeltin:</p>
+          <ul>
+            {Object.entries(errors).map(([key, value]) => (
+              <li key={key}>{value as string}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <DialogFooter>
-        <Button onClick={setClose} variant="outline">
+        <Button onClick={setClose} variant='outline'>
           İptal
         </Button>
         <Button
@@ -352,6 +357,7 @@ const NetCalculationModal: React.FC<{
             onConfirm(data);
             setClose();
           }}
+          disabled={Object.keys(errors).length > 0}
         >
           Onayla ve kaydet
         </Button>
@@ -374,7 +380,9 @@ const ModularExamForm: React.FC = () => {
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: {} as z.infer<typeof schema>,
+    defaultValues: {
+      examType: 'tyt',
+    } as z.infer<typeof schema>,
   });
 
   useEffect(() => {
@@ -387,7 +395,8 @@ const ModularExamForm: React.FC = () => {
     setSchema(newSchema);
 
     const defaultValues: any = {
-      examName: "",
+      examName: '',
+      examType: selectedExamType,
       solvingTime: newConfig.totalTime,
       solvingDate: new Date(),
     };
@@ -413,57 +422,68 @@ const ModularExamForm: React.FC = () => {
       (selectedField && subject.forFields.includes(selectedField))
   );
 
+  const handleCalculateClick = () => {
+    form.trigger();
+    if (form.formState.isValid) {
+      setOpen(
+        <NetCalculationModal
+          currentConfig={currentConfig}
+          onConfirm={onSubmit}
+          data={form.getValues()}
+          errors={form.formState.errors}
+        />
+      );
+    } else {
+      console.log('Form hataları:', form.formState.errors);
+    }
+  };
+
   const onSubmit = async (data: z.infer<typeof schema>) => {
     const { examType, ...examData } = data;
     let aytField: AYTField | undefined;
 
-    if (selectedExamType === "ayt") {
+    if (selectedExamType === 'ayt') {
       aytField = examData.field as AYTField;
     }
 
     try {
       const success = await createExam(selectedExamType, examData, aytField);
       if (success) {
-        console.log("Sınav başarıyla oluşturuldu");
+        console.log('Sınav başarıyla oluşturuldu');
         form.reset();
       }
     } catch (error) {
-      console.error("Sınav oluşturma hatası:", error);
+      console.error('Sınav oluşturma hatası:', error);
     }
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormError
-          title={"Formda eksik veya hatalı alanlar var. Lütfen kontrol edin."}
-          description={form.formState.errors.root?.message}
-        />
-
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
         <Card>
           <CardHeader>
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+            <div className='grid grid-cols-1 xl:grid-cols-3 gap-4'>
               <CustomFormField
                 fieldType={FormFieldType.INPUT}
                 control={form.control}
-                name="examName"
-                label="Sınav Adı"
+                name='examName'
+                label='Sınav Adı'
               />
 
               <CustomFormField
                 fieldType={FormFieldType.DATE_PICKER}
                 control={form.control}
-                name="solvingDate"
-                label="Sınav Tarihi"
+                name='solvingDate'
+                label='Sınav Tarihi'
               />
 
               <CustomFormField
                 fieldType={FormFieldType.SELECT}
                 control={form.control}
-                name="examType"
-                label="Sınav Türü"
+                name='examType'
+                label='Sınav Türü'
                 onValueChange={(value: string) => {
-                  form.setValue("examType", value);
+                  form.setValue('examType', value);
                   setSelectedExamType(value as ExamType);
                 }}
               >
@@ -497,8 +517,8 @@ const ModularExamForm: React.FC = () => {
               <CustomFormField
                 fieldType={FormFieldType.NUMBER}
                 control={form.control}
-                name="solvingTime"
-                label="Toplam Çözüm Süresi (dk)"
+                name='solvingTime'
+                label='Toplam Çözüm Süresi (dk)'
                 min={0}
                 max={currentConfig.totalTime || 180}
               />
@@ -506,7 +526,14 @@ const ModularExamForm: React.FC = () => {
           </CardHeader>
         </Card>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        {form.formState.errors && (
+          <FormError
+            title='Formda hata var!'
+            description='Lütfen formu doğru bir şekilde doldurun.'
+          />
+        )}
+
+        <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
           {filteredSubjects.map((subject) => (
             <SubjectField
               key={subject.name}
@@ -516,20 +543,8 @@ const ModularExamForm: React.FC = () => {
           ))}
         </div>
 
-        <div className="flex items-center justify-end">
-          <Button
-            type="button"
-            size={"lg"}
-            onClick={() =>
-              setOpen(
-                <NetCalculationModal
-                  currentConfig={currentConfig}
-                  onConfirm={onSubmit}
-                  data={form.getValues()}
-                />
-              )
-            }
-          >
+        <div className='flex items-center gap-4 justify-end'>
+          <Button type='button' onClick={handleCalculateClick}>
             Hesapla
           </Button>
         </div>

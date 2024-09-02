@@ -1,19 +1,20 @@
-"use client";
+'use client';
 
-import { DataTable } from "@/components/global/data-table";
-import React from "react";
-import { columns } from "./columns";
-import useSWR from "swr";
-import { fetcher } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import React from 'react';
+import { columns } from './columns';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
+import { BaseDataTable } from '@/components/global/data-table';
+import { DatePickerWithRange } from '@/components/global/date-range-picker';
 
 const FocusItemsTable = () => {
-  const { data, isLoading, error } = useSWR("/pomodoro", fetcher);
+  const { data, isLoading, error } = useSWR('/pomodoro', fetcher);
 
   if (isLoading) {
-    return <Skeleton className="h-20" />;
+    return <Skeleton className='h-20' />;
   }
 
   if (error && !isLoading) {
@@ -29,11 +30,14 @@ const FocusItemsTable = () => {
   }
 
   return (
-    <DataTable
+    <BaseDataTable
       columns={columns}
       data={data}
-      searchableColumn="title"
-      dataType="pomodoro"
+      searchableColumn='title'
+      dateColumn='startsAt'
+      initialSortColumn='startsAt'
+      initialSortDirection='desc'
+      pageSize={10}
     />
   );
 };

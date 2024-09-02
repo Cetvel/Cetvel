@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import { Button } from "../ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { DialogFooter } from "../ui/dialog";
+import React, { useEffect, useRef, useState } from 'react';
+import { Button } from '../ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { DialogFooter } from '../ui/dialog';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
-import { Slider } from "../ui/slider";
-import { LoaderCircle, Pause, Play, RotateCw, Square } from "lucide-react";
-import { SelectItem } from "../ui/select";
-import useSWR from "swr";
-import { fetcher } from "@/lib/utils";
-import { Form, FormProvider, useForm } from "react-hook-form";
-import { FocusTimeSchema } from "@/lib/schemas";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import CustomFormField, { FormFieldType } from "../ui/custom-form-field";
-import { createPomodoro } from "@/lib/services/pomodoro-service";
-import { useToast } from "../ui/use-toast";
+} from '../ui/tooltip';
+import { Slider } from '../ui/slider';
+import { LoaderCircle, Pause, Play, RotateCw, Square } from 'lucide-react';
+import { SelectItem } from '../ui/select';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/utils';
+import { Form, FormProvider, useForm } from 'react-hook-form';
+import { FocusTimeSchema } from '@/lib/schemas';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
+import { createPomodoro } from '@/lib/services/pomodoro-service';
+import { useToast } from '../ui/use-toast';
 
 type FocusTimerFormValues = z.infer<typeof FocusTimeSchema>;
 
@@ -39,13 +39,13 @@ const FocusTimerForm = () => {
     data: tags,
     isLoading: isTagsLoading,
     error: tagsError,
-  } = useSWR<Tag[]>("/tag", fetcher);
+  } = useSWR<Tag[]>('/tag', fetcher);
 
   const form = useForm<FocusTimerFormValues>({
     resolver: zodResolver(FocusTimeSchema),
     defaultValues: {
-      title: "",
-      tag: "",
+      title: '',
+      tag: '',
     },
   });
 
@@ -87,9 +87,9 @@ const FocusTimerForm = () => {
     handlePause(true);
     if (!startDate) {
       toast({
-        title: "Hata",
-        description: "Lütfen önce zamanlayıcıyı başlatın.",
-        variant: "destructive",
+        title: 'Hata',
+        description: 'Lütfen önce zamanlayıcıyı başlatın.',
+        variant: 'destructive',
       });
       return;
     }
@@ -122,24 +122,24 @@ const FocusTimerForm = () => {
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
   };
 
   const renderTimerControls = () => (
-    <DialogFooter className="!justify-center gap-2 m-0">
+    <DialogFooter className='!justify-center gap-2 m-0'>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              type="button"
+              type='button'
               onClick={() => handlePause(!isPaused)}
-              size="icon"
+              size='icon'
             >
               {isPaused ? <Play size={18} /> : <Pause size={18} />}
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <span>{isPaused ? "Devam et" : "Duraklat"}</span>
+            <span>{isPaused ? 'Devam et' : 'Duraklat'}</span>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -147,10 +147,10 @@ const FocusTimerForm = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              type="button"
+              type='button'
               onClick={initTimer}
-              variant="outline"
-              size="icon"
+              variant='outline'
+              size='icon'
             >
               <RotateCw size={18} />
             </Button>
@@ -165,9 +165,9 @@ const FocusTimerForm = () => {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                type="submit"
-                variant="destructive"
-                size="icon"
+                type='submit'
+                variant='destructive'
+                size='icon'
                 onClick={handleSubmit}
               >
                 <Square size={18} />
@@ -185,30 +185,30 @@ const FocusTimerForm = () => {
   return (
     <FormProvider {...form}>
       <Form {...form}>
-        <Tabs defaultValue="focus">
-          <TabsList className="w-full grid grid-cols-2">
-            <TabsTrigger value="focus">Odaklanma</TabsTrigger>
-            <TabsTrigger value="settings">Ayarlar</TabsTrigger>
+        <Tabs defaultValue='focus'>
+          <TabsList className='w-full grid grid-cols-2'>
+            <TabsTrigger value='focus'>Odaklanma</TabsTrigger>
+            <TabsTrigger value='settings'>Ayarlar</TabsTrigger>
           </TabsList>
-          <TabsContent value="focus">
-            <h2 className="text-5xl font-bold my-10 text-center">
+          <TabsContent value='focus'>
+            <h2 className='text-5xl font-bold my-10 text-center'>
               {formatTime(secondsLeft)}
             </h2>
-            <div className="flex flex-col gap-4 mb-6 items-center w-full">
-              <p className="text-sm text-secondary-content text-center">
+            <div className='flex flex-col gap-4 mb-6 items-center w-full'>
+              <p className='text-sm text-secondary-content text-center'>
                 Lütfen odaklanma süresince odağınızı <br /> çalışmanıza verin!
               </p>
               <CustomFormField
                 fieldType={FormFieldType.INPUT}
                 control={form.control}
-                name="title"
-                placeholder="Başlık"
+                name='title'
+                placeholder='Başlık'
               />
               <CustomFormField
                 fieldType={FormFieldType.SELECT}
                 control={form.control}
-                name="tag"
-                placeholder="Etiket seçin"
+                name='tag'
+                placeholder='Etiket seçin'
               >
                 {tags ? (
                   tags.map((tag: Tag, i: number) => (
@@ -217,11 +217,11 @@ const FocusTimerForm = () => {
                     </SelectItem>
                   ))
                 ) : isTagsLoading ? (
-                  <SelectItem value="loading" disabled>
-                    <LoaderCircle size={16} className="animate-spin" />
+                  <SelectItem value='loading' disabled>
+                    <LoaderCircle size={16} className='animate-spin' />
                   </SelectItem>
                 ) : tagsError ? (
-                  <SelectItem value="error" disabled>
+                  <SelectItem value='error' disabled>
                     Etiketler yüklenemedi
                   </SelectItem>
                 ) : null}
@@ -229,16 +229,16 @@ const FocusTimerForm = () => {
             </div>
             {renderTimerControls()}
           </TabsContent>
-          <TabsContent value="settings">
-            <div className="flex flex-col gap-6 mt-6">
-              <div className="form-control">
-                <p className="mb-2">
-                  Odaklanma süresi:{" "}
-                  <span className="font-semibold">{workMinutes} dk</span>
+          <TabsContent value='settings'>
+            <div className='flex flex-col gap-6 mt-6'>
+              <div className='form-control'>
+                <p className='mb-2'>
+                  Odaklanma süresi:{' '}
+                  <span className='font-semibold'>{workMinutes} dk</span>
                 </p>
                 <Slider
                   min={15}
-                  max={60}
+                  max={120}
                   step={5}
                   value={[workMinutes]}
                   onValueChange={(value) => setWorkMinutes(value[0])}

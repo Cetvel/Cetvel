@@ -68,6 +68,18 @@
   }
 }
 
+*::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply bg-muted/50 rounded-xl;
+}
+
+*::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
 .rbc-calendar {
   @apply min-h-[700px];
 }

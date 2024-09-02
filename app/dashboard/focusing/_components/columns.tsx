@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,22 +8,20 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { deletePomodoro } from "@/lib/services/pomodoro-service";
-import { formatMinutesToHours } from "@/lib/utils";
-import { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
-import { tr } from "date-fns/locale";
-import { ArrowUpDown, Ellipsis, Pencil, Trash } from "lucide-react";
+} from '@/components/ui/dropdown-menu';
+import { deletePomodoro } from '@/lib/services/pomodoro-service';
+import { formatMinutesToHours } from '@/lib/utils';
+import { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, Ellipsis, Trash } from 'lucide-react';
 
 export const columns: ColumnDef<Focus>[] = [
   {
-    accessorKey: "title",
-    header: "Başlık",
+    accessorKey: 'title',
+    header: 'Başlık',
   },
   {
-    accessorKey: "duration",
-    header: "Süre",
+    accessorKey: 'duration',
+    header: 'Süre',
     cell: ({ row }) => {
       const minutes = row.original.duration;
 
@@ -31,7 +29,7 @@ export const columns: ColumnDef<Focus>[] = [
     },
   },
   {
-    accessorKey: "startsAt",
+    accessorKey: 'startsAt',
     filterFn: (row, columnId, filterValue) => {
       const filter_from = filterValue.from;
       const filter_to = filterValue.to;
@@ -43,9 +41,9 @@ export const columns: ColumnDef<Focus>[] = [
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
-          className="px-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          variant='ghost'
+          className='px-0'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Tarih
           <ArrowUpDown size={14} />
@@ -57,23 +55,23 @@ export const columns: ColumnDef<Focus>[] = [
     },
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
       const item = row.original;
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon-sm">
-              <span className="sr-only">Menü</span>
+            <Button variant='ghost' size='icon-sm'>
+              <span className='sr-only'>Menü</span>
               <Ellipsis size={14} />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Eylemler</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="text-red-500"
+              className='text-red-500'
               onClick={() => {
                 deletePomodoro(item._id);
               }}
