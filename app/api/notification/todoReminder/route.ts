@@ -4,8 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
 
   const { searchParams } = new URL(request.url);
-  const userId = searchParams.get('userId');
-  if (!userId) {
+  const clerkId = searchParams.get('clerkId');
+  if (!clerkId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -21,15 +21,13 @@ export async function GET(request: NextRequest) {
   endOfDay.setHours(23, 59, 59, 999);
 
   try {
-    const todos = await Todo.find({
-      clerkId: userId,
+    const count = await Todo.countDocuments({
+      clerkId: clerkId,
       status: 'incomplete',
       startsAt: { $lte: endOfDay },
       endsAt: { $gte: startOfDay }
     });
-
-    const count = todos.length;
-    console.log('Todos:', todos);
+    
     return NextResponse.json({ count },{ status: 200});
     } catch (error) {
     console.error("Error fetching todos:", error);

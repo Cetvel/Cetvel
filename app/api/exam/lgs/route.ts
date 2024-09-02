@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
     const exams = await LgsModel.find({ clerkId : userId });
     return NextResponse.json(exams);
   } catch (error) {
@@ -28,7 +27,6 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    console.log("Parsed body:", body);
     if (!body) {
       return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
     }

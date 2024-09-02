@@ -24,13 +24,13 @@ const DgsSchema = new Schema<IDGSDocument>({
     solvingTime: { type: Number, required: false, max: 135 },
     math: { 
         solvingTime: { type: Number, required: false, max: 135 },
-        correct: { type: Number, required: true, min: 0, max: 40 },
-        wrong: { type: Number, required: true, min: 0, max: 40 }
+        correct: { type: Number, required: true, min: 0, max: 50 },
+        wrong: { type: Number, required: true, min: 0, max: 50 }
     },
     turkish: {
         solvingTime: { type: Number, required: false, max: 135 },
-        correct: { type: Number, required: true, min: 0, max: 40 },
-        wrong: { type: Number, required: true, min: 0, max: 40 }
+        correct: { type: Number, required: true, min: 0, max: 50 },
+        wrong: { type: Number, required: true, min: 0, max: 50 }
     },
 });
 

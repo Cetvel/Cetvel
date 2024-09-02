@@ -10,7 +10,9 @@ export async function GET(request: NextRequest, { params }: { params: { aytType:
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
         const { aytType } = params;
-        const exams = await AytModel.find({ clerkId: userId , aytType }) as AytDocument[];
+        console.log("aytType:", aytType);
+        if (aytType !== 'say' && aytType !== 'ea' && aytType !== 'soz') return NextResponse.json({ error: "Geçerli bir Ayt formatı giriniz." }, { status: 400 });
+        const exams = await AytModel.find({ clerkId: userId, aytType }) as AytDocument[];
         return NextResponse.json(exams);
     } catch (error) {
         console.error("Error processing request:", error);
@@ -27,9 +29,9 @@ export async function POST(request: NextRequest, { params }: { params: { aytType
         }
 
         const { aytType } = params;
-
+        if (aytType !== 'say' && aytType !== 'ea' && aytType !== 'soz') return NextResponse.json({ error: "Geçerli bir Ayt formatı giriniz." }, { status: 400 });
         const body = await request.json();
-        console.log("Parsed body:", body);
+        
         if (!body) {
             return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
         }

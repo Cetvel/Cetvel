@@ -5,7 +5,8 @@ import TagModel from "@/lib/models/tag.model";
 import { ITagDocument } from "@/lib/models/tag.model";
 export async function GET(request: NextRequest) {
     if (!getAuth(request).userId) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })}
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
     const tags = await TagModel.find({ clerkId: getAuth(request).userId });
     return NextResponse.json(tags);
 }
@@ -22,6 +23,10 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
+        const isTagExist = await TagModel.countDocuments({ value: body.value, clerkId: userId });
+        if (isTagExist) {
+            return NextResponse.json({ error: "Bu etiketi zaten oluşturdunuz." }, { status: 400 });
+        }
         // tag oluştur
         const tag = new TagModel({
             clerkId: getAuth(request).userId,

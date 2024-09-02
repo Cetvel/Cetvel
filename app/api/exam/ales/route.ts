@@ -7,13 +7,12 @@ import AlesModel from "@/lib/models/exam-models/ales.model";
 export async function GET(request: NextRequest) {
   try {
     const { userId } = getAuth(request);
-    console.log("headers", request.headers)
-    console.log("userId", userId)
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const exams = await AlesModel.find({ clerkId : userId });
+    
     return NextResponse.json(exams);
   } catch (error) {
     console.error("Error processing request:", error);
@@ -38,10 +37,8 @@ export async function POST(request: NextRequest) {
     const exam = new AlesModel({
       clerkId: userId,
       ...body
-    });
-    
+    })
     await exam.save();
-    console.log("exam", exam)
     return NextResponse.json(exam, { status: 201 });
   } catch (error) {
     console.error("Error processing request:", error);

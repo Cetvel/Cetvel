@@ -15,12 +15,12 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as crons from "../crons.js";
-import type * as image from "../image.js";
-import type * as imageList from "../imageList.js";
-import type * as notification from "../notification.js";
-import type * as notificationProduction from "../notificationProduction.js";
-import type * as todoReminder from "../todoReminder.js";
-import type * as todoReminderHelpers from "../todoReminderHelpers.js";
+import type * as image_image from "../image/image.js";
+import type * as image_imageList from "../image/imageList.js";
+import type * as notification_notification from "../notification/notification.js";
+import type * as notification_notificationProduction from "../notification/notificationProduction.js";
+import type * as notification_todoReminder from "../notification/todoReminder.js";
+import type * as notification_todoReminderHelpers from "../notification/todoReminderHelpers.js";
 import type * as user_crud from "../user/crud.js";
 import type * as user_userPreference from "../user/userPreference.js";
 
@@ -34,12 +34,12 @@ import type * as user_userPreference from "../user/userPreference.js";
  */
 declare const fullApi: ApiFromModules<{
   crons: typeof crons;
-  image: typeof image;
-  imageList: typeof imageList;
-  notification: typeof notification;
-  notificationProduction: typeof notificationProduction;
-  todoReminder: typeof todoReminder;
-  todoReminderHelpers: typeof todoReminderHelpers;
+  "image/image": typeof image_image;
+  "image/imageList": typeof image_imageList;
+  "notification/notification": typeof notification_notification;
+  "notification/notificationProduction": typeof notification_notificationProduction;
+  "notification/todoReminder": typeof notification_todoReminder;
+  "notification/todoReminderHelpers": typeof notification_todoReminderHelpers;
   "user/crud": typeof user_crud;
   "user/userPreference": typeof user_userPreference;
 }>;

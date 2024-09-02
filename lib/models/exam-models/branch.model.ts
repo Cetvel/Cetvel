@@ -1,12 +1,12 @@
 import mongoose, { Schema, Document, mongo } from "mongoose";
 import Exam from "../exam.model";
 enum BranchType {
-    TYT_MAT = "tyt-mat",
+    TYT_MAT = "tyt-math",
     TYT_TR = "tyt-tr",
     TYT_SCIENCE = "tyt-science",
     TYT_SOCIAL = "tyt-social",
-    AYT_MAT = "ayt-mat",
-    AYT_FEN = "ayt-fen",
+    AYT_MAT = "ayt-math",
+    AYT_FEN = "ayt-science",
     AYT_SOZ1 = "ayt-soz1",
     AYT_SOZ2 = "ayt-soz2",
     AYT_PHY = "ayt-phy",
@@ -17,8 +17,8 @@ enum BranchType {
     AYT_HIS2 = "ayt-his2",
     AYT_GEO1 = "ayt-geo1",
     AYT_GEO2 = "ayt-geo2",
-    AYT_DIN = "ayt-din",
-    AYT_FELSEFE = "ayt-felsefe"
+    AYT_DIN = "ayt-religion",
+    AYT_FELSEFE = "ayt-philosophy"
 }
 
 export interface IBranchDocument extends Document {

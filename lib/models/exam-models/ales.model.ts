@@ -22,16 +22,20 @@ export interface IALESDocument extends IALES, Document {
     _id: Schema.Types.ObjectId;
 }
 const AlesSchema = new Schema<IALESDocument>({
-    solvingTime: { type: Number, required: false, max: 135 },
+    solvingTime: { type: Number, required: false, max: 150},
     say: { 
         solvingTime: { type: Number, required: false, max: 135 },
-        correct: { type: Number, required: true, min: 0, max: 40 },
-        wrong: { type: Number, required: true, min: 0, max: 40 }
+        correct: { type: Number, required: true, min: 0, max: 50
+         },
+        wrong: { type: Number, required: true, min: 0, max: 50
+         }
     },
     soz: {
         solvingTime: { type: Number, required: false, max: 135 },
-        correct: { type: Number, required: true, min: 0, max: 40 },
-        wrong: { type: Number, required: true, min: 0, max: 40 }
+        correct: { type: Number, required: true, min: 0, max: 50
+         },
+        wrong: { type: Number, required: true, min: 0, max: 50
+         }
     },
     point: { type: Number, required: false, min: 0, max: 100 }
 });

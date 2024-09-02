@@ -11,13 +11,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const exams = await TytModel.find({ clerkId : userId });
+    const exams = await TytModel.find({ clerkId: userId });
     return NextResponse.json(exams);
   } catch (error) {
     console.error("Error processing request:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
-    
+
 }
 
 export async function POST(request: NextRequest) {
@@ -28,7 +28,6 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    console.log("Parsed body:", body);
     if (!body) {
       return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
     }

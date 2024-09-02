@@ -2,12 +2,12 @@ import mongoose, { Document, Schema, Model } from "mongoose";
 import { userPlugins, IUserMethods, userMethods, IUserStaticMethods, userStaticMethods } from "./plugins/user.plugins";
 
 interface IUser {
-    clerkId?: string;
+    clerkId: string;
     name: string;
     email: string;
     password: string;
-    class : string;
-    studyField : string;
+    class?: string;
+    studyField?: string;
 }
 
 export interface IUserDocument extends IUser, Document, IUserMethods {
@@ -30,15 +30,15 @@ const userSchema = new Schema<IUserDocument, UserModel>({
     },
     class: {
         type: String,
-        required: true,
+        required: false,
         trim: false,
     },
     studyField: {
         type: String,
-        required: true,
+        required: false,
         trim: false,
     },
-    
+
     email: {
         type: String,
         required: true,

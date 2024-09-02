@@ -7,6 +7,6 @@ const crons = cronJobs();
 crons.interval(
   "run-notification-production",
   { minutes:  10},
-  internal.notificationProduction.produceNotifications,
+  internal.notification.notificationProduction.produceNotifications,
 )
 export default crons
