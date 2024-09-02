@@ -51,7 +51,8 @@ interface BaseDataTableProps<T> {
     value: string;
     label: string;
   }[];
-  selectColumnDefautSelected?: boolean;
+  selectColumnDefaultSelected?: string;
+  selectPlaceholder?: string;
   onSelectChange?: (value: string) => void;
   createColumnsFunction?: (type: string) => ColumnDef<T>[];
   initialSortColumn?: string;
@@ -71,7 +72,8 @@ export function BaseDataTable<T>({
   dateRangeColumns,
   selectColumn,
   selectColumnOptions,
-  selectColumnDefautSelected,
+  selectColumnDefaultSelected,
+  selectPlaceholder,
   initialSortColumn,
   initialSortDirection = 'desc',
   pageSize = 10,
@@ -91,7 +93,7 @@ export function BaseDataTable<T>({
   const [globalFilter, setGlobalFilter] = useState('');
   const [columnVisibility, setColumnVisibility] = useState({});
   const [selectedValue, setSelectedValue] = useState(
-    selectColumnOptions?.[0]?.value || ''
+    selectColumnDefaultSelected || selectColumnOptions?.[0]?.value || ''
   );
 
   const table = useReactTable({
@@ -180,14 +182,15 @@ export function BaseDataTable<T>({
         {selectColumn && selectColumnOptions && (
           <Select value={selectedValue} onValueChange={handleSelectChange}>
             <SelectTrigger className='w-[180px]'>
-              {selectColumnDefautSelected && (
+              <SelectValue>
                 <SelectValue>
-                  {selectedValue &&
-                    selectColumnOptions.find(
-                      (option) => option.value === selectedValue
-                    )?.label}
+                  {selectColumnOptions.find(
+                    (option) => option.value === selectedValue
+                  )?.label ||
+                    selectPlaceholder ||
+                    'Seçiniz'}
                 </SelectValue>
-              )}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {selectColumnOptions.map((option) => (

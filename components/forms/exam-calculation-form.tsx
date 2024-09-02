@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { FieldError, FieldErrors, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
@@ -9,7 +9,7 @@ import { Form } from '../ui/form';
 import { SelectItem } from '../ui/select';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
-import FormError from './ui/form-error';
+import FormError, { ErrorMessage } from './ui/form-error';
 import { createExam } from '@/lib/services/exam-service';
 import Modal from '../global/modal';
 import { DialogFooter } from '../ui/dialog';
@@ -213,11 +213,29 @@ const createDynamicSchema = (config: ExamConfig) => {
       .object({
         solvingTime: z.coerce
           .number()
-          .min(0)
-          .max(config.totalTime || 180)
+          .min(0, {
+            message: 'Çözüm süresi 0 dakikadan az olamaz.',
+          })
+          .max(config.totalTime || 180, {
+            message: `Çözüm süresi ${config.totalTime || 180}'i geçemez.`,
+          })
           .optional(),
-        correct: z.coerce.number().min(0).max(maxQuestions),
-        wrong: z.coerce.number().min(0).max(maxQuestions),
+        correct: z.coerce
+          .number()
+          .min(0, {
+            message: `Doğru sayısı 0'dan küçük olamaz.`,
+          })
+          .max(maxQuestions, {
+            message: `Doğru sayısı ${maxQuestions}'i geçemez.`,
+          }),
+        wrong: z.coerce
+          .number()
+          .min(0, {
+            message: `Yanlış sayısı 0'dan küçük olamaz.`,
+          })
+          .max(maxQuestions, {
+            message: `Yanlış sayısı ${maxQuestions}'i geçemez.`,
+          }),
       })
       .refine((data) => data.correct + data.wrong <= maxQuestions, {
         message: `Toplam soru sayısı ${maxQuestions}'i geçemez.`,
@@ -375,6 +393,7 @@ const ModularExamForm: React.FC = () => {
   );
   const [schema, setSchema] = useState(createDynamicSchema(currentConfig));
   const [selectedField, setSelectedField] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<ErrorMessage[]>([]);
 
   const { setOpen } = useModal();
 
@@ -422,6 +441,31 @@ const ModularExamForm: React.FC = () => {
       (selectedField && subject.forFields.includes(selectedField))
   );
 
+  const getErrorMessage = (error: unknown): string => {
+    if (typeof error === 'string') return error;
+    if (
+      error &&
+      typeof error === 'object' &&
+      'message' in error &&
+      typeof error.message === 'string'
+    )
+      return error.message;
+    return 'Geçersiz değer';
+  };
+
+  const flattenErrors = (obj: FieldErrors, prefix = ''): ErrorMessage[] => {
+    return Object.entries(obj).flatMap(([key, value]) => {
+      const field = prefix ? `${prefix}.${key}` : key;
+      if (value && typeof value === 'object' && 'message' in value) {
+        return [{ field, message: getErrorMessage(value) }];
+      }
+      if (value && typeof value === 'object') {
+        return flattenErrors(value as FieldErrors, field);
+      }
+      return [];
+    });
+  };
+
   const handleCalculateClick = () => {
     form.trigger();
     if (form.formState.isValid) {
@@ -434,7 +478,8 @@ const ModularExamForm: React.FC = () => {
         />
       );
     } else {
-      console.log('Form hataları:', form.formState.errors);
+      const errors = flattenErrors(form.formState.errors);
+      setFormErrors(errors);
     }
   };
 
@@ -526,12 +571,7 @@ const ModularExamForm: React.FC = () => {
           </CardHeader>
         </Card>
 
-        {form.formState.errors && (
-          <FormError
-            title='Formda hata var!'
-            description='Lütfen formu doğru bir şekilde doldurun.'
-          />
-        )}
+        {formErrors.length > 0 && <FormError errors={formErrors} />}
 
         <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
           {filteredSubjects.map((subject) => (

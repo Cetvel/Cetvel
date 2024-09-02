@@ -44,6 +44,7 @@ const ExamsTable = () => {
           selectColumn='examType'
           selectColumnOptions={examTypeOptions}
           createColumnsFunction={createDynamicColumns}
+          selectColumnDefaultSelected='tyt'
         />
       </CardContent>
     </Card>

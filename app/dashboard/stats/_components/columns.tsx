@@ -115,9 +115,13 @@ const createSubjectColumn = <T extends ExamResult>(
     const subjectData = row.getValue(subject.name) as SubjectResult | undefined;
     return subjectData ? (
       <div className='flex gap-2'>
-        <span className='text-green-500'>{subjectData.correct} D</span>
+        <span className='text-green-500 whitespace-nowrap'>
+          {subjectData.correct} D
+        </span>
         <p className='text-muted-foreground'>/</p>
-        <span className='text-destructive'>{subjectData.wrong} Y</span>
+        <span className='text-destructive whitespace-nowrap'>
+          {subjectData.wrong} Y
+        </span>
       </div>
     ) : (
       '-'
@@ -133,7 +137,7 @@ const actionColumn: ColumnDef<ExamResult> = {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant='ghost' size='icon'>
+          <Button variant='ghost' size='icon-sm'>
             <span className='sr-only'>Menü</span>
             <Ellipsis size={16} />
           </Button>
