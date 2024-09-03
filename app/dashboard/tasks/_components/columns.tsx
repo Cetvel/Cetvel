@@ -49,7 +49,7 @@ export const columns: ColumnDef<Task>[] = [
           {
             {
               completed: 'Tamamlandı',
-              incomplete: 'Aktif',
+              incomplete: 'Tamamlanmadı',
             }[value]
           }
         </Badge>

@@ -13,7 +13,7 @@ import { BaseDataTable } from '@/components/global/data-table';
 const taskStatusOptions = [
   {
     value: 'incomplete',
-    label: 'Aktif',
+    label: 'Tamamlanmadı',
   },
   {
     value: 'completed',
@@ -44,7 +44,7 @@ const TasksTable = () => {
         columns={columns}
         searchableColumn='title'
         dateColumn='startsAt'
-        pageSize={10}
+        pageSize={5}
         initialSortColumn='startsAt'
         initialSortDirection='desc'
         selectColumn='status'
