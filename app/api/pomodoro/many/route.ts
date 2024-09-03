@@ -5,7 +5,7 @@ export async function DELETE(req: Request) {
         const { ids } = await req.json();
         if (ids && Array.isArray(ids)) {
             await Pomodoro.deleteMany({ _id: { $in: ids } });
-            return NextResponse.json({ message: 'Görevler başarı ile silindi.' }, { status: 200 });
+            return NextResponse.json({ message: 'Çalışma oturumları başarı ile silindi.' }, { status: 200 });
         } else {
             return NextResponse.json({ error: 'Hatalı istek' }, { status: 400 });
         }
@@ -26,7 +26,7 @@ export async function PUT(req: Request) {
                 { _id: { $in: ids } },
                 { $set: updateData }
             );
-            return NextResponse.json({ message: 'Görevler başarı ile güncellendi.' }, { status: 200 });
+            return NextResponse.json({ message: 'Çalışma oturumları başarı ile güncellendi.' }, { status: 200 });
         }
     }
     catch (error: any) {
