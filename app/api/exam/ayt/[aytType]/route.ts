@@ -38,12 +38,12 @@ export async function POST(request: NextRequest, { params }: { params: { aytType
 
         const exam = new AytModel({
             clerkId: userId,
-            aytField: aytType,
+            field: aytType,
             ...body
         }) as AytDocument
 
         await exam.save();
-        return NextResponse.json(exam, { status: 201 });
+        return NextResponse.json({ status: 201 });
     } catch (error) {
         console.error("Error processing request:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
