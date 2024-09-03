@@ -1,11 +1,8 @@
-import { defaultTo } from 'lodash';
 import mongoose, { Schema, Model, Document, Types } from 'mongoose';
 
 interface IGoal {
     clerkId: string;
     title: string;
-    category: string;
-    priority: number;
     totalUnits: number;
     completedUnits: number;
     startsAt: Date;
@@ -21,7 +18,7 @@ export interface IGoalDocument extends IGoal, Document {
 interface GoalModel extends Model<IGoalDocument> { }
 
 
-const goalSchema = new mongoose.Schema<IGoalDocument, GoalModel>({
+const goalSchema = new Schema<IGoalDocument, GoalModel>({
     clerkId: {
         type: String,
         required: true,
@@ -30,17 +27,6 @@ const goalSchema = new mongoose.Schema<IGoalDocument, GoalModel>({
     title: {
         type: String,
         required: true
-    },
-    category: {
-        type: String,
-        required: true,
-        enum: ['Kodlama', 'Ders Çalışma', 'Kitap Okuma'] // Kategorileri ihtiyaca göre genişletebilirsiniz
-    },
-    priority: {
-        type: Number,
-        required: true,
-        min: 1,
-        max: 3 // 1: Düşük, 2: Orta, 3: Yüksek
     },
     startsAt: {
         type: Date,
@@ -52,7 +38,8 @@ const goalSchema = new mongoose.Schema<IGoalDocument, GoalModel>({
     },
     totalUnits: {
         type: Number,
-        required: true,
+        required: false,
+        default: 1,
         min: 1
     },
     completedUnits: {

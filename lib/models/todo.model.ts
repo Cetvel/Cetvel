@@ -1,16 +1,16 @@
-import mongoose, { Schema, Model, Document, Types } from 'mongoose';
-import { todoStatics , ITodoStatics } from './plugins/todo.plugins';
+import mongoose, { Schema, Document, Model, Types } from 'mongoose';
+import { todoStatics, ITodoStatics } from './plugins/todo.plugins';
 
 interface ITodo {
 	userId: Types.ObjectId;
-	clerkId?: string;
+	clerkId: string;
 	title: string;
 	description?: string;
-	tag: string
+	tag: string;
 	status: 'incomplete' | 'in-progress' | 'completed';
 	updatedAt: Date;
-	startsAt: Date ;
-	endsAt: Date ;
+	startsAt: Date;
+	endsAt: Date;
 	completedAt?: Date;
 	createdAt: Date;
 }
@@ -21,16 +21,15 @@ export interface ITodoDocument extends ITodo, Document {
 
 interface TodoModel extends Model<ITodoDocument>, ITodoStatics { }
 
-
 const TodoSchema = new Schema<ITodoDocument>({
-	clerkId:{
+	clerkId: {
 		type: String,
-		required: false,
+		required: true,
 	},
 	userId: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',
-		required: false
+		required: false,
 	},
 	title: {
 		type: String,
@@ -47,8 +46,8 @@ const TodoSchema = new Schema<ITodoDocument>({
 		trim: true,
 		required: true
 	},
-	startsAt : {type : Date , required : true},
-    endsAt : {type : Date , required : true},
+	startsAt: { type: Date, required: true },
+	endsAt: { type: Date, required: true },
 	createdAt: {
 		type: Date,
 		default: Date.now
@@ -57,7 +56,6 @@ const TodoSchema = new Schema<ITodoDocument>({
 		type: Date,
 		default: Date.now
 	},
-	
 	completedAt: {
 		type: Date
 	}
@@ -65,9 +63,11 @@ const TodoSchema = new Schema<ITodoDocument>({
 	timestamps: true
 });
 
-
+// Static metodları ekleme
 Object.assign(TodoSchema.statics, todoStatics);
 
-const Todo= mongoose.models.Todo || mongoose.model<ITodoDocument,TodoModel>('Todo', TodoSchema);
 
+// Modeli oluşturma ve export etme
+const Todo = mongoose.models.Todo ||mongoose.model<ITodoDocument, TodoModel>('Todo', TodoSchema)
 export default Todo;
+
