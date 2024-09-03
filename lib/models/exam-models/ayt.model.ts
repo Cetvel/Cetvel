@@ -15,7 +15,7 @@ export interface Section {
 }
 
 interface Ayt {
-    aytType: {
+    field: {
         type: string,
         enum: ['say', 'ea', `soz`],
     },
@@ -32,7 +32,7 @@ export interface AytDocument extends Ayt, Document, Section {
 
 
 const AytSchema: Schema<AytDocument> = new Schema({
-    aytType: { type: String, enum: ['say', 'ea', 'soz'], required: true },
+    field: { type: String, enum: ['say', 'ea', 'soz'], required: true },
     solvingTime: { type: Number, required: false },
     // Say ve Ea icin ortak alanlar
 
