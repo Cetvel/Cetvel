@@ -18,20 +18,17 @@ export async function POST(request: NextRequest) {
         }
        
         const body = await request.json();
-        console.log("Parsed body:", body);
         if (!body) {
             return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
         }
-       
-
-        // goal oluştur
+    
         const goal = new GoalModel({
             clerkId: userId,
             ...body
         }) as IGoalDocument
 
         await goal.save();
-        return NextResponse.json(goal, { status: 201 });
+        return NextResponse.json({ status: 201 });
     } catch (error) {
         console.error("Error processing request:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
