@@ -46,8 +46,7 @@ export async function GET() {
             { clerkId: userId, createdAt: { $gte: oneWeekAgo } },
             { title: 1, tag: 1, status: 1, _id: 0 }
         );
-        console.log("prompt todos: ", todos);
-        const prompt = `
+            const prompt = `
 		Here is my last week todo list: ${todos}.
 		Can you give me 3 todo suggestions according to them?
 		I want you to advise me on a topic that I am weak in. I don't want simple suggestions like "Study math" or "Read a book".

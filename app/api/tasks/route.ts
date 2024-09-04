@@ -3,10 +3,26 @@ import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import TodoModel from "@/lib/models/todo.model";
 import { ITodoDocument } from "@/lib/models/todo.model";
+import NodeCache from "node-cache";
+
+const cache = new NodeCache({ stdTTL: 300 });
 
 export async function GET(request: NextRequest) {
   if (!getAuth(request).userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const cacheKey = `exams_${getAuth(request).userId}_${new Date().toDateString()}`;
+
+  // Cache'den veriyi kontrol et
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) {
+    console.log(cachedData)
+    return NextResponse.json(cachedData, {
+      headers: {
+        'X-Cache-Status': 'HIT'
+      }
+    });
   }
 
   // URL'den query parametrelerini al
@@ -33,12 +49,23 @@ export async function GET(request: NextRequest) {
 
     // Toplam sayfa sayısını hesapla
     const totalPages = Math.ceil(totalTodos / limit);
-
+    cache.set(cacheKey, {
+      data: todos,
+      meta: {
+        total: totalTodos,
+        page,
+        pageSize: limit,
+        totalPages,
+      }
+    })
     return NextResponse.json({
-      todos,
-      currentPage: page,
-      totalPages,
-      totalTodos,
+      data: todos,
+      meta: {
+        total: totalTodos,
+        page,
+        pageSize: limit,
+        totalPages,
+      }
     });
   } catch (error) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
