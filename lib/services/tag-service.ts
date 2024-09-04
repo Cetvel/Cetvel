@@ -14,7 +14,7 @@ const handleApiResponse = (
   console.log(`API Response for ${action}:`, response);
 
   if (response.status >= 200 && response.status < 300) {
-    mutate('/tag');
+    mutate('/tags');
     return true;
   } else {
     toast({
@@ -41,7 +41,7 @@ const handleApiError = (error: any, action: string): boolean => {
 
 export const createTag = async (values: any): Promise<boolean> => {
   try {
-    const res = await axiosInstance.post('/tag', values);
+    const res = await axiosInstance.post('/tags', values);
     return handleApiResponse(
       { data: res.data, status: res.status },
       'oluşturma'
@@ -56,7 +56,7 @@ export const updateTag = async (
   values: any
 ): Promise<boolean> => {
   try {
-    const res = await axiosInstance.put(`/tag/${tagId}`, values);
+    const res = await axiosInstance.put(`/tags/${tagId}`, values);
     return handleApiResponse(
       { data: res.data, status: res.status },
       'güncelleme'
@@ -68,7 +68,7 @@ export const updateTag = async (
 
 export const deleteTag = async (tagId: string): Promise<boolean> => {
   try {
-    const res = await axiosInstance.delete(`/tag/${tagId}`);
+    const res = await axiosInstance.delete(`/tags/${tagId}`);
     return handleApiResponse({ data: res.data, status: res.status }, 'silme');
   } catch (error: any) {
     return handleApiError(error, 'silme');

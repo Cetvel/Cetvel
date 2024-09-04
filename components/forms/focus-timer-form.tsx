@@ -99,7 +99,7 @@ const FocusForge: React.FC = () => {
     data: tags,
     isLoading: isTagsLoading,
     error: tagsError,
-  } = useSWR<Tag[]>('/tag', fetcher);
+  } = useSWR<Tag[]>('/tags', fetcher);
 
   const form = useForm<FocusSessionValues>({
     resolver: zodResolver(FocusSessionSchema),

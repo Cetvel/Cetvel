@@ -28,7 +28,7 @@ const FocusSessionForm: React.FC<FocusSessionFormProps> = ({ editSession }) => {
     data: tags,
     isLoading: isTagsLoading,
     error: tagsError,
-  } = useSWR<Tag[]>('/tag', fetcher);
+  } = useSWR<Tag[]>('/tags', fetcher);
 
   const form = useForm<FocusSessionFormValues>({
     resolver: zodResolver(FocusSessionSchema),

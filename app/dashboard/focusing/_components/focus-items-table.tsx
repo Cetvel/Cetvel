@@ -12,7 +12,7 @@ import AddFocusItem from '@/components/global/add-focus-item';
 import { deleteMultipleFocusSessions } from '@/lib/services/focus-service';
 
 const FocusItemsTable = () => {
-  const { data, isLoading, error } = useSWR('/pomodoro', fetcher);
+  const { data, isLoading, error } = useSWR('/pomodoros', fetcher);
 
   if (isLoading) {
     return <Skeleton className='h-20' />;

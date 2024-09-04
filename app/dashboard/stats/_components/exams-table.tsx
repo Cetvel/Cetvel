@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 const ExamsTable = () => {
-  const { data, isLoading, error } = useSWR('/exam', fetcher);
+  const { data, isLoading, error } = useSWR('/exams', fetcher);
   const initialColumns = createDynamicColumns('tyt');
 
   if (isLoading) return <Skeleton className='h-36 rounded-xl' />;

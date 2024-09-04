@@ -32,7 +32,7 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
     data: tags,
     isLoading: isTagsLoading,
     error: tagsError,
-  } = useSWR<Tag[]>('/tag', fetcher);
+  } = useSWR<Tag[]>('/tags', fetcher);
   const { setClose } = useModal();
   const [isFormChanged, setIsFormChanged] = useState<boolean>(false);
 

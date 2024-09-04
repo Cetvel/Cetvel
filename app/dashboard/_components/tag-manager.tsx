@@ -29,7 +29,7 @@ interface Tag {
 }
 
 const TagManager: React.FC = () => {
-  const { data: tags, isLoading, error } = useSWR<Tag[]>('/tag', fetcher);
+  const { data: tags, isLoading, error } = useSWR<Tag[]>('/tags', fetcher);
   const [newTagName, setNewTagName] = useState('');
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
 

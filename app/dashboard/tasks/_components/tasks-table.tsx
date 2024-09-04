@@ -2,88 +2,86 @@
 
 import React from 'react';
 import { columns } from './columns';
-import useSWR from 'swr';
-import { fetcher } from '@/lib/utils';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
 import AddTask from '@/components/global/add-task';
 import { BaseDataTable } from '@/components/global/data-table';
 import {
   completeManyTasks,
   deleteManyTasks,
   incompleteManyTasks,
+  getTasksPaginated,
 } from '@/lib/services/task-service';
+import { mutate } from 'swr';
+import { ColumnDef } from '@tanstack/react-table';
 
-const taskStatusOptions = [
-  {
-    value: 'incomplete',
-    label: 'Tamamlanmadı',
-  },
-  {
-    value: 'completed',
-    label: 'Tamamlandı',
-  },
-];
+interface FetchDataOptions {
+  pageIndex: number;
+  pageSize: number;
+  sorting: Array<{ id: string; desc: boolean }>;
+  filters: Array<{ id: string; value: any }>;
+  globalFilter: string;
+}
 
 const TasksTable = () => {
-  const { data: tasks, isLoading, error } = useSWR('/todo', fetcher);
+  const fetchTasks = async (options: FetchDataOptions) => {
+    const params = {
+      page: options.pageIndex + 1,
+      pageSize: options.pageSize,
+      sortBy: options.sorting[0]?.id,
+      sortOrder: options.sorting[0]?.desc
+        ? ('desc' as const)
+        : ('asc' as const),
+      filters: Object.fromEntries(options.filters.map((f) => [f.id, f.value])),
+      search: options.globalFilter,
+    };
 
-  if (isLoading) return <Skeleton className='h-36 rounded-xl' />;
-  if (error && !isLoading)
-    return (
-      <Alert variant={'destructive'}>
-        <AlertCircle size={16} className='text-destructive' />
-        <AlertTitle>Görevler yüklenemedi</AlertTitle>
-        <AlertDescription>
-          Görevler yüklenirken bir hata oluştu. Lütfen sayfayı yenile veya daha
-          sonra tekrar dene.
-        </AlertDescription>
-      </Alert>
-    );
+    return getTasksPaginated(params);
+  };
+
+  const refreshData = () => {
+    mutate('/tasks');
+    mutate('/tasks/today');
+  };
 
   return (
-    <>
-      <BaseDataTable
-        data={tasks.todos}
-        columns={columns}
-        searchableColumn='title'
-        dateColumn='startsAt'
-        pageSize={5}
-        initialSortColumn='startsAt'
-        initialSortDirection='desc'
-        selectColumn='status'
-        selectColumnOptions={taskStatusOptions}
-        additionalComponents={<AddTask />}
-        enableMultiSelect
-        bulkActions={[
-          {
-            label: 'Tamamla',
-            action: async (selectedRows, clearSelection) => {
-              const ids = selectedRows.map((row) => row._id);
-              await completeManyTasks(ids);
-              clearSelection();
-            },
+    <BaseDataTable<Task>
+      columns={columns as ColumnDef<Task>[]}
+      fetchData={fetchTasks}
+      pageSize={5}
+      initialSort={[{ id: 'startsAt', desc: true }]}
+      showColumnToggle
+      showGlobalFilter
+      enableMultiSelect
+      bulkActions={[
+        {
+          label: 'Tamamla',
+          action: async (selectedRows, clearSelection) => {
+            const ids = selectedRows.map((row) => row._id);
+            await completeManyTasks(ids);
+            clearSelection();
+            refreshData();
           },
-          {
-            label: 'Tamamlanmadı yap',
-            action: async (selectedRows, clearSelection) => {
-              const ids = selectedRows.map((row) => row._id);
-              await incompleteManyTasks(ids);
-              clearSelection();
-            },
+        },
+        {
+          label: 'Tamamlanmadı yap',
+          action: async (selectedRows, clearSelection) => {
+            const ids = selectedRows.map((row) => row._id);
+            await incompleteManyTasks(ids);
+            clearSelection();
+            refreshData();
           },
-          {
-            label: 'Sil',
-            action: async (selectedRows, clearSelection) => {
-              const ids = selectedRows.map((row) => row._id);
-              await deleteManyTasks(ids);
-              clearSelection();
-            },
+        },
+        {
+          label: 'Sil',
+          action: async (selectedRows, clearSelection) => {
+            const ids = selectedRows.map((row) => row._id);
+            await deleteManyTasks(ids);
+            clearSelection();
+            refreshData();
           },
-        ]}
-      />
-    </>
+        },
+      ]}
+      renderAdditionalComponents={() => <AddTask />}
+    />
   );
 };
 

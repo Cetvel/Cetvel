@@ -1,24 +1,24 @@
-import React from "react";
-import { Combobox } from "../ui/combobox";
-import { AlertCircle, LoaderCircle } from "lucide-react";
+import React from 'react';
+import { Combobox } from '../ui/combobox';
+import { AlertCircle, LoaderCircle } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
-import useSWR from "swr";
-import { fetcher } from "@/lib/utils";
+} from '../ui/tooltip';
+import useSWR from 'swr';
+import { fetcher } from '@/lib/utils';
 
 type Props = {
   onChange: (value: string) => void;
 };
 
 const TagFilter = ({ onChange }: Props) => {
-  const { data: tags, isLoading, error } = useSWR<Tag[]>("/tag", fetcher);
+  const { data: tags, isLoading, error } = useSWR<Tag[]>('/tags', fetcher);
 
   if (isLoading) {
-    return <LoaderCircle size={18} className="animate-spin" />;
+    return <LoaderCircle size={18} className='animate-spin' />;
   }
 
   if (error) {
@@ -28,7 +28,7 @@ const TagFilter = ({ onChange }: Props) => {
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <AlertCircle size={18} className="text-destructive" />
+            <AlertCircle size={18} className='text-destructive' />
           </TooltipTrigger>
           <TooltipContent>
             <p>
@@ -42,13 +42,13 @@ const TagFilter = ({ onChange }: Props) => {
 
   return (
     <Combobox
-      className={"w-[120px]"}
-      itemValue={tags!.length ? tags![0].label : ""}
+      className={'w-[120px]'}
+      itemValue={tags!.length ? tags![0].label : ''}
       onChange={onChange}
       items={tags!}
-      searchText="Etiket Ara..."
-      emptyText="Etiket bulunamadı."
-      selectText="Etiket"
+      searchText='Etiket Ara...'
+      emptyText='Etiket bulunamadı.'
+      selectText='Etiket'
       searchable
     />
   );

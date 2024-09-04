@@ -1,14 +1,14 @@
-import { axiosInstance } from "@/lib/utils";
-import { toast } from "@/components/ui/use-toast";
-import { mutate } from "swr";
+import { axiosInstance } from '@/lib/utils';
+import { toast } from '@/components/ui/use-toast';
+import { mutate } from 'swr';
 
 interface ExamApiResponse {
   data: any;
   status: number;
 }
 
-type ExamType = "tyt" | "ayt" | "lgs" | "dgs" | "yds" | "ales" | "kpss";
-type AYTField = "say" | "ea" | "soz";
+type ExamType = 'tyt' | 'ayt' | 'lgs' | 'dgs' | 'yds' | 'ales' | 'kpss';
+type AYTField = 'say' | 'ea' | 'soz';
 
 const handleApiResponse = (
   response: ExamApiResponse,
@@ -17,15 +17,15 @@ const handleApiResponse = (
   if (response.status >= 200 && response.status < 300) {
     toast({
       title: `Sınav ${action}`,
-      description: "İşlem başarıyla tamamlandı.",
+      description: 'İşlem başarıyla tamamlandı.',
     });
-    mutate("/exam");
+    mutate('/exams');
     return true;
   } else {
     toast({
       title: `Sınav ${action} başarısız`,
-      description: response.data?.error || "Bir hata oluştu.",
-      variant: "destructive",
+      description: response.data?.error || 'Bir hata oluştu.',
+      variant: 'destructive',
     });
     return false;
   }
@@ -38,7 +38,7 @@ const handleApiError = (error: any, action: string): boolean => {
     description:
       error.response?.data?.error ||
       `Sınav ${action} sırasında bir hata oluştu.`,
-    variant: "destructive",
+    variant: 'destructive',
   });
   return false;
 };
@@ -49,16 +49,16 @@ export const createExam = async (
   aytField?: AYTField
 ): Promise<boolean> => {
   try {
-    let url = `/exam/${examType}`;
-    if (examType === "ayt" && aytField) {
+    let url = `/exams/${examType}`;
+    if (examType === 'ayt' && aytField) {
       url += `/${aytField}`;
     }
 
     // LGS için özel işlem
-    if (examType === "lgs") {
+    if (examType === 'lgs') {
       const { educationStyle, ...restValues } = values;
       const examData =
-        educationStyle === "din"
+        educationStyle === 'din'
           ? { ...restValues, religion: restValues.religion || {} }
           : {
               ...restValues,
@@ -66,13 +66,13 @@ export const createExam = async (
             };
 
       const res = await axiosInstance.post(url, examData);
-      return handleApiResponse(res, "oluşturma");
+      return handleApiResponse(res, 'oluşturma');
     }
 
     const res = await axiosInstance.post(url, values);
-    return handleApiResponse(res, "oluşturma");
+    return handleApiResponse(res, 'oluşturma');
   } catch (error: any) {
-    return handleApiError(error, "oluşturma");
+    return handleApiError(error, 'oluşturma');
   }
 };
 
@@ -83,24 +83,24 @@ export const updateExam = async (
   aytField?: AYTField
 ): Promise<boolean> => {
   try {
-    let url = `/exam/update/${examType}/${id}`;
-    if (examType === "ayt" && aytField) {
+    let url = `/exams/update/${examType}/${id}`;
+    if (examType === 'ayt' && aytField) {
       url += `/${aytField}`;
     }
     const res = await axiosInstance.put(url, values);
-    return handleApiResponse(res, "güncelleme");
+    return handleApiResponse(res, 'güncelleme');
   } catch (error: any) {
-    return handleApiError(error, "güncelleme");
+    return handleApiError(error, 'güncelleme');
   }
 };
 
 export const deleteExam = async (id: string): Promise<boolean> => {
   try {
-    let url = `/exam/delete/${id}`;
+    let url = `/exams/delete/${id}`;
     const res = await axiosInstance.delete(url);
-    return handleApiResponse(res, "silme");
+    return handleApiResponse(res, 'silme');
   } catch (error: any) {
-    return handleApiError(error, "silme");
+    return handleApiError(error, 'silme');
   }
 };
 
@@ -110,14 +110,14 @@ export const getExamDetails = async (
   aytField?: AYTField
 ): Promise<any> => {
   try {
-    let url = `/exam/${examType}/${id}`;
-    if (examType === "ayt" && aytField) {
+    let url = `/exams/${examType}/${id}`;
+    if (examType === 'ayt' && aytField) {
       url += `/${aytField}`;
     }
     const res = await axiosInstance.get(url);
     return res.data;
   } catch (error: any) {
-    handleApiError(error, "detayları alma");
+    handleApiError(error, 'detayları alma');
     return null;
   }
 };

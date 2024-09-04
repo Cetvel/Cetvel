@@ -26,7 +26,7 @@ type Data = {
 };
 
 const Statistics = () => {
-  const { data, isLoading, error } = useSWR<Data>('/pomodoro/today', fetcher);
+  const { data, isLoading, error } = useSWR<Data>('/pomodoros/today', fetcher);
 
   if (isLoading) {
     return (
