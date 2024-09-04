@@ -9,6 +9,11 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import AddTask from '@/components/global/add-task';
 import { BaseDataTable } from '@/components/global/data-table';
+import {
+  completeManyTasks,
+  deleteManyTasks,
+  incompleteManyTasks,
+} from '@/lib/services/task-service';
 
 const taskStatusOptions = [
   {
@@ -40,7 +45,7 @@ const TasksTable = () => {
   return (
     <>
       <BaseDataTable
-        data={tasks}
+        data={tasks.todos}
         columns={columns}
         searchableColumn='title'
         dateColumn='startsAt'
@@ -49,7 +54,34 @@ const TasksTable = () => {
         initialSortDirection='desc'
         selectColumn='status'
         selectColumnOptions={taskStatusOptions}
-        filterComponent={<AddTask />}
+        additionalComponents={<AddTask />}
+        enableMultiSelect
+        bulkActions={[
+          {
+            label: 'Tamamla',
+            action: async (selectedRows, clearSelection) => {
+              const ids = selectedRows.map((row) => row._id);
+              await completeManyTasks(ids);
+              clearSelection();
+            },
+          },
+          {
+            label: 'Tamamlanmadı yap',
+            action: async (selectedRows, clearSelection) => {
+              const ids = selectedRows.map((row) => row._id);
+              await incompleteManyTasks(ids);
+              clearSelection();
+            },
+          },
+          {
+            label: 'Sil',
+            action: async (selectedRows, clearSelection) => {
+              const ids = selectedRows.map((row) => row._id);
+              await deleteManyTasks(ids);
+              clearSelection();
+            },
+          },
+        ]}
       />
     </>
   );

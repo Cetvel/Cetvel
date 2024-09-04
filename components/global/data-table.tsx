@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ColumnDef,
   flexRender,
@@ -33,13 +33,15 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
+  DropdownMenuItem,
 } from '../ui/dropdown-menu';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface BaseDataTableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
   searchableColumn?: string;
-  filterComponent?: React.ReactNode;
+  additionalComponents?: React.ReactNode;
   dateColumn?: string;
   dateRangeColumns?: {
     placeholder?: string;
@@ -61,13 +63,19 @@ interface BaseDataTableProps<T> {
   showColumnToggle?: boolean;
   showGlobalFilter?: boolean;
   customRowActions?: (row: T) => React.ReactNode;
+  enableMultiSelect?: boolean;
+  bulkActions?: {
+    label: string;
+    action: (selectedRows: T[], clearSelection: () => void) => void;
+  }[];
+  getRowId?: (row: T) => string;
 }
 
 export function BaseDataTable<T>({
   data,
   columns: initialColumns,
   searchableColumn,
-  filterComponent,
+  additionalComponents,
   dateColumn,
   dateRangeColumns,
   selectColumn,
@@ -82,6 +90,9 @@ export function BaseDataTable<T>({
   createColumnsFunction,
   onSelectChange,
   customRowActions,
+  enableMultiSelect = false,
+  bulkActions = [],
+  getRowId = (row: any) => row.id,
 }: BaseDataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>(
     initialSortColumn
@@ -95,6 +106,7 @@ export function BaseDataTable<T>({
   const [selectedValue, setSelectedValue] = useState(
     selectColumnDefaultSelected || selectColumnOptions?.[0]?.value || ''
   );
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
@@ -107,18 +119,27 @@ export function BaseDataTable<T>({
     getFilteredRowModel: getFilteredRowModel(),
     onGlobalFilterChange: setGlobalFilter,
     onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       globalFilter,
       columnVisibility,
+      rowSelection,
     },
     initialState: {
       pagination: {
         pageSize,
       },
     },
+    enableRowSelection: enableMultiSelect,
+    enableMultiRowSelection: enableMultiSelect,
+    getRowId,
   });
+
+  const clearRowSelection = useCallback(() => {
+    setRowSelection({});
+  }, []);
 
   useEffect(() => {
     if (createColumnsFunction && selectedValue) {
@@ -135,54 +156,86 @@ export function BaseDataTable<T>({
     }
   };
 
+  const selectedRows = table
+    .getPreFilteredRowModel()
+    .rows.filter((row) => row.getIsSelected())
+    .map((row) => row.original);
+
+  const selectionColumn: ColumnDef<T> = {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label='Tümünü seç'
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label='Satırı seç'
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  };
+
+  useEffect(() => {
+    if (enableMultiSelect && !columns.find((col) => col.id === 'select')) {
+      setColumns([selectionColumn, ...columns]);
+    }
+  }, [enableMultiSelect, columns]);
+
   return (
     <div>
-      <div className='flex items-center pb-4 gap-4'>
-        {showGlobalFilter && (
-          <Input
-            placeholder='Global arama...'
-            value={globalFilter}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            className='max-w-sm'
-          />
-        )}
-        {searchableColumn && (
-          <Input
-            placeholder='Arama yap...'
-            value={
-              (table.getColumn(searchableColumn)?.getFilterValue() as string) ??
-              ''
-            }
-            onChange={(event) =>
-              table
-                .getColumn(searchableColumn)
-                ?.setFilterValue(event.target.value)
-            }
-            className='max-w-sm'
-          />
-        )}
-        {dateColumn && (
-          <DatePickerWithRange
-            onDateChange={(range) => {
-              table.getColumn(dateColumn)?.setFilterValue(range);
-            }}
-          />
-        )}
-        {dateRangeColumns &&
-          dateRangeColumns.map((range, index) => (
+      <div className='flex items-center justify-between pb-4'>
+        <div className='flex items-center gap-4'>
+          {showGlobalFilter && (
+            <Input
+              placeholder='Global arama...'
+              value={globalFilter}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              className='max-w-sm'
+            />
+          )}
+          {searchableColumn && (
+            <Input
+              placeholder='Arama yap...'
+              value={
+                (table
+                  .getColumn(searchableColumn)
+                  ?.getFilterValue() as string) ?? ''
+              }
+              onChange={(event) =>
+                table
+                  .getColumn(searchableColumn)
+                  ?.setFilterValue(event.target.value)
+              }
+              className='max-w-sm'
+            />
+          )}
+          {dateColumn && (
             <DatePickerWithRange
-              key={index}
-              placeholder={range.placeholder}
-              onDateChange={(dateRange) => {
-                table.getColumn(range.start)?.setFilterValue(dateRange);
-                table.getColumn(range.end)?.setFilterValue(dateRange);
+              onDateChange={(range) => {
+                table.getColumn(dateColumn)?.setFilterValue(range);
               }}
             />
-          ))}
-        {selectColumn && selectColumnOptions && (
-          <Select value={selectedValue} onValueChange={handleSelectChange}>
-            <SelectTrigger className='w-[180px]'>
-              <SelectValue>
+          )}
+          {dateRangeColumns &&
+            dateRangeColumns.map((range, index) => (
+              <DatePickerWithRange
+                key={index}
+                placeholder={range.placeholder}
+                onDateChange={(dateRange) => {
+                  table.getColumn(range.start)?.setFilterValue(dateRange);
+                  table.getColumn(range.end)?.setFilterValue(dateRange);
+                }}
+              />
+            ))}
+          {selectColumn && selectColumnOptions && (
+            <Select value={selectedValue} onValueChange={handleSelectChange}>
+              <SelectTrigger className='w-[180px]'>
                 <SelectValue>
                   {selectColumnOptions.find(
                     (option) => option.value === selectedValue
@@ -190,43 +243,68 @@ export function BaseDataTable<T>({
                     selectPlaceholder ||
                     'Seçiniz'}
                 </SelectValue>
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {selectColumnOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
-        {filterComponent}
+              </SelectTrigger>
+              <SelectContent>
+                {selectColumnOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          {additionalComponents}
+        </div>
+        <div className='flex items-center gap-2'>
+          {showColumnToggle && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant='outline'>Sütunlar</Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align='end'>
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className='capitalize'
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+          {enableMultiSelect && bulkActions.length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant='outline' disabled={selectedRows.length === 0}>
+                  İşlemler ({selectedRows.length})
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {bulkActions.map((action, index) => (
+                  <DropdownMenuItem
+                    key={index}
+                    onClick={() =>
+                      action.action(selectedRows, clearRowSelection)
+                    }
+                  >
+                    {action.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
       </div>
-
-      {showColumnToggle && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='outline' className='ml-auto'>
-              Sütunlar
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            {table.getAllColumns().map((column) => {
-              return (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className='capitalize'
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
       <div className='rounded-md border'>
         <Table>
           <TableHeader>

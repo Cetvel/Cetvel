@@ -1,5 +1,6 @@
 'use client';
 
+import { ActionCell } from '@/components/global/action-cell';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -9,7 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { deletePomodoro } from '@/lib/services/pomodoro-service';
+import { useFocusActions } from '@/hooks/use-focus-actions';
+import { deleteFocusSession } from '@/lib/services/focus-service';
 import { formatMinutesToHours } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Ellipsis, Trash } from 'lucide-react';
@@ -57,30 +59,14 @@ export const columns: ColumnDef<Focus>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const item = row.original;
+      const actions = useFocusActions(row.original);
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' size='icon-sm'>
-              <span className='sr-only'>Menü</span>
-              <Ellipsis size={14} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Eylemler</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className='text-red-500'
-              onClick={() => {
-                deletePomodoro(item._id);
-              }}
-            >
-              <Trash size={14} />
-              Sil
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ActionCell
+          item={row.original}
+          actions={actions}
+          label='Odaklanma eylemleri'
+        />
       );
     },
   },

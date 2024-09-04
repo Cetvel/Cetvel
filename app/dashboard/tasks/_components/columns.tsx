@@ -1,35 +1,10 @@
 import { ActionCell } from '@/components/global/action-cell';
 import { ColumnHeader } from '@/components/global/column-header';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { useTaskActions } from '@/hooks/use-task-actions';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
 
 export const columns: ColumnDef<Task>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Tümünü seç'
-      />
-    ),
-
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Satırı seç'
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
   {
     accessorKey: 'title',
     header: 'Başlık',
@@ -90,6 +65,15 @@ export const columns: ColumnDef<Task>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <ActionCell task={row.original} />,
+    cell: ({ row }) => {
+      const actions = useTaskActions(row.original);
+      return (
+        <ActionCell
+          item={row.original}
+          actions={actions}
+          label='Görev eylemleri'
+        />
+      );
+    },
   },
 ];

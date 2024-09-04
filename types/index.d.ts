@@ -14,6 +14,7 @@ declare type Task = {
 
 declare type Focus = {
   _id: string;
+  tag: string;
   title: string;
   duration: number;
   startsAt: Date;
@@ -40,17 +41,17 @@ declare type Action = {
   icon: React.ReactNode;
   label: string;
   onClick: () => void;
-  variant?: "default" | "destructive";
+  variant?: 'default' | 'destructive';
   alert?: boolean;
 };
 
 declare enum TaskStatus {
-  COMPLETED = "completed",
-  INCOMPLETE = "incomplete",
+  COMPLETED = 'completed',
+  INCOMPLETE = 'incomplete',
 }
 
-declare type UserClass = "9" | "10" | "11" | "12" | "Mezun";
-declare type ExamType = "TYT" | "AYT";
+declare type UserClass = '9' | '10' | '11' | '12' | 'Mezun';
+declare type ExamType = 'TYT' | 'AYT';
 
 declare interface FieldBase {
   name: string;
@@ -59,12 +60,12 @@ declare interface FieldBase {
 }
 
 declare interface NumberField extends FieldBase {
-  type: "number";
+  type: 'number';
   max: number;
 }
 
 declare interface SelectField extends FieldBase {
-  type: "select";
+  type: 'select';
   options: { value: string; label: string }[];
 }
 

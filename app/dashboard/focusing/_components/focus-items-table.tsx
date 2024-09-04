@@ -8,7 +8,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { BaseDataTable } from '@/components/global/data-table';
-import { DatePickerWithRange } from '@/components/global/date-range-picker';
+import AddFocusItem from '@/components/global/add-focus-item';
+import { deleteMultipleFocusSessions } from '@/lib/services/focus-service';
 
 const FocusItemsTable = () => {
   const { data, isLoading, error } = useSWR('/pomodoro', fetcher);
@@ -32,12 +33,24 @@ const FocusItemsTable = () => {
   return (
     <BaseDataTable
       columns={columns}
-      data={data}
+      data={data.pomodoros}
       searchableColumn='title'
       dateColumn='startsAt'
       initialSortColumn='startsAt'
       initialSortDirection='desc'
       pageSize={10}
+      additionalComponents={<AddFocusItem />}
+      enableMultiSelect
+      bulkActions={[
+        {
+          label: 'Seçilenleri sil',
+          action: async (selectedRows, clearSelection) => {
+            const ids = selectedRows.map((row) => row._id);
+            await deleteMultipleFocusSessions(ids);
+            clearSelection();
+          },
+        },
+      ]}
     />
   );
 };

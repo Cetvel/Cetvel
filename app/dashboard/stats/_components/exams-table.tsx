@@ -5,10 +5,12 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { BaseDataTable } from '@/components/global/data-table';
 import { createDynamicColumns, examTypeOptions } from './columns';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 const ExamsTable = () => {
   const { data, isLoading, error } = useSWR('/exam', fetcher);
@@ -45,6 +47,25 @@ const ExamsTable = () => {
           selectColumnOptions={examTypeOptions}
           createColumnsFunction={createDynamicColumns}
           selectColumnDefaultSelected='tyt'
+          enableMultiSelect
+          bulkActions={[
+            {
+              label: 'Seçilenleri sil',
+              action: async (selectedRows, clearSelection) => {
+                const ids = selectedRows.map((row) => row._id);
+                console.log(ids);
+                clearSelection();
+              },
+            },
+          ]}
+          additionalComponents={
+            <Link href={'/dashboard/calculation'}>
+              <Button>
+                <Plus size={16} />
+                <span className='ml-2'>Sınav Ekle</span>
+              </Button>
+            </Link>
+          }
         />
       </CardContent>
     </Card>
