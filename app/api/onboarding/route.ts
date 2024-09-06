@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from '@/convex/_generated/api'
 import User from "@/lib/models/user.model";
+import connectDB from "@/lib/config/connectDB";
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!)
 
@@ -13,6 +14,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         const { isOnboarded, studyField, defaultTemplate, studentClass, notification } = await req.json()
 
+        await connectDB()
         const user = await User.findOne({ clerkId: userId })
         if (!user) return NextResponse.json({ error: "Kullanıcı bulunamadı." }, { status: 404 })
 
@@ -41,7 +43,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         return NextResponse.json({ status: 200 })
     } catch (error) {
-        console.error("Error occured", error)
         return NextResponse.json({ error }, { status: 400 })
 
     }

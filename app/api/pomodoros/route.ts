@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import PomodoroModel from "@/lib/models/pomodoro.model";
 import { PomodoroDocument } from "@/lib/models/pomodoro.model";
+import connectDB from '@/lib/config/connectDB';
 
 
 export async function GET(request: NextRequest) {
@@ -21,6 +22,7 @@ export async function GET(request: NextRequest) {
     const skip = (page - 1) * limit;
   
     try {
+      await connectDB();
       const totalPomodoros = await PomodoroModel.countDocuments({ clerkId: getAuth(request).userId! });
   
       const pomodoros = await PomodoroModel.find({ clerkId: getAuth(request).userId! })
@@ -35,7 +37,7 @@ export async function GET(request: NextRequest) {
         currentPage: page,
         totalPages,
         totalPomodoros,
-      });
+      },{status:200});
     } catch (error) {
       return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
@@ -55,16 +57,15 @@ export async function POST(request: NextRequest) {
         if (!body) {
             return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
         }
-        
+        await connectDB();
         const pomodoro = new PomodoroModel({
             clerkId: getAuth(request).userId,
             ...body
         }) as PomodoroDocument
         
         await pomodoro.save();
-        return NextResponse.json(pomodoro, { status: 201 });
+        return NextResponse.json({ status: 201 });
     } catch (error) {
-        console.error("Error processing request:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

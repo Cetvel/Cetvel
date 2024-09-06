@@ -1,121 +1,74 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
-import TodoModel from '@/lib/models/todo.model';
-import { ITodoDocument } from '@/lib/models/todo.model';
-import NodeCache from 'node-cache';
+import { NextRequest,NextResponse } from "next/server";
+import NodeCache from "node-cache";
+import { getAuth } from "@clerk/nextjs/server";
+import TodoModel from "@/lib/models/todo.model";
 
 const cache = new NodeCache({ stdTTL: 300 });
 
 export async function GET(request: NextRequest) {
-  if (!getAuth(request).userId) {
+  const userId = getAuth(request).userId;
+  if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const cacheKey = `exams_${getAuth(request).userId}_${new Date().toDateString()}`;
-
-  // Cache'den veriyi kontrol et
-  const cachedData = cache.get(cacheKey);
-  if (cachedData) {
-    console.log(cachedData);
-    return NextResponse.json(cachedData, {
-      headers: {
-        'X-Cache-Status': 'HIT',
-      },
-    });
-  }
-
-  // URL'den query parametrelerini al
   const searchParams = request.nextUrl.searchParams;
   const page = parseInt(searchParams.get('page') || '1', 10);
-  const limit = parseInt(searchParams.get('limit') || '10', 10);
+  const pageSize = parseInt(searchParams.get('pageSize') || '10', 10);
+  const sortBy = searchParams.get('sortBy') || 'createdAt';
+  const sortOrder = searchParams.get('sortOrder') || 'desc';
+  const search = searchParams.get('search') || '';
+  const status = searchParams.get('status') || '';
 
-  // Sayfa ve limit değerlerini doğrula
-  if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
+  if (isNaN(page) || isNaN(pageSize) || page < 1 || pageSize < 1) {
     return NextResponse.json(
-      { error: 'Geçersiz sayfa sayısı veya limit' },
+      { error: 'Geçersiz sayfa sayısı veya pageSize' },
       { status: 400 }
     );
   }
 
-  const skip = (page - 1) * limit;
+  // caching
+
+  const skip = (page - 1) * pageSize;
 
   try {
-    // Toplam todo sayısını al
-    const totalTodos = await TodoModel.countDocuments({
-      clerkId: getAuth(request).userId!,
-    });
+    let query: any = { clerkId: userId };
 
-    // Paginasyonlu todo verilerini al
-    const todos = await TodoModel.find({ clerkId: getAuth(request).userId! })
+    if (status) {
+      query.status = status;
+    }
+
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { tag: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const totalTodos = await TodoModel.countDocuments(query);
+
+    const sortOptions: any = {};
+    sortOptions[sortBy] = sortOrder === 'asc' ? 1 : -1;
+
+    const todos = await TodoModel.find(query)
       .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 });
+      .limit(pageSize)
+      .sort(sortOptions);
 
-    // Toplam sayfa sayısını hesapla
-    const totalPages = Math.ceil(totalTodos / limit);
-    cache.set(cacheKey, {
+    const totalPages = Math.ceil(totalTodos / pageSize);
+
+    const result = {
       data: todos,
       meta: {
         total: totalTodos,
         page,
-        pageSize: limit,
+        pageSize,
         totalPages,
       },
-    });
-    return NextResponse.json({
-      data: todos,
-      meta: {
-        total: totalTodos,
-        page,
-        pageSize: limit,
-        totalPages,
-      },
-    });
+    };
+
+
+    return NextResponse.json(result);
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    console.log('Parsed body:', body);
-    if (!body) {
-      return NextResponse.json(
-        { error: 'Request body is empty' },
-        { status: 400 }
-      );
-    }
-    const { userId } = getAuth(request);
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    if (!body.tag)
-      return NextResponse.json({ error: 'Etiket gereklidir' }, { status: 400 });
-
-    // Todo oluştur
-    const todo = new TodoModel({
-      clerkId: getAuth(request).userId,
-      ...body,
-    }) as ITodoDocument;
-
-    await todo.save();
-    const response = NextResponse.json(todo, { status: 201 });
-    response.headers.set(
-      'Cache-Control',
-      's-maxage=60, stale-while-revalidate'
-    );
-    return response;
-  } catch (error) {
-    console.error('Error processing request:', error);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
+    // Error catching
   }
 }
