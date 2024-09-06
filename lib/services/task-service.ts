@@ -105,31 +105,6 @@ export const getTodayTasks = async (): Promise<Task[]> => {
   }
 };
 
-export const getTasksPaginated = async (params: {
-  page: number;
-  pageSize: number;
-  sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
-  filters?: Record<string, any>;
-  search?: string;
-}): Promise<{
-  data: Task[];
-  meta: {
-    total: number;
-    page: number;
-    pageSize: number;
-    totalPages: number;
-  };
-}> => {
-  try {
-    const res = await axiosInstance.get('/tasks', { params });
-    return res.data;
-  } catch (error: any) {
-    console.error('Error fetching paginated tasks:', error);
-    throw error;
-  }
-};
-
 export const deleteManyTasks = async (taskIds: string[]): Promise<boolean> => {
   try {
     const res = await axiosInstance.delete('/tasks/many', {

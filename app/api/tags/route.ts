@@ -3,18 +3,25 @@ import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import TagModel from "@/lib/models/tag.model";
 import { ITagDocument } from "@/lib/models/tag.model";
+import connectDB from "@/lib/config/connectDB";
+
 export async function GET(request: NextRequest) {
-    if (!getAuth(request).userId) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    try {
+        if (!getAuth(request).userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+        }
+        await connectDB();
+        const tags = await TagModel.find({ clerkId: getAuth(request).userId });
+        return NextResponse.json(tags, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
-    const tags = await TagModel.find({ clerkId: getAuth(request).userId });
-    return NextResponse.json(tags);
+
 }
 
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        console.log("Parsed body:", body);
         if (!body) {
             return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
         }
@@ -28,15 +35,15 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Bu etiketi zaten oluşturdunuz." }, { status: 400 });
         }
         // tag oluştur
+        await connectDB()
         const tag = new TagModel({
             clerkId: getAuth(request).userId,
             ...body
         }) as ITagDocument
 
         await tag.save();
-        return NextResponse.json(tag, { status: 201 });
+        return NextResponse.json({ status: 201 });
     } catch (error) {
-        console.error("Error processing request:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

@@ -2,19 +2,10 @@
 
 import { ActionCell } from '@/components/global/action-cell';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { useFocusActions } from '@/hooks/use-focus-actions';
-import { deleteFocusSession } from '@/lib/services/focus-service';
 import { formatMinutesToHours } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Ellipsis, Trash } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 
 export const columns: ColumnDef<Focus>[] = [
   {

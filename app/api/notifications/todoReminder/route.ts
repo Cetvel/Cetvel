@@ -1,3 +1,7 @@
+//! Here is used by Convex
+
+
+import connectDB from "@/lib/config/connectDB";
 import Todo from "@/lib/models/todo.model";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -21,8 +25,9 @@ export async function GET(request: NextRequest) {
   endOfDay.setHours(23, 59, 59, 999);
 
   try {
+    await connectDB()
     const count = await Todo.countDocuments({
-      clerkId: clerkId,
+      clerkId,
       status: 'incomplete',
       startsAt: { $lte: endOfDay },
       endsAt: { $gte: startOfDay }
@@ -30,7 +35,6 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json({ count },{ status: 200});
     } catch (error) {
-    console.error("Error fetching todos:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

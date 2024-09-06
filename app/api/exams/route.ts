@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import ExamModel from "@/lib/models/exam.model";
 import NodeCache from 'node-cache';
+import connectDB from "@/lib/config/connectDB";
 
 const cache = new NodeCache({ stdTTL: 300 });
 export async function GET(request: NextRequest) {
@@ -17,16 +18,17 @@ export async function GET(request: NextRequest) {
     if (cachedData) {
       console.log(cachedData)
       return NextResponse.json(cachedData, {
+        status: 200,
         headers: {
           'X-Cache-Status': 'HIT'
         }
       });
     }
+    await connectDB();
     const exams = await ExamModel.find({ clerkId: userId });
     cache.set(cacheKey, exams)
-    return NextResponse.json(exams);
+    return NextResponse.json(exams, { status: 200 });
   } catch (error) {
-    console.error("Error processing request:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 

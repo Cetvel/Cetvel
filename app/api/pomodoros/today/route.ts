@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
 import Pomodoro from '@/lib/models/pomodoro.model';
+import connectDB from '@/lib/config/connectDB';
 
 export async function GET(request: NextRequest) {
-  console.log("istegi aldim hocam")
   try {
     const { userId } = getAuth(request);
 
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     const sevenDaysAgo = new Date(nowInTurkey);
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
     sevenDaysAgo.setUTCHours(0, 0, 0, 0);
-
+    await connectDB()
     const result = await Pomodoro.aggregate([
       {
         $match: {
@@ -137,10 +137,9 @@ export async function GET(request: NextRequest) {
           : 0
       },
       chartData: chartData
-    });
+    },{status: 200});
 
   } catch (error) {
-    console.error('Error fetching pomodoro stats:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

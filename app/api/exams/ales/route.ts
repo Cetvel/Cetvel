@@ -3,28 +3,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import AlesModel from "@/lib/models/exam-models/ales.model";
-
+import connectDB from "@/lib/config/connectDB";
 export async function GET(request: NextRequest) {
   try {
     const { userId } = getAuth(request);
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    await connectDB()
+    const exams = await AlesModel.find({ clerkId: userId });
 
-    const exams = await AlesModel.find({ clerkId : userId });
-    
-    return NextResponse.json(exams);
+    return NextResponse.json(exams, { status: 200 });
   } catch (error) {
-    console.error("Error processing request:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
-    
+
 }
 
 export async function POST(request: NextRequest) {
   try {
     const { userId } = getAuth(request);
-    console.log("headers", request.headers)
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -34,14 +32,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
     }
 
+    await connectDB()
     const exam = new AlesModel({
       clerkId: userId,
       ...body
     })
     await exam.save();
-    return NextResponse.json(exam, { status: 201 });
+
+    return NextResponse.json({ status: 201 });
   } catch (error) {
-    console.error("Error processing request:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
