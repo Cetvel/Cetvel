@@ -3,119 +3,65 @@ import { NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
 import TodoModel from '@/lib/models/todo.model';
 import { ITodoDocument } from '@/lib/models/todo.model';
-import NodeCache from 'node-cache';
-
-const cache = new NodeCache({ stdTTL: 300 });
+import connectDB from '@/lib/config/connectDB';
 
 export async function GET(request: NextRequest) {
-  if (!getAuth(request).userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
 
-  const cacheKey = `exams_${getAuth(request).userId}_${new Date().toDateString()}`;
+	if (!getAuth(request).userId) {
+		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+	}
 
-  // Cache'den veriyi kontrol et
-  const cachedData = cache.get(cacheKey);
-  if (cachedData) {
-    console.log(cachedData);
-    return NextResponse.json(cachedData, {
-      headers: {
-        'X-Cache-Status': 'HIT',
-      },
-    });
-  }
+	try {
 
-  // URL'den query parametrelerini al
-  const searchParams = request.nextUrl.searchParams;
-  const page = parseInt(searchParams.get('page') || '1', 10);
-  const limit = parseInt(searchParams.get('limit') || '10', 10);
-
-  // Sayfa ve limit değerlerini doğrula
-  if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
-    return NextResponse.json(
-      { error: 'Geçersiz sayfa sayısı veya limit' },
-      { status: 400 }
-    );
-  }
-
-  const skip = (page - 1) * limit;
-
-  try {
-    // Toplam todo sayısını al
-    const totalTodos = await TodoModel.countDocuments({
-      clerkId: getAuth(request).userId!,
-    });
-
-    // Paginasyonlu todo verilerini al
-    const todos = await TodoModel.find({ clerkId: getAuth(request).userId! })
-      .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 });
-
-    // Toplam sayfa sayısını hesapla
-    const totalPages = Math.ceil(totalTodos / limit);
-    cache.set(cacheKey, {
-      data: todos,
-      meta: {
-        total: totalTodos,
-        page,
-        pageSize: limit,
-        totalPages,
-      },
-    });
-    return NextResponse.json({
-      data: todos,
-      meta: {
-        total: totalTodos,
-        page,
-        pageSize: limit,
-        totalPages,
-      },
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
-  }
+		await connectDB()
+		const todos = await TodoModel.find({ clerkId: getAuth(request).userId });
+		return NextResponse.json(todos, {
+			headers: {
+				'X-Cache-Status': 'MISS',
+			},
+		});
+	} catch (error) {
+		return NextResponse.json(
+			{ error: 'Internal Server Error' },
+			{ status: 500 }
+		);
+	}
 }
 
 export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    console.log('Parsed body:', body);
-    if (!body) {
-      return NextResponse.json(
-        { error: 'Request body is empty' },
-        { status: 400 }
-      );
-    }
-    const { userId } = getAuth(request);
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+	try {
+		const body = await request.json();
+		if (!body) {
+			return NextResponse.json(
+				{ error: 'Request body is empty' },
+				{ status: 400 }
+			);
+		}
+		const { userId } = getAuth(request);
+		if (!userId) {
+			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+		}
 
-    if (!body.tag)
-      return NextResponse.json({ error: 'Etiket gereklidir' }, { status: 400 });
+		if (!body.tag)
+			return NextResponse.json({ error: 'Etiket gereklidir' }, { status: 400 });
 
-    // Todo oluştur
-    const todo = new TodoModel({
-      clerkId: getAuth(request).userId,
-      ...body,
-    }) as ITodoDocument;
+		// Todo oluştur
+		const todo = new TodoModel({
+			clerkId: getAuth(request).userId,
+			...body,
+		}) as ITodoDocument;
 
-    await todo.save();
-    const response = NextResponse.json(todo, { status: 201 });
-    response.headers.set(
-      'Cache-Control',
-      's-maxage=60, stale-while-revalidate'
-    );
-    return response;
-  } catch (error) {
-    console.error('Error processing request:', error);
-    return NextResponse.json(
-      { error: 'Internal Server Error' },
-      { status: 500 }
-    );
-  }
+		await todo.save();
+		const response = NextResponse.json({ status: 201 });
+		response.headers.set(
+			'Cache-Control',
+			's-maxage=60, stale-while-revalidate'
+		);
+		return response;
+	} catch (error) {
+		return NextResponse.json(
+			{ error: 'Internal Server Error' },
+			{ status: 500 }
+		);
+	}
 }
