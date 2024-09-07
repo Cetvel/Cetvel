@@ -79,7 +79,7 @@ const KpssSchema = new Schema<IKPSSDocument>({
 
 
 const Kpss = (mongoose.models.Kpss as mongoose.Model<IKPSSDocument>) || 
-    Exam.discriminator<IKPSSDocument>('Kpss', KpssSchema);
+    Exam.discriminator<IKPSSDocument>('KPSS', KpssSchema);
 
 export default Kpss;
 

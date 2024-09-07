@@ -42,7 +42,7 @@ const AlesSchema = new Schema<IALESDocument>({
 
 
 const Ales = (mongoose.models.Ales as mongoose.Model<IALESDocument>) || 
-    Exam.discriminator<IALESDocument>('Ales', AlesSchema);
+    Exam.discriminator<IALESDocument>('ALES', AlesSchema);
 
 export default Ales;
 

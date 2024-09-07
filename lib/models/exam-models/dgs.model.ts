@@ -36,7 +36,7 @@ const DgsSchema = new Schema<IDGSDocument>({
 
 
 const Dgs = (mongoose.models.Dgs as mongoose.Model<IDGSDocument>) || 
-    Exam.discriminator<IDGSDocument>('Dgs', DgsSchema);
+    Exam.discriminator<IDGSDocument>('DGS', DgsSchema);
 
 export default Dgs;
 

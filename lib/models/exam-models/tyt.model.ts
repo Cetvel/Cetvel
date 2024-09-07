@@ -75,7 +75,7 @@ TytSchema.virtual('totalNet').get(function (this: ITytDocument) {
 TytSchema.methods = TytMethods;
 
 const Tyt = (mongoose.models.Tyt as mongoose.Model<ITytDocument>) || 
-    Exam.discriminator<ITytDocument>('Tyt', TytSchema);
+    Exam.discriminator<ITytDocument>('TYT', TytSchema);
 
 export default Tyt;
 

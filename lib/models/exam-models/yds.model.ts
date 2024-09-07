@@ -27,7 +27,7 @@ const YdsSchema = new Schema<IYDSDocument>({
 
 
 const Yds = (mongoose.models.Yds as mongoose.Model<IYDSDocument>) || 
-    Exam.discriminator<IYDSDocument>('Yds', YdsSchema);
+    Exam.discriminator<IYDSDocument>('YDS', YdsSchema);
 
 export default Yds;
 

@@ -1,6 +1,14 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
 import { userPlugins, IUserMethods, userMethods, IUserStaticMethods, userStaticMethods } from "./plugins/user.plugins";
 
+enum StudyField {
+    yks,
+    lgs,
+    kpss,
+    ales,
+    dgs
+}
+
 interface IUser {
     clerkId: string;
     name: string;
@@ -36,6 +44,7 @@ const userSchema = new Schema<IUserDocument, UserModel>({
     studyField: {
         type: String,
         required: false,
+        enum: Object.values(StudyField),
         trim: false,
     },
 

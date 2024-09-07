@@ -90,6 +90,6 @@ const LgsSchema = new Schema<LgsDocument>({
     },
 })
 
-const Lgs = (mongoose.models.Lgs as mongoose.Model<LgsDocument>) || Exam.discriminator<LgsDocument>('Lgs', LgsSchema)
+const Lgs = (mongoose.models.Lgs as mongoose.Model<LgsDocument>) || Exam.discriminator<LgsDocument>('LGS', LgsSchema)
 
 export default Lgs

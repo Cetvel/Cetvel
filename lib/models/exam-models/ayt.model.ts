@@ -17,7 +17,7 @@ export interface Section {
 interface Ayt {
     field: {
         type: string,
-        enum: ['say', 'ea', `soz`],
+        enum: ['SAY', 'EA', `SOZ`],
     },
     solvingTime?: {
         type: number
@@ -32,7 +32,7 @@ export interface AytDocument extends Ayt, Document, Section {
 
 
 const AytSchema: Schema<AytDocument> = new Schema({
-    field: { type: String, enum: ['say', 'ea', 'soz'], required: true },
+    field: { type: String, enum: ['SAY', 'EA', 'SOZ'], required: true },
     solvingTime: { type: Number, required: false },
     // Say ve Ea icin ortak alanlar
 
@@ -100,6 +100,6 @@ const AytSchema: Schema<AytDocument> = new Schema({
 })
 
 const Ayt = (mongoose.models.Ayt as mongoose.Model<AytDocument>) ||
-    Exam.discriminator<AytDocument>('Ayt', AytSchema);
+    Exam.discriminator<AytDocument>('AYT', AytSchema);
 
 export default Ayt;

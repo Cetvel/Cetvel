@@ -11,13 +11,29 @@ export async function GET(request: NextRequest, { params }: { params: { aytType:
         }
 
         const { aytType } = params;
-        
+
         if (aytType !== 'say' && aytType !== 'ea' && aytType !== 'soz') return NextResponse.json({ error: "Geçerli bir Ayt formatı giriniz." }, { status: 400 });
-        
+        let field
+        switch (aytType) {
+            case 'say':
+                field = 'SAY'
+                break;
+            case 'ea':
+                field = 'EA'
+                break;
+            case 'soz':
+                field = 'SOZ'
+                break;
+        }
+
+
         await connectDB()
-        const exams = await AytModel.find({ clerkId: userId, aytType }) as AytDocument[];
-        
-        return NextResponse.json(exams,{status: 200});
+        const exams = await AytModel.find({
+            clerkId: userId,
+            aytType: field
+        }) as AytDocument[];
+
+        return NextResponse.json(exams, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
@@ -34,15 +50,28 @@ export async function POST(request: NextRequest, { params }: { params: { aytType
         const { aytType } = params;
         if (aytType !== 'say' && aytType !== 'ea' && aytType !== 'soz') return NextResponse.json({ error: "Geçerli bir Ayt formatı giriniz." }, { status: 400 });
         const body = await request.json();
-        
+
         if (!body) {
             return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
+        }
+
+        let field
+        switch (aytType) {
+            case 'say':
+                field = 'SAY'
+                break;
+            case 'ea':
+                field = 'EA'
+                break;
+            case 'soz':
+                field = 'SOZ'
+                break;
         }
 
         await connectDB()
         const exam = new AytModel({
             clerkId: userId,
-            field: aytType,
+            field,
             ...body
         }) as AytDocument
 
