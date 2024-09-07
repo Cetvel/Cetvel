@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import Todo from "@/lib/models/todo.model";
 import NodeCache from 'node-cache';
+import connectDB from "@/lib/config/connectDB";
 
 const cache = new NodeCache({ stdTTL: 300 });
 
@@ -37,7 +38,7 @@ export async function GET(request: NextRequest) {
     const todayEndInTurkey = new Date(todayStartInTurkey);
     todayEndInTurkey.setUTCHours(23, 59, 59, 999);
 
-    // MongoDB sorgusu
+    await connectDB();
     const todos = await Todo.find({
       clerkId: userId,
       $or: [
@@ -63,10 +64,9 @@ export async function GET(request: NextRequest) {
       ]
     }).sort({ startsAt: 1 });
 
-    // Sonuçları cache'e kaydet
     cache.set(cacheKey, todos);
 
-    return NextResponse.json(todos);
+    return NextResponse.json(todos, {status : 200});
   } catch (error) {
     console.error("Error fetching todos:", error);
     return NextResponse.json(

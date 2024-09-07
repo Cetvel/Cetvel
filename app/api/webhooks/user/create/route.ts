@@ -4,6 +4,8 @@ import { UserJSON, WebhookEvent } from '@clerk/nextjs/server';
 import UserData from '@/lib/models/user.model';
 import { ConvexHttpClient } from 'convex/browser';
 import { api } from '@/convex/_generated/api';
+import connectDB from '@/lib/config/connectDB';
+
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
@@ -53,6 +55,7 @@ export async function POST(req: Request): Promise<Response> {
 
     try {
         const user = evt.data as UserJSON
+        await connectDB()
         const newUser = new UserData({
             clerkId: user.id,
             name: user.username,

@@ -51,5 +51,5 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     if (!todo) {
         return NextResponse.json({ error: "Todo not found" }, { status: 404 });
     }
-    return NextResponse.json({ message: "Todo deleted successfully" });
+    return NextResponse.json({ status : 200});
 }
