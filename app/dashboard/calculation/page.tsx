@@ -1,11 +1,11 @@
-import ExamCalculationForm from "@/components/forms/exam-calculation-form";
-import PageHeader from "@/components/global/page-header";
-import React from "react";
+import ExamCalculationForm from '@/components/forms/exam-calculation-form';
+import PageHeader from '@/components/global/page-header';
+import React from 'react';
 
 const Calculation = () => {
   return (
     <>
-      <PageHeader title="Hesaplama" />
+      <PageHeader title='Hesaplama' />
       <ExamCalculationForm />
     </>
   );

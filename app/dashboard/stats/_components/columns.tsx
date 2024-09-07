@@ -22,8 +22,6 @@ import {
 } from '@/components/forms/exam-calculation-form';
 import { ColumnHeader } from '@/components/global/column-header';
 
-export type ExamType = 'tyt' | 'ayt' | 'lgs' | 'dgs' | 'yds' | 'ales' | 'kpss';
-
 export interface ExamResult {
   _id: string;
   clerkId: string;
@@ -165,7 +163,6 @@ export function createAllColumns<T extends ExamResult>(): ColumnDef<T>[] {
     config.subjects.map((subject) => createSubjectColumn<T>(subject))
   );
 
-  // Tekrar eden sütunları kaldır
   const uniqueSubjectColumns = allSubjectColumns.filter(
     (column, index, self) => index === self.findIndex((t) => t.id === column.id)
   );
@@ -178,11 +175,12 @@ export function createAllColumns<T extends ExamResult>(): ColumnDef<T>[] {
 }
 
 export function createDynamicColumns<T extends ExamResult>(
-  examType: string,
-  selectedColumns?: string[]
+  examType: string
 ): ColumnDef<T>[] {
   const allColumns = createAllColumns<T>();
-  const config = examConfigs.find((c) => c.type === examType);
+  const config = examConfigs.find(
+    (c) => c.type.toLowerCase() === examType.toLowerCase()
+  );
 
   if (!config) {
     return allColumns;
@@ -199,21 +197,7 @@ export function createDynamicColumns<T extends ExamResult>(
     'actions',
   ];
 
-  if (selectedColumns) {
-    return allColumns.filter(
-      (column) =>
-        selectedColumns.includes(column.id as string) ||
-        column.id === 'select' ||
-        column.id === 'actions'
-    );
-  }
-
   return allColumns.filter((column) =>
     columnsToShow.includes(column.id as string)
   );
 }
-
-export const examTypeOptions = examConfigs.map((config: ExamConfig) => ({
-  label: config.label,
-  value: config.type,
-}));

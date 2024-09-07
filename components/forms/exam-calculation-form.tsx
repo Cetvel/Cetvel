@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { FieldError, FieldErrors, useForm } from 'react-hook-form';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
@@ -9,7 +9,6 @@ import { Form } from '../ui/form';
 import { SelectItem } from '../ui/select';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader } from '../ui/card';
-import FormError, { ErrorMessage } from './ui/form-error';
 import { createExam } from '@/lib/services/exam-service';
 import Modal from '../global/modal';
 import { DialogFooter } from '../ui/dialog';
@@ -22,6 +21,12 @@ import {
   TableRow,
 } from '../ui/table';
 import { useModal } from '@/providers/modal-provider';
+import { LoaderCircle } from 'lucide-react';
+import { useUser } from '@clerk/nextjs';
+import {
+  getAvailableExams,
+  StudyField,
+} from '@/app/dashboard/calculation/utils/exam-filter';
 
 export type SubjectConfig = {
   name: string;
@@ -44,12 +49,9 @@ export type ExamConfig = {
   totalTime?: number;
 };
 
-type ExamType = 'tyt' | 'ayt' | 'lgs' | 'dgs' | 'yds' | 'ales' | 'kpss';
-type AYTField = 'say' | 'ea' | 'soz';
-
 export const examConfigs: ExamConfig[] = [
   {
-    type: 'tyt',
+    type: 'TYT',
     label: 'TYT (Temel Yeterlilik Testi)',
     subjects: [
       { name: 'turkish', label: 'Türkçe', maxQuestions: 40 },
@@ -60,13 +62,13 @@ export const examConfigs: ExamConfig[] = [
     totalTime: 135,
   },
   {
-    type: 'ayt',
+    type: 'AYT',
     label: 'AYT (Alan Yeterlilik Testi)',
     fields: [
       {
         name: 'field',
         label: 'Alan',
-        options: ['say', 'ea', 'soz'],
+        options: ['SAY', 'EA', 'SOZ'],
       },
     ],
     subjects: [
@@ -74,62 +76,62 @@ export const examConfigs: ExamConfig[] = [
         name: 'literature',
         label: 'Türk Dili ve Edebiyatı',
         maxQuestions: 24,
-        forFields: ['ea', 'soz'],
+        forFields: ['EA', 'SOZ'],
       },
       {
         name: 'history1',
         label: 'Tarih-1',
         maxQuestions: 13,
-        forFields: ['ea'],
+        forFields: ['EA'],
       },
       {
         name: 'history2',
         label: 'Tarih-2',
         maxQuestions: 13,
-        forFields: ['soz'],
+        forFields: ['SOZ'],
       },
       {
         name: 'geography1',
         label: 'Coğrafya-1',
         maxQuestions: 6,
-        forFields: ['ea'],
+        forFields: ['EA'],
       },
       {
         name: 'math',
         label: 'Matematik',
         maxQuestions: 40,
-        forFields: ['say', 'ea'],
+        forFields: ['SAY', 'EA'],
       },
-      { name: 'physics', label: 'Fizik', maxQuestions: 14, forFields: ['say'] },
+      { name: 'physics', label: 'Fizik', maxQuestions: 14, forFields: ['SAY'] },
       {
         name: 'chemistry',
         label: 'Kimya',
         maxQuestions: 13,
-        forFields: ['say'],
+        forFields: ['SAY'],
       },
       {
         name: 'biology',
         label: 'Biyoloji',
         maxQuestions: 13,
-        forFields: ['say'],
+        forFields: ['SAY'],
       },
       {
         name: 'geography2',
         label: 'Coğrafya-2',
         maxQuestions: 11,
-        forFields: ['soz'],
+        forFields: ['SOZ'],
       },
       {
         name: 'philosophy',
         label: 'Felsefe',
         maxQuestions: 12,
-        forFields: ['soz'],
+        forFields: ['SOZ'],
       },
       {
         name: 'religion',
         label: 'Din Kültürü',
         maxQuestions: 6,
-        forFields: ['soz'],
+        forFields: ['SOZ'],
       },
       {
         name: 'language',
@@ -141,7 +143,7 @@ export const examConfigs: ExamConfig[] = [
     totalTime: 180,
   },
   {
-    type: 'lgs',
+    type: 'LGS',
     label: 'LGS (Liselere Geçiş Sınavı)',
     fields: [
       {
@@ -169,7 +171,7 @@ export const examConfigs: ExamConfig[] = [
     totalTime: 120,
   },
   {
-    type: 'dgs',
+    type: 'DGS',
     label: 'DGS (Dikey Geçiş Sınavı)',
     subjects: [
       { name: 'turkish', label: 'Sözel Bölüm', maxQuestions: 60 },
@@ -178,13 +180,13 @@ export const examConfigs: ExamConfig[] = [
     totalTime: 150,
   },
   {
-    type: 'yds',
+    type: 'YDS',
     label: 'YDS (Yabancı Dil Sınavı)',
     subjects: [{ name: 'english', label: 'Yabancı Dil', maxQuestions: 80 }],
     totalTime: 180,
   },
   {
-    type: 'ales',
+    type: 'ALES',
     label: 'ALES (Akademik Personel ve Lisansüstü Eğitimi Giriş Sınavı)',
     subjects: [
       { name: 'soz', label: 'Sözel Bölüm', maxQuestions: 50 },
@@ -193,7 +195,7 @@ export const examConfigs: ExamConfig[] = [
     totalTime: 135,
   },
   {
-    type: 'kpss',
+    type: 'KPSS',
     label: 'KPSS (Kamu Personeli Seçme Sınavı)',
     subjects: [
       { name: 'turkish', label: 'Türkçe', maxQuestions: 40 },
@@ -239,6 +241,7 @@ const createDynamicSchema = (config: ExamConfig) => {
       })
       .refine((data) => data.correct + data.wrong <= maxQuestions, {
         message: `Toplam soru sayısı ${maxQuestions}'i geçemez.`,
+        path: ['correct'],
       });
 
   const schemaFields: Record<string, z.ZodTypeAny> = {
@@ -320,7 +323,21 @@ const NetCalculationModal: React.FC<{
   errors: any;
 }> = ({ onConfirm, data, currentConfig, errors }) => {
   const { setClose } = useModal();
-  const totalNet = currentConfig.subjects.reduce((acc, subject) => {
+
+  const getFilteredSubjects = () => {
+    if (currentConfig.type === 'ayt') {
+      const selectedField = data.field;
+      return currentConfig.subjects.filter(
+        (subject) =>
+          !subject.forFields || subject.forFields.includes(selectedField)
+      );
+    }
+    return currentConfig.subjects;
+  };
+
+  const filteredSubjects = getFilteredSubjects();
+
+  const totalNet = filteredSubjects.reduce((acc, subject) => {
     const subjectData = data[subject.name];
     return acc + calculateNet(subjectData.correct, subjectData.wrong);
   }, 0);
@@ -337,7 +354,7 @@ const NetCalculationModal: React.FC<{
           </TableRow>
         </TableHeader>
         <TableBody>
-          {currentConfig.subjects.map((subject) => {
+          {filteredSubjects.map((subject) => {
             const subjectData = data[subject.name];
             const net = calculateNet(subjectData.correct, subjectData.wrong);
             return (
@@ -393,21 +410,41 @@ const ModularExamForm: React.FC = () => {
   );
   const [schema, setSchema] = useState(createDynamicSchema(currentConfig));
   const [selectedField, setSelectedField] = useState<string | null>(null);
-  const [formErrors, setFormErrors] = useState<ErrorMessage[]>([]);
 
   const { setOpen } = useModal();
+  const { user } = useUser();
+
+  const studyField: StudyField = useMemo(() => {
+    const userStudyField = user?.publicMetadata?.studyField as string;
+    return userStudyField
+      ? (StudyField as any)[userStudyField]
+      : StudyField.YKS;
+  }, [user?.publicMetadata?.studyField]);
+
+  const availableExams = useMemo(
+    () => getAvailableExams(studyField),
+    [studyField]
+  );
+
+  const filteredExamConfigs = useMemo(
+    () =>
+      examConfigs.filter((config) =>
+        availableExams.some((exam) => exam.id === config.type)
+      ),
+    [availableExams]
+  );
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      examType: 'tyt',
+      examType: filteredExamConfigs[0]?.type || 'TYT',
     } as z.infer<typeof schema>,
   });
 
   useEffect(() => {
     const newConfig =
-      examConfigs.find((config) => config.type === selectedExamType) ||
-      examConfigs[0];
+      filteredExamConfigs.find((config) => config.type === selectedExamType) ||
+      filteredExamConfigs[0];
     setCurrentConfig(newConfig);
     setSelectedField(newConfig.fields?.[0]?.options[0] || null);
     const newSchema = createDynamicSchema(newConfig);
@@ -433,7 +470,7 @@ const ModularExamForm: React.FC = () => {
     });
 
     form.reset(defaultValues);
-  }, [selectedExamType, form]);
+  }, [selectedExamType, filteredExamConfigs, form]);
 
   const filteredSubjects = currentConfig.subjects.filter(
     (subject) =>
@@ -441,61 +478,50 @@ const ModularExamForm: React.FC = () => {
       (selectedField && subject.forFields.includes(selectedField))
   );
 
-  const getErrorMessage = (error: unknown): string => {
-    if (typeof error === 'string') return error;
-    if (
-      error &&
-      typeof error === 'object' &&
-      'message' in error &&
-      typeof error.message === 'string'
-    )
-      return error.message;
-    return 'Geçersiz değer';
-  };
-
-  const flattenErrors = (obj: FieldErrors, prefix = ''): ErrorMessage[] => {
-    return Object.entries(obj).flatMap(([key, value]) => {
-      const field = prefix ? `${prefix}.${key}` : key;
-      if (value && typeof value === 'object' && 'message' in value) {
-        return [{ field, message: getErrorMessage(value) }];
-      }
-      if (value && typeof value === 'object') {
-        return flattenErrors(value as FieldErrors, field);
-      }
-      return [];
-    });
-  };
-
   const handleCalculateClick = () => {
-    form.trigger();
-    if (form.formState.isValid) {
-      setOpen(
-        <NetCalculationModal
-          currentConfig={currentConfig}
-          onConfirm={onSubmit}
-          data={form.getValues()}
-          errors={form.formState.errors}
-        />
-      );
-    } else {
-      const errors = flattenErrors(form.formState.errors);
-      setFormErrors(errors);
-    }
+    form.trigger().then((isValid) => {
+      if (isValid) {
+        setOpen(
+          <NetCalculationModal
+            currentConfig={currentConfig}
+            onConfirm={onSubmit}
+            data={form.getValues()}
+            errors={form.formState.errors}
+          />
+        );
+      }
+    });
   };
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
     const { examType, ...examData } = data;
-    let aytField: AYTField | undefined;
-
-    if (selectedExamType === 'ayt') {
-      aytField = examData.field as AYTField;
-    }
 
     try {
-      const success = await createExam(selectedExamType, examData, aytField);
+      const success = await createExam(selectedExamType, examData);
       if (success) {
         console.log('Sınav başarıyla oluşturuldu');
-        form.reset();
+
+        const resetValues: any = {
+          examName: '',
+          examType: selectedExamType,
+          solvingTime: currentConfig.totalTime,
+          solvingDate: new Date(),
+        };
+
+        currentConfig.fields?.forEach((field) => {
+          resetValues[field.name] = field.options[0];
+        });
+
+        currentConfig.subjects.forEach((subject) => {
+          resetValues[subject.name] = {
+            solvingTime: 0,
+            correct: 0,
+            wrong: 0,
+          };
+        });
+
+        form.reset(resetValues);
+        form.clearErrors();
       }
     } catch (error) {
       console.error('Sınav oluşturma hatası:', error);
@@ -532,7 +558,7 @@ const ModularExamForm: React.FC = () => {
                   setSelectedExamType(value as ExamType);
                 }}
               >
-                {examConfigs.map((config) => (
+                {filteredExamConfigs.map((config) => (
                   <SelectItem key={config.type} value={config.type}>
                     {config.label}
                   </SelectItem>
@@ -571,8 +597,6 @@ const ModularExamForm: React.FC = () => {
           </CardHeader>
         </Card>
 
-        {formErrors.length > 0 && <FormError errors={formErrors} />}
-
         <div className='grid grid-cols-1 xl:grid-cols-2 gap-6'>
           {filteredSubjects.map((subject) => (
             <SubjectField
@@ -584,7 +608,14 @@ const ModularExamForm: React.FC = () => {
         </div>
 
         <div className='flex items-center gap-4 justify-end'>
-          <Button type='button' onClick={handleCalculateClick}>
+          <Button
+            type='button'
+            onClick={handleCalculateClick}
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting && (
+              <LoaderCircle className='animate-spin' size={24} />
+            )}
             Hesapla
           </Button>
         </div>

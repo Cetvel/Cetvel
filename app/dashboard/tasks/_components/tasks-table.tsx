@@ -27,7 +27,7 @@ const taskStatusOptions = [
 ];
 
 const TasksTable = () => {
-  const { data: tasks, isLoading, error } = useSWR('/todo', fetcher);
+  const { data: tasks, isLoading, error } = useSWR('/tasks', fetcher);
 
   if (isLoading) return <Skeleton className='h-36 rounded-xl' />;
   if (error && !isLoading)
@@ -45,7 +45,7 @@ const TasksTable = () => {
   return (
     <>
       <BaseDataTable
-        data={tasks.todos}
+        data={tasks}
         columns={columns}
         searchableColumn='title'
         dateColumn='startsAt'

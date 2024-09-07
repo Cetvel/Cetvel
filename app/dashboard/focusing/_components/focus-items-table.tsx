@@ -33,7 +33,7 @@ const FocusItemsTable = () => {
   return (
     <BaseDataTable
       columns={columns}
-      data={data.pomodoros}
+      data={data}
       searchableColumn='title'
       dateColumn='startsAt'
       initialSortColumn='startsAt'

@@ -1,23 +1,29 @@
-import PageHeader from "@/components/global/page-header";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Link from "next/link";
+import PageHeader from '@/components/global/page-header';
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from '@/components/ui/navigation-menu';
+import Link from 'next/link';
 
 const navigationItems: { title: string; href: string }[] = [
   {
-    title: "Hesap",
-    href: "/dashboard/settings",
+    title: 'Hesap',
+    href: '/dashboard/settings',
   },
   {
-    title: "Bildirimler",
-    href: "/dashboard/settings/notifications",
+    title: 'Bildirimler',
+    href: '/dashboard/settings/notifications',
   },
   {
-    title: "Tercihler",
-    href: "/dashboard/settings/preferences",
+    title: 'Tercihler',
+    href: '/dashboard/settings/preferences',
   },
   {
-    title: "Ödeme Bilgileri",
-    href: "/dashboard/settings/payment",
+    title: 'Ödeme Bilgileri',
+    href: '/dashboard/settings/payment',
   },
 ];
 
@@ -28,18 +34,48 @@ export default async function RootLayout({
 }>) {
   return (
     <main>
-      <PageHeader title="Ayarlar" />
-      <Tabs defaultValue="account">
-        <TabsList className="w-full grid grid-cols-4 mb-6">
-          <TabsTrigger value="account" defaultChecked>
-            Hesap
-          </TabsTrigger>
-          <TabsTrigger value="notifications">Bildirimler</TabsTrigger>
-          <TabsTrigger value="preferences">Tercihler</TabsTrigger>
-          <TabsTrigger value="payment">Ödeme Bilgileri</TabsTrigger>
-        </TabsList>
-        {children}
-      </Tabs>
+      <PageHeader title='Ayarlar' />
+      <NavigationMenu className='mb-6'>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <Link href='/dashboard/settings' legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Hesap
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link
+              href='/dashboard/settings/notifications'
+              legacyBehavior
+              passHref
+            >
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Bildirimler
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link
+              href='/dashboard/settings/preferences'
+              legacyBehavior
+              passHref
+            >
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Tercihler
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href='/dashboard/settings/payment' legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Abonelik
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+      {children}
     </main>
   );
 }

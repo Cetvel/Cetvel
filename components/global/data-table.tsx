@@ -53,6 +53,7 @@ interface BaseDataTableProps<T> {
     value: string;
     label: string;
   }[];
+  onSelectColumnChange?: (value: string) => void;
   selectColumnDefaultSelected?: string;
   selectPlaceholder?: string;
   onSelectChange?: (value: string) => void;
@@ -79,6 +80,7 @@ export function BaseDataTable<T>({
   dateRangeColumns,
   selectColumn,
   selectColumnOptions,
+  onSelectColumnChange,
   selectColumnDefaultSelected,
   selectPlaceholder,
   initialSortColumn,
@@ -148,6 +150,7 @@ export function BaseDataTable<T>({
 
   const handleSelectChange = (value: string) => {
     setSelectedValue(value);
+    onSelectColumnChange?.(value);
     table.getColumn(selectColumn!)?.setFilterValue(value);
     if (onSelectChange) {
       onSelectChange(value);

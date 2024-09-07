@@ -51,7 +51,8 @@ declare enum TaskStatus {
 }
 
 declare type UserClass = '9' | '10' | '11' | '12' | 'Mezun';
-declare type ExamType = 'TYT' | 'AYT';
+declare type ExamType = 'TYT' | 'AYT' | 'LGS' | 'DGS' | 'YDS' | 'ALES' | 'KPSS';
+declare type AYTField = 'SAY' | 'EA' | 'SOZ';
 
 declare interface FieldBase {
   name: string;

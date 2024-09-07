@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -8,16 +8,58 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { BaseDataTable } from '@/components/global/data-table';
-import { createDynamicColumns, examTypeOptions } from './columns';
+import { createDynamicColumns } from './columns';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { useUser } from '@clerk/nextjs';
+import {
+  getAvailableExams,
+  StudyField,
+} from '@/app/dashboard/calculation/utils/exam-filter';
 
 const ExamsTable = () => {
   const { data, isLoading, error } = useSWR('/exams', fetcher);
-  const initialColumns = createDynamicColumns('tyt');
+  const { user } = useUser();
+
+  const studyField: StudyField = useMemo(() => {
+    const userStudyField = user?.publicMetadata?.studyField as string;
+    return userStudyField
+      ? (StudyField as any)[userStudyField]
+      : StudyField.YKS;
+  }, [user?.publicMetadata?.studyField]);
+
+  const availableExams = useMemo(
+    () => getAvailableExams(studyField),
+    [studyField]
+  );
+
+  const examTypeOptions = useMemo(
+    () =>
+      availableExams.map((exam) => ({
+        value: exam.id.toUpperCase(),
+        label: exam.name,
+      })),
+    [availableExams]
+  );
+
+  const [selectedExamType, setSelectedExamType] = useState<ExamType>(
+    (examTypeOptions[0]?.value as ExamType) || 'TYT'
+  );
+
+  const columns = useMemo(
+    () => createDynamicColumns(selectedExamType),
+    [selectedExamType]
+  );
+
+  const filteredData = useMemo(() => {
+    if (!data) return [];
+    return data.filter((exam: any) => exam.examType === selectedExamType);
+  }, [data, selectedExamType]);
 
   if (isLoading) return <Skeleton className='h-36 rounded-xl' />;
-  if (error && !isLoading)
+  if (error && !isLoading) {
+    console.error(JSON.stringify(error));
+
     return (
       <Alert variant={'destructive'}>
         <AlertCircle size={16} className='text-destructive' />
@@ -28,6 +70,7 @@ const ExamsTable = () => {
         </AlertDescription>
       </Alert>
     );
+  }
 
   return (
     <Card>
@@ -36,8 +79,8 @@ const ExamsTable = () => {
       </CardHeader>
       <CardContent>
         <BaseDataTable
-          data={data}
-          columns={initialColumns}
+          data={filteredData}
+          columns={columns}
           searchableColumn='examName'
           initialSortColumn='solvingDate'
           initialSortDirection='desc'
@@ -46,7 +89,10 @@ const ExamsTable = () => {
           selectColumn='examType'
           selectColumnOptions={examTypeOptions}
           createColumnsFunction={createDynamicColumns}
-          selectColumnDefaultSelected='tyt'
+          selectColumnDefaultSelected={selectedExamType}
+          onSelectColumnChange={(value) =>
+            setSelectedExamType(value as ExamType)
+          }
           enableMultiSelect
           bulkActions={[
             {

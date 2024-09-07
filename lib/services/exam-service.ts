@@ -7,9 +7,6 @@ interface ExamApiResponse {
   status: number;
 }
 
-type ExamType = 'tyt' | 'ayt' | 'lgs' | 'dgs' | 'yds' | 'ales' | 'kpss';
-type AYTField = 'say' | 'ea' | 'soz';
-
 const handleApiResponse = (
   response: ExamApiResponse,
   action: string
@@ -45,17 +42,12 @@ const handleApiError = (error: any, action: string): boolean => {
 
 export const createExam = async (
   examType: ExamType,
-  values: any,
-  aytField?: AYTField
+  values: any
 ): Promise<boolean> => {
   try {
-    let url = `/exams/${examType}`;
-    if (examType === 'ayt' && aytField) {
-      url += `/${aytField}`;
-    }
+    let url = `/exams/${examType.toLowerCase()}`;
 
-    // LGS için özel işlem
-    if (examType === 'lgs') {
+    if (examType === 'LGS') {
       const { educationStyle, ...restValues } = values;
       const examData =
         educationStyle === 'din'
@@ -79,14 +71,11 @@ export const createExam = async (
 export const updateExam = async (
   examType: ExamType,
   id: string,
-  values: any,
-  aytField?: AYTField
+  values: any
 ): Promise<boolean> => {
   try {
     let url = `/exams/update/${examType}/${id}`;
-    if (examType === 'ayt' && aytField) {
-      url += `/${aytField}`;
-    }
+
     const res = await axiosInstance.put(url, values);
     return handleApiResponse(res, 'güncelleme');
   } catch (error: any) {
@@ -106,14 +95,10 @@ export const deleteExam = async (id: string): Promise<boolean> => {
 
 export const getExamDetails = async (
   examType: ExamType,
-  id: string,
-  aytField?: AYTField
+  id: string
 ): Promise<any> => {
   try {
     let url = `/exams/${examType}/${id}`;
-    if (examType === 'ayt' && aytField) {
-      url += `/${aytField}`;
-    }
     const res = await axiosInstance.get(url);
     return res.data;
   } catch (error: any) {
