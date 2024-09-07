@@ -27,7 +27,6 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    console.log("Parsed body:", body);
     if (!body) {
       return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
     }

@@ -4,8 +4,6 @@ import Todo from "@/lib/models/todo.model";
 import NodeCache from 'node-cache';
 import connectDB from "@/lib/config/connectDB";
 
-const cache = new NodeCache({ stdTTL: 300 });
-
 export async function GET(request: NextRequest) {
   try {
     const { userId } = getAuth(request);
@@ -13,19 +11,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Cache key oluştur
-    const cacheKey = `todos_${userId}_${new Date().toDateString()}`;
-
-    // Cache'den veriyi kontrol et
-    const cachedData = cache.get(cacheKey);
-    if (cachedData) {
-      console.log(cachedData)
-      return NextResponse.json(cachedData, {
-        headers: {
-          'X-Cache-Status': 'HIT'
-        }
-      });
-    }
 
     // Türkiye saat dilimi için offset (UTC+3)
     const turkeyOffset = 3 * 60 * 60 * 1000; // 3 saat milisaniye cinsinden
@@ -63,12 +48,8 @@ export async function GET(request: NextRequest) {
         }
       ]
     }).sort({ startsAt: 1 });
-
-    cache.set(cacheKey, todos);
-
     return NextResponse.json(todos, {status : 200});
   } catch (error) {
-    console.error("Error fetching todos:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
