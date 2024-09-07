@@ -12,7 +12,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         const { userId } = getAuth(req)
         if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-        const { isOnboarded, studyField, defaultTemplate, studentClass, notification } = await req.json()
+        const { studyField, defaultTemplate, studentClass, notification } = await req.json()
 
         await connectDB()
         const user = await User.findOne({ clerkId: userId })
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         await clerkClient.users.updateUserMetadata(userId, {
             publicMetadata: {
-                isOnboarded,
+                isOnboarded : true,
                 studyField,
                 studentClass,
                 notification
