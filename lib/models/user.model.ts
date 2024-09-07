@@ -2,11 +2,11 @@ import mongoose, { Document, Schema, Model } from "mongoose";
 import { userPlugins, IUserMethods, userMethods, IUserStaticMethods, userStaticMethods } from "./plugins/user.plugins";
 
 enum StudyField {
-    yks,
-    lgs,
-    kpss,
-    ales,
-    dgs
+    YKS,
+    LGS,
+    KPSS,
+    ALES,
+    DGS
 }
 
 interface IUser {
