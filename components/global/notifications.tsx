@@ -20,21 +20,31 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { motion, AnimatePresence } from 'framer-motion';
 import moment from 'moment';
+import 'moment/locale/tr';
+import { api } from '@/convex/_generated/api';
+import { useQuery } from 'convex/react';
+import { useUser } from '@clerk/nextjs';
+import { Id } from '@/convex/_generated/dataModel';
+
+moment.locale('tr');
 
 type NotificationType = 'success' | 'error' | 'info';
 
 interface Notification {
-  _id: number;
-  type: NotificationType;
+  _id: Id<'notification'>;
+  _creationTime: number;
+  type: string;
+  clerkId: string;
   title: string;
   message: string;
-  timestamp: Date;
+  timeStamp: string;
   read: boolean;
+  _ttl: number;
 }
 
 interface NotificationItemProps extends Notification {
-  onDismiss: (id: number) => void;
-  onRead: (id: number) => void;
+  onDismiss: (id: Id<'notification'>) => void;
+  onRead: (id: Id<'notification'>) => void;
 }
 
 interface NotificationsPanelProps {
@@ -47,7 +57,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   type,
   title,
   message,
-  timestamp,
+  timeStamp,
   onDismiss,
   onRead,
 }) => {
@@ -65,12 +75,11 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       className='bg-secondary rounded-lg shadow-md p-4 mb-3'
     >
       <div className='flex items-start'>
-        {icons[type]}
         <div className='ml-3 flex-1'>
           <h3 className='text-sm font-medium'>{title}</h3>
           <p className='text-sm text-muted-foreground mt-1'>{message}</p>
           <p className='text-xs text-secondary-foreground mt-2'>
-            {moment(timestamp).toNow()}
+            {moment(timeStamp).toNow()}
           </p>
         </div>
         <div className='flex flex-col space-y-2'>
@@ -92,24 +101,28 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
 }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [activeTab, setActiveTab] = useState<string>('all');
+  const { user } = useUser();
+
+  const notificationData = useQuery(
+    api.notification.notification.getNotifications,
+    {
+      clerkId: user?.id!,
+    }
+  );
 
   useEffect(() => {
-    const fetchNotifications = async () => {
-      setNotifications(mockNotifications);
-    };
-
-    if (isOpen) {
-      fetchNotifications();
+    if (notificationData) {
+      setNotifications(notificationData);
     }
-  }, [isOpen]);
+  }, [notificationData]);
 
-  const dismissNotification = (id: number) => {
+  const dismissNotification = (id: Id<'notification'>) => {
     setNotifications(
       notifications.filter((notification) => notification._id !== id)
     );
   };
 
-  const markAsRead = (id: number) => {
+  const markAsRead = (id: Id<'notification'>) => {
     setNotifications(
       notifications.map((notification) =>
         notification._id === id ? { ...notification, read: true } : notification

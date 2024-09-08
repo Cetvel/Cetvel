@@ -195,7 +195,7 @@ export function BaseDataTable<T>({
         <div className='flex items-center gap-4 flex-wrap'>
           {showGlobalFilter && (
             <Input
-              placeholder='Global arama...'
+              placeholder='Arama yap...'
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
               className='max-w-sm'
@@ -214,7 +214,7 @@ export function BaseDataTable<T>({
                   .getColumn(searchableColumn)
                   ?.setFilterValue(event.target.value)
               }
-              className='max-w-sm'
+              className='max-w-xs'
             />
           )}
           {dateColumn && (
