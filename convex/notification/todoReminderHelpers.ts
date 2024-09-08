@@ -35,9 +35,9 @@ export const createTodoReminder = internalMutation({
                 title: "Görev Hatırlatıcısı",
                 message,
                 type: "info",
-                timeStamp: Date.now().toString(),
+                timeStamp: Date.now(),
                 read: false,
-                _ttl: 0
+                ttl: 0
             },
 
             );

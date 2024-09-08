@@ -7,9 +7,9 @@ export default defineSchema({
         title: v.string(),
         message: v.string(),
         type: v.string(),
-        timeStamp : v.string(),
+        timeStamp : v.number(),
         read: v.boolean(),
-        _ttl : v.number()
+        ttl : v.number()
     }),
     user: defineTable({
         email: v.optional(v.string()),
