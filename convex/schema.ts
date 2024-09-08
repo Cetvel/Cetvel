@@ -4,10 +4,12 @@ import { v } from 'convex/values';
 export default defineSchema({
     notification: defineTable({
         clerkId: v.string(),
+        title: v.string(),
         message: v.string(),
-        sent: v.boolean(),
         type: v.string(),
+        timeStamp : v.string(),
         read: v.boolean(),
+        _ttl : v.number()
     }),
     user: defineTable({
         email: v.optional(v.string()),

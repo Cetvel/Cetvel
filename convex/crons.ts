@@ -10,3 +10,9 @@ crons.interval(
   internal.notification.notificationProduction.produceNotifications,
 )
 export default crons
+
+crons.interval(
+  "delete-exprired-notifications",
+  { minutes:  60},
+  internal.notification.notification.deleteExpiredNotifications
+)
