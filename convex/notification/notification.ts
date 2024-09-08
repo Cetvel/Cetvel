@@ -52,7 +52,7 @@ export const readNotification = mutation({
             const now = Date.now();
             await ctx.db.patch(args.id, { 
                 read: true,
-                _ttl :  now + 1000 * 60 * 60 * 24 * 2
+                ttl :  now + 1000 * 60 * 60 * 24 * 2
             });
         } catch (error: any) {
             throw new Error(error);
@@ -70,7 +70,7 @@ export const readManyNotification = mutation({
                 const now = Date.now();
                 await ctx.db.patch(id, { 
                     read: true,
-                    _ttl :  now + 1000 * 60 * 60 * 24 * 2
+                    ttl :  now + 1000 * 60 * 60 * 24 * 1
                 });
             })
         } catch (error: any) {
@@ -84,8 +84,8 @@ export const deleteExpiredNotifications = internalMutation({
         const now = Date.now();
         const expiredDocs = await ctx.db
             .query('notification')
-            .filter(q => q.neq(q.field('_ttl'), 0))
-            .filter(q => q.lt(q.field('_ttl'), now))
+            .filter(q => q.neq(q.field('ttl'), 0))
+            .filter(q => q.lt(q.field('ttl'), now))
             .collect();
 
         for (const doc of expiredDocs) {
