@@ -151,40 +151,12 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
 
         {type === 'edit' && (
           <div className='flex justify-center'>
+            <Button variant='outline' onClick={toggleComplete}>
+              <ArrowUpFromLine size={16} />
+            </Button>
             <SubmitButton
               icon={<ArrowUpFromLine size={16} />}
               loading={form.formState.isSubmitting}
-              additionalButtons={[
-                ({ loading }) => ({
-                  button: (
-                    <Button
-                      type='button'
-                      onClick={toggleComplete}
-                      disabled={loading}
-                      variant='secondary'
-                    >
-                      {task?.status === 'completed' ? (
-                        <X size={16} />
-                      ) : (
-                        <Check size={16} />
-                      )}
-                    </Button>
-                  ),
-                }),
-
-                ({ loading }) => ({
-                  button: (
-                    <Button
-                      type='button'
-                      onClick={onDelete}
-                      disabled={loading}
-                      variant='destructive'
-                    >
-                      <Trash size={16} />
-                    </Button>
-                  ),
-                }),
-              ]}
             />
           </div>
         )}

@@ -109,7 +109,7 @@ export const getExamDetails = async (
 
 export const deleteManyExams = async (ids: string[]): Promise<boolean> => {
   try {
-    let url = `/exams/delete-many`;
+    let url = `/exams/many`;
     const res = await axiosInstance.post(url, { ids });
     return handleApiResponse(res, 'silme');
   } catch (error: any) {

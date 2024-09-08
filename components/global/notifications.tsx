@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useOptimistic } from 'react';
 import {
   Bell,
   X,
@@ -7,6 +7,7 @@ import {
   Info,
   Settings,
   Trash2,
+  CheckCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -22,9 +23,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import moment from 'moment';
 import 'moment/locale/tr';
 import { api } from '@/convex/_generated/api';
-import { useQuery } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
 import { useUser } from '@clerk/nextjs';
 import { Id } from '@/convex/_generated/dataModel';
+import { useToast } from '../ui/use-toast';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 moment.locale('tr');
 
@@ -60,6 +64,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   timeStamp,
   onDismiss,
   onRead,
+  read,
 }) => {
   const icons: Record<NotificationType, JSX.Element> = {
     success: <CheckCircle className='w-5 h-5 text-green-500' />,
@@ -72,22 +77,25 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -50 }}
-      className='bg-secondary rounded-lg shadow-md p-4 mb-3'
+      className={cn('rounded-lg shadow-md p-4 mb-3', {
+        'bg-secondary': read,
+        'bg-muted/50': !read,
+      })}
     >
       <div className='flex items-start'>
         <div className='ml-3 flex-1'>
           <h3 className='text-sm font-medium'>{title}</h3>
           <p className='text-sm text-muted-foreground mt-1'>{message}</p>
           <p className='text-xs text-secondary-foreground mt-2'>
-            {moment(timeStamp).toNow()}
+            {moment(timeStamp).fromNow()}
           </p>
         </div>
         <div className='flex flex-col space-y-2'>
-          <Button variant='ghost' size='icon' onClick={() => onRead(_id)}>
-            <CheckCircle size={20} />
+          <Button variant='ghost' size='icon-sm' onClick={() => onRead(_id)}>
+            <CheckCircle size={18} />
           </Button>
-          <Button variant='ghost' size='icon' onClick={() => onDismiss(_id)}>
-            <X size={20} />
+          <Button variant='ghost' size='icon-sm' onClick={() => onDismiss(_id)}>
+            <X size={18} />
           </Button>
         </div>
       </div>
@@ -99,9 +107,9 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
   isOpen,
   onClose,
 }) => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [activeTab, setActiveTab] = useState<string>('all');
   const { user } = useUser();
+  const [activeTab, setActiveTab] = useState<string>('all');
+  const { toast } = useToast();
 
   const notificationData = useQuery(
     api.notification.notification.getNotifications,
@@ -110,40 +118,137 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
     }
   );
 
+  const deleteNotificationMutation = useMutation(
+    api.notification.notification.deleteNotification
+  );
+
+  const markAsReadMutation = useMutation(
+    api.notification.notification.readNotification
+  );
+
+  const clearAllNotificationsMutation = useMutation(
+    api.notification.notification.deleteManyNotification
+  );
+
+  const readAllNotificationsMutation = useMutation(
+    api.notification.notification.readManyNotification
+  );
+
+  const [optimisticNotifications, setOptimisticNotifications] = useState<
+    Notification[]
+  >(notificationData ?? []);
+
   useEffect(() => {
     if (notificationData) {
-      setNotifications(notificationData);
+      setOptimisticNotifications(notificationData);
     }
   }, [notificationData]);
 
-  const dismissNotification = (id: Id<'notification'>) => {
-    setNotifications(
-      notifications.filter((notification) => notification._id !== id)
+  const dismissNotification = async (id: Id<'notification'>) => {
+    setOptimisticNotifications((prev) =>
+      prev.filter((notification) => notification._id !== id)
     );
+    try {
+      await deleteNotificationMutation({ id });
+    } catch (error) {
+      console.error('Failed to delete notification:', error);
+      toast({
+        title: 'Hata',
+        description: 'Bildirim silinirken bir hata oluştu.',
+        variant: 'destructive',
+      });
+      setOptimisticNotifications((prev) =>
+        [...prev, notificationData?.find((n) => n._id === id)!].sort(
+          (a, b) => b._creationTime - a._creationTime
+        )
+      );
+    }
   };
 
-  const markAsRead = (id: Id<'notification'>) => {
-    setNotifications(
-      notifications.map((notification) =>
+  const handleMarkAsRead = async (id: Id<'notification'>) => {
+    setOptimisticNotifications((prev) =>
+      prev.map((notification) =>
         notification._id === id ? { ...notification, read: true } : notification
       )
     );
+    try {
+      await markAsReadMutation({ id });
+    } catch (error) {
+      console.error('Failed to mark notification as read:', error);
+      toast({
+        title: 'Hata',
+        description: 'Bildirim okundu olarak işaretlenirken bir hata oluştu.',
+        variant: 'destructive',
+      });
+      setOptimisticNotifications((prev) =>
+        prev.map((notification) =>
+          notification._id === id
+            ? { ...notification, read: false }
+            : notification
+        )
+      );
+    }
   };
 
-  const filteredNotifications = notifications.filter((notification) => {
-    if (activeTab === 'all') return true;
-    if (activeTab === 'unread') return !notification.read;
-    return notification.type === activeTab;
-  });
+  const handleClearAll = async (ids: Id<'notification'>[]) => {
+    const previousNotifications = [...optimisticNotifications];
+    setOptimisticNotifications([]);
+    try {
+      await clearAllNotificationsMutation({ ids: ids });
+    } catch (error) {
+      console.error('Failed to clear all notifications:', error);
+      toast({
+        title: 'Hata',
+        description: 'Bildirimler temizlenirken bir hata oluştu.',
+        variant: 'destructive',
+      });
+      setOptimisticNotifications(previousNotifications);
+    }
+  };
+
+  const handleReadAll = async (ids: Id<'notification'>[]) => {
+    const previousNotifications = [...optimisticNotifications];
+    setOptimisticNotifications((prev) =>
+      prev.map((notification) => ({ ...notification, read: true }))
+    );
+    try {
+      await readAllNotificationsMutation({ ids: ids });
+    } catch (error) {
+      console.error('Failed to clear all notifications:', error);
+      toast({
+        title: 'Hata',
+        description: 'Bildirimler temizlenirken bir hata oluştu.',
+        variant: 'destructive',
+      });
+      setOptimisticNotifications(previousNotifications);
+    }
+  };
+
+  const filteredNotifications = optimisticNotifications.filter(
+    (notification) => {
+      if (activeTab === 'all') return true;
+      if (activeTab === 'unread') return !notification.read;
+      return notification.type === activeTab;
+    }
+  );
+
+  const hasUnreadNotifications = optimisticNotifications.some(
+    (notification) => !notification.read
+  );
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent side='right' className='w-[400px] sm:w-[540px]'>
-        <SheetHeader>
+        <SheetHeader className='flex flex-row items-center gap-4'>
           <SheetTitle>Bildirimler</SheetTitle>
+          <Link href={'/dashboard/settings/preferences'}>
+            <Button variant={'ghost'} size={'icon-sm'}>
+              <Settings size={18} />
+            </Button>
+          </Link>
         </SheetHeader>
         <Tabs
-          defaultValue='all'
+          defaultValue='unread'
           className='w-full mt-4'
           onValueChange={setActiveTab}
         >
@@ -154,12 +259,12 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
           <TabsContent value='all' className='mt-4'>
             <ScrollArea className='h-[calc(100vh-200px)]'>
               <AnimatePresence>
-                {filteredNotifications.map((notification) => (
+                {filteredNotifications.map((notification: Notification) => (
                   <NotificationItem
                     key={notification._id}
                     {...notification}
                     onDismiss={dismissNotification}
-                    onRead={markAsRead}
+                    onRead={handleMarkAsRead}
                   />
                 ))}
               </AnimatePresence>
@@ -171,12 +276,12 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
           <TabsContent value='unread' className='mt-4'>
             <ScrollArea className='h-[calc(100vh-200px)]'>
               <AnimatePresence>
-                {filteredNotifications.map((notification) => (
+                {filteredNotifications.map((notification: Notification) => (
                   <NotificationItem
                     key={notification._id}
                     {...notification}
                     onDismiss={dismissNotification}
-                    onRead={markAsRead}
+                    onRead={handleMarkAsRead}
                   />
                 ))}
               </AnimatePresence>
@@ -188,14 +293,28 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
             </ScrollArea>
           </TabsContent>
         </Tabs>
-        <div className='flex justify-between items-center mt-4'>
-          <Button variant='outline' onClick={() => setNotifications([])}>
-            <Trash2 className='w-4 h-4 mr-2' />
-            Tümünü temizle
+        <div className='grid grid-cols-2 gap-4'>
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => {
+              handleReadAll(filteredNotifications.map((n) => n._id));
+            }}
+            disabled={!hasUnreadNotifications}
+          >
+            <CheckCheck className='w-4 h-4 mr-2' />
+            Tümünü Oku
           </Button>
-          <Button variant='outline'>
-            <Settings className='w-4 h-4 mr-2' />
-            Ayarlar
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => {
+              handleClearAll(filteredNotifications.map((n) => n._id));
+            }}
+            disabled={optimisticNotifications.length === 0}
+          >
+            <Trash2 className='w-4 h-4 mr-2' />
+            Tümünü Temizle
           </Button>
         </div>
       </SheetContent>
@@ -203,16 +322,30 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
   );
 };
 
-interface NotificationsButtonProps {}
-
-const NotificationsButton: React.FC<NotificationsButtonProps> = () => {
+const NotificationsButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [unreadCount, setUnreadCount] = useState<number>(3);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
+  const { user } = useUser();
+
+  const notificationData = useQuery(
+    api.notification.notification.getNotifications,
+    {
+      clerkId: user?.id!,
+    }
+  );
+
+  useEffect(() => {
+    if (notificationData) {
+      const unreadNotifications = notificationData.filter(
+        (notification) => !notification.read
+      );
+      setUnreadCount(unreadNotifications.length);
+    }
+  }, [notificationData]);
 
   const togglePanel = () => {
     setIsOpen(!isOpen);
     if (!isOpen) {
-      setUnreadCount(0);
     }
   };
 

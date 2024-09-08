@@ -16,6 +16,7 @@ import {
   getAvailableExams,
   StudyField,
 } from '@/app/dashboard/calculation/utils/exam-filter';
+import { deleteManyExams } from '@/lib/services/exam-service';
 
 const ExamsTable = () => {
   const { data, isLoading, error } = useSWR('/exams', fetcher);
@@ -99,7 +100,7 @@ const ExamsTable = () => {
               label: 'Seçilenleri sil',
               action: async (selectedRows, clearSelection) => {
                 const ids = selectedRows.map((row) => row._id);
-                console.log(ids);
+                await deleteManyExams(ids);
                 clearSelection();
               },
             },
