@@ -41,9 +41,9 @@ interface Notification {
   clerkId: string;
   title: string;
   message: string;
-  timeStamp: string;
+  timeStamp: number;
   read: boolean;
-  _ttl: number;
+  ttl: number;
 }
 
 interface NotificationItemProps extends Notification {
@@ -58,7 +58,6 @@ interface NotificationsPanelProps {
 
 const NotificationItem: React.FC<NotificationItemProps> = ({
   _id,
-  type,
   title,
   message,
   timeStamp,
