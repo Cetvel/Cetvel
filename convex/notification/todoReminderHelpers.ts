@@ -6,7 +6,7 @@ export const fetchTodoCounts = internalAction({
     args: { clerkId: v.string() },
     handler: async (ctx, { clerkId }) => {
         try {
-            const response = await fetch(`https://7efa-88-233-39-55.ngrok-free.app/api/notification/todoReminder?clerkId=${clerkId}`);
+            const response = await fetch(`https://d398-78-191-160-95.ngrok-free.app/api/notification/todoReminder?clerkId=${clerkId}`);
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(`API request failed with status ${response.status}: ${errorText}`);
@@ -30,8 +30,13 @@ export const createTodoReminder = internalMutation({
             } else {
                 message = "Bugün yapılacak göreviniz yok. Oluşturmak ister misiniz?"
             }
-            await ctx.db.insert("notification", { clerkId, message, sent: false, type: "todoReminder", read: false });
-            return message
+            await ctx.db.insert("notification", { 
+                clerkId,
+                title: "Görev Hatırlatıcısı",
+                message, 
+                type: "todoReminder",
+                timeStamp: Date.now().toString(), 
+                read: false });
         } catch (error) {
             throw new Error("Görev hatırlatıcı oluşturulurken bir hata çıktı " + error);
         }
