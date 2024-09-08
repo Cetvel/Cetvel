@@ -76,9 +76,9 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -50 }}
-      className={cn('rounded-lg shadow-md p-4 mb-3', {
+      className={cn('rounded-lg p-4 mb-3', {
         'bg-secondary': read,
-        'bg-muted/50': !read,
+        'border bg-muted/20': !read,
       })}
     >
       <div className='flex items-start'>

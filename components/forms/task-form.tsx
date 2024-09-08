@@ -150,9 +150,12 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
         </CustomFormField>
 
         {type === 'edit' && (
-          <div className='flex justify-center'>
+          <div className='flex justify-center items-center gap-2'>
             <Button variant='outline' onClick={toggleComplete}>
-              <ArrowUpFromLine size={16} />
+              <Check size={16} />
+            </Button>
+            <Button variant='destructive' onClick={onDelete}>
+              <Trash size={16} />
             </Button>
             <SubmitButton
               icon={<ArrowUpFromLine size={16} />}
