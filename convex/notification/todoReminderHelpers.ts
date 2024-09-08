@@ -6,7 +6,7 @@ export const fetchTodoCounts = internalAction({
     args: { clerkId: v.string() },
     handler: async (ctx, { clerkId }) => {
         try {
-            const response = await fetch(`https://d398-78-191-160-95.ngrok-free.app/api/notifications/todoReminder?clerkId=${clerkId}`);
+            const response = await fetch(`https://2af5-78-191-160-95.ngrok-free.app/api/notifications/todoReminder?clerkId=${clerkId}`);
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(`API request failed with status ${response.status}: ${errorText}`);
@@ -34,7 +34,7 @@ export const createTodoReminder = internalMutation({
                 clerkId,
                 title: "Görev Hatırlatıcısı",
                 message,
-                type: "todoReminder",
+                type: "info",
                 timeStamp: Date.now().toString(),
                 read: false,
                 _ttl: 0
