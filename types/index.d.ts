@@ -37,6 +37,16 @@ declare type Goal = {
   endsAt: Date;
 };
 
+declare type notification = {
+  _id: string;
+  title: string;
+  message: string;
+  type: string;
+  timestamp: Date;
+  onRead: boolean;
+  onDismiss: boolean;
+};
+
 declare type Action = {
   icon: React.ReactNode;
   label: string;

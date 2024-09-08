@@ -162,36 +162,37 @@ export function BaseDataTable<T>({
     .rows.filter((row) => row.getIsSelected())
     .map((row) => row.original);
 
-  const selectionColumn: ColumnDef<T> = {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Tümünü seç'
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Satırı seç'
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  };
-
   useEffect(() => {
     if (enableMultiSelect && !columns.find((col) => col.id === 'select')) {
+      const selectionColumn: ColumnDef<T> = {
+        id: 'select',
+        header: ({ table }) => (
+          <Checkbox
+            checked={table.getIsAllPageRowsSelected()}
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
+            aria-label='Tümünü seç'
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label='Satırı seç'
+          />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      };
       setColumns([selectionColumn, ...columns]);
     }
-  }, [enableMultiSelect, columns, selectionColumn]);
+  }, [enableMultiSelect, columns]);
 
   return (
     <div>
       <div className='flex items-center justify-between pb-4'>
-        <div className='flex items-center gap-4'>
+        <div className='flex items-center gap-4 flex-wrap'>
           {showGlobalFilter && (
             <Input
               placeholder='Global arama...'

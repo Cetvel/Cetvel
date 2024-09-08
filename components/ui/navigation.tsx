@@ -1,103 +1,138 @@
-import Link from 'next/link';
-import React from 'react';
-import { Button } from './button';
-import { Sheet, SheetContent, SheetHeader, SheetTrigger } from './sheet';
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-  UserButton,
-} from '@clerk/nextjs';
-import { dark } from '@clerk/themes';
-import { Menu } from 'lucide-react';
+'use client';
 
-const Navigation = async () => {
+import React, { useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import Image from 'next/image';
+import { SignInButton, SignUpButton } from '@clerk/nextjs';
+
+const Navbar: React.FC = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const navItems = [
+    { name: 'Hakkında', href: '#about' },
+    { name: 'Özellikler', href: '#features' },
+    { name: 'Fiyatlar', href: '#pricing' },
+    { name: 'İletişim', href: '#contact' },
+  ];
+
   return (
-    <>
-      {/* Main Nav */}
-      <nav className='fixed border-b border-neutral-200 dark:border-neutral-500 !z-30 flex top-0 right-0 left-0 px-6 py-3 backdrop-blur-lg !bg-opacity-60 flex-row items-center justify-between'>
-        <Link href={'/'}>
-          <h2 className='text-xl font-bold'>Cetvel</h2>
-        </Link>
-        <ul className='hidden md:flex gap-6 items-center absolute left-1/2 transform -translate-x-1/2'>
-          <li>
-            <Link href='/' className='nav-link'>
-              Anasayfa
+    <nav
+      className={cn(
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out',
+        isScrolled
+          ? 'bg-background/80 backdrop-blur-md border-b border-border shadow-sm'
+          : 'bg-transparent'
+      )}
+    >
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+        <div className='flex items-center justify-between h-16'>
+          {/* Logo */}
+          <div className='flex-shrink-0'>
+            <Link href='#' className='text-2xl font-bold text-primary'>
+              <Image
+                src={'/image/logo.svg'}
+                alt='Logo'
+                width={32}
+                height={32}
+              />
             </Link>
-          </li>
-          <li>
-            <Link href='/' className='nav-link'>
-              Hakkında
-            </Link>
-          </li>
-          <li>
-            <Link href='/' className='nav-link'>
-              Özellikler
-            </Link>
-          </li>
-          <li>
-            <Link href='/' className='nav-link'>
-              Fiyatlar
-            </Link>
-          </li>
-        </ul>
-        <SignedOut>
-          <div className='hidden md:flex items-center gap-4'>
+          </div>
+
+          {/* Centered Menu Links */}
+          <div className='hidden md:flex flex-grow justify-start pl-6'>
+            <div className='flex items-center space-x-2'>
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className='text-secondary-foreground transition-colors hover:text-primary px-3 py-2 rounded-md text-sm font-medium'
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Login and Sign Up Buttons */}
+          <div className='hidden md:flex items-center space-x-4'>
             <SignInButton>
-              <Button variant='secondary' size='sm'>
-                Giriş Yap
-              </Button>
+              <Button variant='ghost'>Giriş Yap</Button>
             </SignInButton>
             <SignUpButton>
-              <Button size='sm'>Kayıt Ol</Button>
+              <Button variant='default'>Kayıt Ol</Button>
             </SignUpButton>
           </div>
-        </SignedOut>
-        <SignedIn>
-          <div className='hidden md:flex items-center gap-4'>
-            <Link href='/dashboard'>
-              <Button variant='secondary' size='sm'>
-                Panele git
-              </Button>
-            </Link>
-            <UserButton />
+
+          {/* Mobile Menu Button */}
+          <div className='md:hidden'>
+            <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant='ghost' size='icon'>
+                  <Menu className='h-6 w-6' />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side='right' className='w-[300px] sm:w-[400px]'>
+                <nav className='flex flex-col h-full'>
+                  <div className='flex items-center justify-between mb-6'>
+                    <span className='text-lg font-semibold'>Menü</span>
+                    <Button
+                      variant='ghost'
+                      size='icon'
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <X className='h-5 w-5' />
+                    </Button>
+                  </div>
+                  <div className='space-y-4'>
+                    {navItems.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className='block px-3 py-2 rounded-md text-base font-medium text-secondary-foreground hover:text-primary hover:bg-accent'
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                  <div className='mt-auto space-y-4'>
+                    <SignInButton>
+                      <Button variant='outline'>Giriş Yap</Button>
+                    </SignInButton>
+                    <SignUpButton>
+                      <Button variant='default'>Kayıt Ol</Button>
+                    </SignUpButton>
+                  </div>
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
-        </SignedIn>
-
-        {/* Side Nav */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant={'secondary'}
-              size={'icon'}
-              className='flex md:hidden'
-            >
-              <Menu size={24} />
-            </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <h2 className='text-xl font-bold'>Cetvel</h2>
-            </SheetHeader>
-
-            <SignedOut>
-              <div className='flex flex-col space-y-4 mt-10'>
-                <Link href={'/login'}>
-                  <Button variant='secondary' className='w-full'>
-                    Giriş Yap
-                  </Button>
-                </Link>
-                <Link href={'/register'}>
-                  <Button className='w-full'>Kayıt Ol</Button>
-                </Link>
-              </div>
-            </SignedOut>
-          </SheetContent>
-        </Sheet>
-      </nav>
-    </>
+        </div>
+      </div>
+    </nav>
   );
 };
 
-export default Navigation;
+export default Navbar;

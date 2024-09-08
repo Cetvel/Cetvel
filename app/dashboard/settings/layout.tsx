@@ -46,17 +46,6 @@ export default async function RootLayout({
           </NavigationMenuItem>
           <NavigationMenuItem>
             <Link
-              href='/dashboard/settings/notifications'
-              legacyBehavior
-              passHref
-            >
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Bildirimler
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link
               href='/dashboard/settings/preferences'
               legacyBehavior
               passHref

@@ -66,6 +66,14 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .form-line {
+    @apply border px-4 py-3 rounded-xl flex items-center justify-between;
+  }
+
+  .form-line label {
+    @apply font-semibold;
+  }
 }
 
 *::-webkit-scrollbar {
