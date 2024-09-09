@@ -1,9 +1,8 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
-import BranchExam, { IBranchDocument } from "@/lib/models/exam-models/branch.model";
+import BranchExam, { BranchType } from "@/lib/models/exam-models/branch.model";
 import connectDB from "@/lib/config/connectDB";
-import { stat } from "fs";
 export async function GET(request: NextRequest, { params }: { params: { type: string } }) {
     try {
         const { userId } = getAuth(request);
@@ -29,6 +28,8 @@ export async function POST(request: NextRequest, { params }: { params: { type: s
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
         const { type } = params;
+
+        if (!Object.values(BranchType).includes(type as BranchType)) return NextResponse.json({ error: "Invalid branch type" }, { status: 400 });
 
         const body = await request.json();
 
