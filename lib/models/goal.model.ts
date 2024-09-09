@@ -3,6 +3,7 @@ import mongoose, { Schema, Model, Document, Types } from 'mongoose';
 interface IGoal {
     clerkId: string;
     title: string;
+    target : string;
     totalUnits: number;
     completedUnits: number;
     startsAt: Date;
@@ -36,6 +37,11 @@ const goalSchema = new Schema<IGoalDocument, GoalModel>({
         type: Date,
         required: true
     },
+    target: {
+        type: String,
+        required: true
+    }
+    ,
     totalUnits: {
         type: Number,
         required: false,
