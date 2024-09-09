@@ -11,7 +11,7 @@ export const getNotifications = query({
                 .query("notification")
                 .filter((q) => q.eq(q.field("clerkId"), clerkId))
                 .collect()
-            return notifications;
+            return notifications.reverse();
         } catch (error: any) {
             throw new Error(error);
         }
