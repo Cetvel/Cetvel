@@ -33,9 +33,7 @@ export const TextGenerateEffect = ({
             <motion.span
               key={word + idx}
               className={` ${
-                idx > 4
-                  ? 'underline decoration-primary'
-                  : 'text-muted-foreground'
+                idx > 4 ? 'underline decoration-primary' : 'text-foreground/70'
               } opacity-0`}
             >
               {word}{' '}

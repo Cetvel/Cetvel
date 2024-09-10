@@ -74,6 +74,10 @@
   .form-line label {
     @apply font-semibold;
   }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-muted-foreground to-foreground/90 text-transparent bg-clip-text;
+  }
 }
 
 *::-webkit-scrollbar {

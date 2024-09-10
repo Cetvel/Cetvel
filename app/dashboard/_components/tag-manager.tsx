@@ -11,7 +11,6 @@ import {
   X,
   Tag,
   AlertCircle,
-  LoaderCircle,
 } from 'lucide-react';
 import { createTag, updateTag, deleteTag } from '@/lib/services/tag-service';
 import {
@@ -21,6 +20,7 @@ import {
 } from '@/components/ui/popover';
 import useSWR, { mutate } from 'swr';
 import { fetcher } from '@/lib/utils';
+import Spinner from '@/components/ui/spinner';
 
 interface Tag {
   _id: string;
@@ -119,7 +119,7 @@ const TagManager: React.FC = () => {
     [tags]
   );
 
-  if (isLoading) return <LoaderCircle size={18} className='animate-spin' />;
+  if (isLoading) return <Spinner />;
   if (error) {
     console.log('Error fetching tags:', error);
     return <AlertCircle size={18} className='text-destructive' />;

@@ -1,16 +1,29 @@
 import { z } from 'zod';
 
-export const onboardingSchema = z.object({
-  educationLevel: z.enum(['İlkokul', 'Ortaokul', 'Lise', 'Mezun'], {
-    required_error: 'Eğitim seviyesi seçmek zorunludur',
-  }),
-  courseSubjects: z.string({
-    required_error: 'Sınav türü seçmek zorunludur',
-  }),
-  field: z.enum(['Sayısal', 'Sözel', 'Eşit Ağırlık', 'Dil'], {
-    required_error: 'Alan seçmek zorunludur',
-  }),
-});
+export const onboardingSchema = z
+  .object({
+    educationLevel: z.enum(['İlkokul', 'Ortaokul', 'Lise', 'Mezun'], {
+      required_error: 'Eğitim seviyesi seçmek zorunludur',
+    }),
+    grade: z.string().optional(),
+    field: z.enum(['Sayısal', 'Sözel', 'Eşit Ağırlık', 'Dil']).optional(),
+    courseSubjects: z.string().optional(),
+    coverImage: z.any().optional(),
+    timerImage: z.any().optional(),
+    notifications: z.boolean().default(true),
+  })
+  .refine(
+    (data) => {
+      if (data.educationLevel !== 'Mezun' && !data.grade) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'Sınıf seçimi zorunludur',
+      path: ['grade'],
+    }
+  );
 
 export const TaskSchema = z.object({
   title: z
@@ -44,20 +57,11 @@ export const GoalSchema = z.object({
   title: z.string({
     required_error: 'Hedef girmek zorunludur',
   }),
-  type: z.enum(['Günlük', 'Haftalık', 'Aylık'], {
-    required_error: 'Hedef tipi seçmek zorunludur',
-  }),
   target: z.number({
     required_error: 'Hedef sayı girmek zorunludur',
   }),
-  unit: z.enum(['Saat', 'Dakika', 'Sayı', 'Konu sayısı'], {
-    required_error: 'Hedef birimi seçmek zorunludur',
-  }),
   startsAt: z.date({
     required_error: 'Başlangıç tarihi girmek zorunludur',
-  }),
-  related: z.string({
-    required_error: 'İlgili konu veya ders seçmek zorunludur',
   }),
 });
 

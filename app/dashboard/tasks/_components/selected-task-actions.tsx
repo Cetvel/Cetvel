@@ -1,8 +1,8 @@
 // SelectedTaskActions.tsx
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { deleteTask, updateTask } from "@/lib/services/task-service";
-import { LoaderCircle } from "lucide-react";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { deleteTask, updateTask } from '@/lib/services/task-service';
+import Spinner from '@/components/ui/spinner';
 
 interface SelectedTaskActionsProps {
   selectedTasks: Task[];
@@ -27,8 +27,8 @@ export function SelectedTaskActions({
   const handleMarkComplete = async () => {
     setLoading(true);
     for (const task of selectedTasks) {
-      if (task.status !== "completed") {
-        await updateTask(task._id, { ...task, status: "completed" });
+      if (task.status !== 'completed') {
+        await updateTask(task._id, { ...task, status: 'completed' });
       }
     }
     onActionComplete();
@@ -36,24 +36,24 @@ export function SelectedTaskActions({
   };
 
   return (
-    <div className="flex space-x-2 mb-4 items-center">
+    <div className='flex space-x-2 mb-4 items-center'>
       <Button
         onClick={handleDelete}
-        variant="destructive"
-        size={"sm"}
+        variant='destructive'
+        size={'sm'}
         disabled={loading}
       >
         Seçilenleri Sil
       </Button>
       <Button
         onClick={handleMarkComplete}
-        variant="secondary"
-        size={"sm"}
+        variant='secondary'
+        size={'sm'}
         disabled={loading}
       >
         Seçilenleri Tamamla
       </Button>
-      {loading && <LoaderCircle size={18} className="animate-spin" />}
+      {loading && <Spinner />}
     </div>
   );
 }

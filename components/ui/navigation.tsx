@@ -42,12 +42,12 @@ const Navbar: React.FC = () => {
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out',
         isScrolled
-          ? 'bg-background/80 backdrop-blur-md border-b border-border shadow-sm'
+          ? 'bg-background/80 backdrop-blur-md border-b'
           : 'bg-transparent'
       )}
     >
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='flex items-center justify-between h-16'>
+        <div className='flex items-center justify-between h-14'>
           {/* Logo */}
           <div className='flex-shrink-0'>
             <Link href='#' className='text-2xl font-bold text-primary'>
@@ -78,10 +78,14 @@ const Navbar: React.FC = () => {
           {/* Login and Sign Up Buttons */}
           <div className='hidden md:flex items-center space-x-4'>
             <SignInButton>
-              <Button variant='ghost'>Giriş Yap</Button>
+              <Button variant='outline' size={'sm'}>
+                Giriş Yap
+              </Button>
             </SignInButton>
             <SignUpButton>
-              <Button variant='default'>Kayıt Ol</Button>
+              <Button variant='default' size={'sm'}>
+                Kayıt Ol
+              </Button>
             </SignUpButton>
           </div>
 

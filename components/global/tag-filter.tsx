@@ -1,6 +1,6 @@
 import React from 'react';
 import { Combobox } from '../ui/combobox';
-import { AlertCircle, LoaderCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -9,6 +9,7 @@ import {
 } from '../ui/tooltip';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
+import Spinner from '../ui/spinner';
 
 type Props = {
   onChange: (value: string) => void;
@@ -18,7 +19,7 @@ const TagFilter = ({ onChange }: Props) => {
   const { data: tags, isLoading, error } = useSWR<Tag[]>('/tags', fetcher);
 
   if (isLoading) {
-    return <LoaderCircle size={18} className='animate-spin' />;
+    return <Spinner />;
   }
 
   if (error) {

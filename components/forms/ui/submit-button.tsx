@@ -1,13 +1,13 @@
-import React from "react";
-import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
-import { LoaderCircle } from "lucide-react";
-import { cva, type VariantProps } from "class-variance-authority";
+import React from 'react';
+import { Button, ButtonProps, buttonVariants } from '@/components/ui/button';
+import { cva, type VariantProps } from 'class-variance-authority';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from '@/components/ui/tooltip';
+import Spinner from '@/components/ui/spinner';
 
 type SubmitButtonVariants = VariantProps<typeof buttonVariants>;
 
@@ -27,8 +27,8 @@ interface SubmitButtonProps
     | ((props: { loading: boolean }) => AdditionalButtonProps)
   )[];
   tooltipContent?: React.ReactNode;
-  variant?: SubmitButtonVariants["variant"];
-  size?: SubmitButtonVariants["size"];
+  variant?: SubmitButtonVariants['variant'];
+  size?: SubmitButtonVariants['size'];
 }
 
 const SubmitButton: React.FC<SubmitButtonProps> = ({
@@ -47,7 +47,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
     if (loading) {
       return (
         <>
-          <LoaderCircle size={16} className="animate-spin" />
+          <Spinner />
           {isMainButton && (loadingText || text)}
         </>
       );
@@ -77,7 +77,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 
   const mainButton = (
     <Button
-      type="submit"
+      type='submit'
       disabled={loading || props.disabled}
       className={buttonVariants({ variant, size, className })}
       {...props}
@@ -92,7 +92,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
     if (!additionalButtons) return null;
     return additionalButtons.map((buttonProps, index) => {
       const { button, tooltip } =
-        typeof buttonProps === "function"
+        typeof buttonProps === 'function'
           ? buttonProps({ loading })
           : buttonProps;
       return (
@@ -105,7 +105,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 
   return (
     <TooltipProvider>
-      <div className="flex items-center gap-2 justify-end">
+      <div className='flex items-center gap-2 justify-end'>
         {renderAdditionalButtons()}
         {wrappedMainButton}
       </div>
