@@ -18,8 +18,10 @@ import { SelectItem } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
 import { onboardingSchema } from '@/lib/schemas';
 import { axiosInstance, cn } from '@/lib/utils';
+import { useUser } from '@clerk/nextjs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -53,7 +55,7 @@ const Onboarding = () => {
     defaultValues: {
       educationLevel: 'Lise',
       field: 'Sayısal',
-      grade: '12',
+      grade: 12,
     },
   });
   const { toast } = useToast();
@@ -62,21 +64,44 @@ const Onboarding = () => {
 
   const watchEducationLevel = form.watch('educationLevel');
 
+  const router = useRouter();
+  const { user } = useUser();
+
   async function onSubmit(values: z.infer<typeof onboardingSchema>) {
+    let studyField: string;
+
+    if (
+      values.educationLevel === 'İlkokul' ||
+      values.educationLevel === 'Ortaokul'
+    ) {
+      studyField = 'LGS';
+    } else if (values.educationLevel === 'Lise') {
+      studyField = 'YKS';
+    } else if (values.educationLevel === 'Mezun') {
+      studyField = values.courseSubjects || '';
+    } else {
+      studyField = '';
+    }
+
     const data = {
-      isOnboarded: true,
-      studyField: values.field
-        ? values.field
-        : values.educationLevel === 'Lise'
-          ? 'YKS'
-          : 'LGS',
+      studyField,
+      field: values.educationLevel === 'Lise' ? values.field : undefined,
       studentClass: values.grade,
-      ...values,
+      notification: values.notifications,
     };
 
     try {
       const response = await axiosInstance.post('/onboarding', data);
-      console.log('Onboarding response:', response.data);
+      if (response?.status === 200) {
+        await user?.reload();
+        router.push('/dashboard');
+      } else if (response?.status === 400) {
+        toast({
+          title: 'Bir hata oluştu',
+          description: 'Onboarding işlemi sırasında bir hata oluştu.',
+          variant: 'destructive',
+        });
+      }
     } catch (error) {
       console.error('Onboarding error:', error);
       toast({
@@ -84,7 +109,6 @@ const Onboarding = () => {
         description: 'Onboarding işlemi sırasında bir hata oluştu.',
         variant: 'destructive',
       });
-    } finally {
     }
   }
 
@@ -219,13 +243,10 @@ const Onboarding = () => {
             )}
 
             <div
-              className={cn(
-                'flex pt-6 border-t border-t-neutral-200 dark:border-neutral-500',
-                {
-                  'justify-between': step !== 0,
-                  'justify-end': step === 0,
-                }
-              )}
+              className={cn('flex pt-4', {
+                'justify-between': step !== 0,
+                'justify-end': step === 0,
+              })}
             >
               {step !== 0 && (
                 <Button

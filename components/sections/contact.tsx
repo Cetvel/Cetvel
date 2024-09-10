@@ -6,7 +6,10 @@ import { Mail, User, MessageSquare } from 'lucide-react';
 
 const ContactSection = () => {
   return (
-    <section className='py-20 bg-gradient-to-br from-background to-muted/20'>
+    <section
+      id='#contact'
+      className='py-20 bg-gradient-to-br from-background to-muted/20'
+    >
       <div className='container mx-auto px-4'>
         <div className='flex flex-col lg:flex-row items-center gap-12'>
           <div className='lg:w-1/2 space-y-6'>

@@ -1,4 +1,3 @@
-// components/sections/features.tsx
 'use client';
 
 import React from 'react';
@@ -13,6 +12,7 @@ import {
   Zap,
   Bell,
 } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 const features = [
   {
@@ -86,6 +86,9 @@ const FeatureCard = ({
 };
 
 const Features = () => {
+  const { resolvedTheme } = useTheme();
+  console.log(resolvedTheme);
+
   return (
     <section
       id='features'
@@ -95,7 +98,7 @@ const Features = () => {
 
       <div className='relative z-10 w-full max-w-6xl'>
         <Image
-          src={'/image/app.png'}
+          src={`/image/app-${resolvedTheme === 'dark' ? 'dark' : 'light'}.png`}
           alt='hero'
           height={720}
           width={1400}

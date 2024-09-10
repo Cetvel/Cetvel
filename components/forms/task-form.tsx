@@ -36,6 +36,9 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
   } = useSWR<Tag[]>('/tags', fetcher);
   const { setClose } = useModal();
   const [isFormChanged, setIsFormChanged] = useState<boolean>(false);
+  const [isToggling, setIsToggling] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
   const defaultValues = {
     title: task?.title || '',
@@ -66,6 +69,10 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
       endsAt: values.endsAt.toISOString(),
     };
 
+    if (type === 'edit') {
+      setIsUpdating(true);
+    }
+
     const success: any =
       type === 'create'
         ? await createTask(data)
@@ -74,21 +81,27 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
     if (success) {
       if (type === 'create') {
         form.reset();
+      } else {
+        setIsUpdating(false);
       }
       setClose();
     }
   }
 
   async function onDelete() {
+    setIsDeleting(true);
     const success = await deleteTask(task?._id!);
     if (success) {
+      setIsDeleting(false);
       setClose();
     }
   }
 
   async function toggleComplete() {
+    setIsToggling(true);
     const success = await toggleTaskComplete(task!);
     if (success) {
+      setIsToggling(false);
       setClose();
     }
   }
@@ -152,15 +165,29 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
 
         {type === 'edit' && (
           <div className='flex justify-center items-center gap-2'>
-            <Button variant='outline' onClick={toggleComplete}>
-              <Check size={16} />
+            <Button
+              variant='outline'
+              disabled={isToggling}
+              onClick={toggleComplete}
+            >
+              {isToggling ? (
+                <Spinner size={16} />
+              ) : task?.status === 'completed' ? (
+                <X size={16} />
+              ) : (
+                <Check size={16} />
+              )}
             </Button>
-            <Button variant='destructive' onClick={onDelete}>
-              <Trash size={16} />
+            <Button
+              variant='destructive'
+              disabled={isDeleting}
+              onClick={onDelete}
+            >
+              {isDeleting ? <Spinner size={16} /> : <Trash size={16} />}
             </Button>
             <SubmitButton
               icon={<ArrowUpFromLine size={16} />}
-              loading={form.formState.isSubmitting}
+              loading={isUpdating}
             />
           </div>
         )}

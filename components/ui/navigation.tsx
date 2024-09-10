@@ -7,7 +7,13 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import Image from 'next/image';
-import { SignInButton, SignUpButton } from '@clerk/nextjs';
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from '@clerk/nextjs';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -77,16 +83,19 @@ const Navbar: React.FC = () => {
 
           {/* Login and Sign Up Buttons */}
           <div className='hidden md:flex items-center space-x-4'>
-            <SignInButton>
-              <Button variant='outline' size={'sm'}>
-                Giriş Yap
-              </Button>
-            </SignInButton>
-            <SignUpButton>
-              <Button variant='default' size={'sm'}>
-                Kayıt Ol
-              </Button>
-            </SignUpButton>
+            <SignedOut>
+              <SignInButton>
+                <Button variant='outline' size={'sm'}>
+                  Giriş Yap
+                </Button>
+              </SignInButton>
+              <SignUpButton>
+                <Button variant='default' size={'sm'}>
+                  Kayıt Ol
+                </Button>
+              </SignUpButton>
+            </SignedOut>
+            <UserButton />
           </div>
 
           {/* Mobile Menu Button */}
