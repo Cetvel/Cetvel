@@ -256,8 +256,6 @@ export function BaseDataTable<T>({
             </Select>
           )}
           {additionalComponents}
-        </div>
-        <div className='flex items-center gap-2'>
           {enableMultiSelect && bulkActions.length > 0 && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

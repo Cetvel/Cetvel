@@ -21,12 +21,12 @@ import {
   TableRow,
 } from '../ui/table';
 import { useModal } from '@/providers/modal-provider';
-import { LoaderCircle } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import {
   getAvailableExams,
   StudyField,
 } from '@/app/dashboard/calculation/utils/exam-filter';
+import Spinner from '../ui/spinner';
 
 export type SubjectConfig = {
   name: string;
@@ -613,9 +613,7 @@ const ModularExamForm: React.FC = () => {
             onClick={handleCalculateClick}
             disabled={form.formState.isSubmitting}
           >
-            {form.formState.isSubmitting && (
-              <LoaderCircle className='animate-spin' size={24} />
-            )}
+            {form.formState.isSubmitting && <Spinner />}
             Hesapla
           </Button>
         </div>

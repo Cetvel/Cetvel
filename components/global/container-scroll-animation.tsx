@@ -1,6 +1,6 @@
-"use client";
-import React, { useRef } from "react";
-import { useScroll, useTransform, motion, MotionValue } from "framer-motion";
+'use client';
+import React, { useRef } from 'react';
+import { useScroll, useTransform, motion, MotionValue } from 'framer-motion';
 
 export const ContainerScroll = ({
   children,
@@ -18,9 +18,9 @@ export const ContainerScroll = ({
       setIsMobile(window.innerWidth <= 768);
     };
     checkMobile();
-    window.addEventListener("resize", checkMobile);
+    window.addEventListener('resize', checkMobile);
     return () => {
-      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener('resize', checkMobile);
     };
   }, []);
 
@@ -34,13 +34,13 @@ export const ContainerScroll = ({
 
   return (
     <div
-      className="h-[50rem] hidden md:h-[50rem] -mt-[24rem] md:flex items-center justify-center relative"
+      className='h-[50rem] hidden md:h-[50rem] -mt-[24rem] md:flex items-center justify-center relative'
       ref={containerRef}
     >
       <div
-        className="w-full relative"
+        className='w-full relative'
         style={{
-          perspective: "800px",
+          perspective: '800px',
         }}
       >
         <Card rotate={rotate} translate={translate} scale={scale}>
@@ -67,9 +67,9 @@ export const Card = ({
         rotateX: rotate,
         scale,
       }}
-      className={`max-w-6xl -mt-12 mx-auto h-[30rem] md:h-[40rem] w-full rounded-[30px]`}
+      className={`max-w-6xl mx-auto h-[30rem] md:h-[40rem] w-full rounded-[30px]`}
     >
-      <div className=" h-full w-full overflow-hidden">{children}</div>
+      <div className=' h-full w-full overflow-hidden'>{children}</div>
     </motion.div>
   );
 };

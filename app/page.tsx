@@ -1,3 +1,5 @@
+import About from '@/components/sections/about';
+import Contact from '@/components/sections/contact';
 import Faq from '@/components/sections/faq';
 import Features from '@/components/sections/features';
 import Hero from '@/components/sections/hero';
@@ -9,8 +11,10 @@ const page = async () => {
     <main>
       <Hero />
       <Features />
+      <About />
       <Faq />
       <Start />
+      <Contact />
       <footer className='py-4 text-center bg-dark-300'>
         <span className='text-sm text-secondary-content'>
           2024 © Muhammed. All rights reserved.

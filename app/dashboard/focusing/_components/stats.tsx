@@ -75,7 +75,6 @@ const Statistics = () => {
             <p>{data.todayStatistics.totalPomodoros} oturum</p>
           </div>
         </CardContent>
-        <div className='h-24' />
         <CardFooter>
           <FocusingStatsChart chartData={data.chartData} />
         </CardFooter>

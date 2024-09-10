@@ -7,7 +7,6 @@ import { Form } from '../ui/form';
 import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
 import SubmitButton from './ui/submit-button';
 import { SelectItem } from '../ui/select';
-import { LoaderCircle } from 'lucide-react';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
 import {
@@ -15,6 +14,7 @@ import {
   updateFocusSession,
 } from '@/lib/services/focus-service';
 import { useModal } from '@/providers/modal-provider';
+import Spinner from '../ui/spinner';
 
 type FocusSessionFormValues = z.infer<typeof FocusSessionSchema>;
 
@@ -89,7 +89,7 @@ const FocusSessionForm: React.FC<FocusSessionFormProps> = ({ editSession }) => {
             ))
           ) : isTagsLoading ? (
             <SelectItem value='loading' disabled>
-              <LoaderCircle size={16} className='animate-spin' />
+              <Spinner />
             </SelectItem>
           ) : tagsError ? (
             <SelectItem value='error' disabled>

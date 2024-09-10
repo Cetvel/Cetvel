@@ -12,7 +12,7 @@ import { SelectItem } from '../ui/select';
 import isEqual from 'lodash/isEqual';
 import { Button } from '../ui/button';
 import { useModal } from '@/providers/modal-provider';
-import { ArrowUpFromLine, Check, LoaderCircle, Trash, X } from 'lucide-react';
+import { ArrowUpFromLine, Check, Trash, X } from 'lucide-react';
 import useSWR from 'swr';
 import {
   createTask,
@@ -21,6 +21,7 @@ import {
   updateTask,
 } from '@/lib/services/task-service';
 import { fetcher } from '@/lib/utils';
+import Spinner from '../ui/spinner';
 
 type TaskFormProps = {
   type?: 'edit' | 'create';
@@ -136,7 +137,7 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
             ))
           ) : isTagsLoading ? (
             <SelectItem value='loading' disabled>
-              <LoaderCircle size={16} className='animate-spin' />
+              <Spinner />
             </SelectItem>
           ) : !tagsError ? (
             <SelectItem value='empty' disabled>

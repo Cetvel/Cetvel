@@ -11,15 +11,7 @@ import {
   TooltipTrigger,
 } from '../ui/tooltip';
 import { Slider } from '../ui/slider';
-import {
-  LoaderCircle,
-  Pause,
-  Play,
-  RotateCw,
-  Square,
-  Volume2,
-  VolumeX,
-} from 'lucide-react';
+import { Pause, Play, RotateCw, Square, Volume2, VolumeX } from 'lucide-react';
 import { SelectItem } from '../ui/select';
 import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
@@ -31,6 +23,8 @@ import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
 import { createFocusSession } from '@/lib/services/focus-service';
 import { useToast } from '../ui/use-toast';
 import { Switch } from '../ui/switch';
+import Spinner from '../ui/spinner';
+import { CustomTooltip } from '../global/custom-tooltip';
 
 type FocusSessionValues = z.infer<typeof FocusSessionSchema>;
 
@@ -51,29 +45,7 @@ const TimerDisplay: React.FC<TimerDisplayProps> = ({
   };
 
   return (
-    <div className='relative w-48 h-48 mx-auto my-10'>
-      <svg className='w-full h-full' viewBox='0 0 100 100'>
-        <circle
-          className='text-secondary stroke-current'
-          strokeWidth='5'
-          cx='50'
-          cy='50'
-          r='45'
-          fill='transparent'
-        />
-        <circle
-          className='text-primary stroke-current'
-          strokeWidth='5'
-          strokeLinecap='round'
-          cx='50'
-          cy='50'
-          r='45'
-          fill='transparent'
-          strokeDasharray='283'
-          strokeDashoffset={283 - (283 * percentage) / 100}
-          transform='rotate(-90 50 50)'
-        />
-      </svg>
+    <div className='relative w-20 h-20 mx-auto my-10'>
       <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-bold'>
         {formatTime(secondsLeft)}
       </div>
@@ -200,57 +172,31 @@ const FocusForge: React.FC = () => {
 
   const renderTimerControls = () => (
     <DialogFooter className='!justify-center gap-2 m-0'>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type='button'
-              onClick={() => handlePause(!isPaused)}
-              size='icon'
-            >
-              {isPaused ? <Play size={18} /> : <Pause size={18} />}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <span>{isPaused ? 'Devam et' : 'Duraklat'}</span>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type='button'
-              onClick={initTimer}
-              variant='outline'
-              size='icon'
-            >
-              <RotateCw size={18} />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <span>Sayacı sıfırla</span>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <CustomTooltip content={isPaused ? 'Başlat' : 'Duraklat'}>
+        <Button
+          type='button'
+          onClick={() => handlePause(!isPaused)}
+          size='icon'
+        >
+          {isPaused ? <Play size={18} /> : <Pause size={18} />}
+        </Button>
+      </CustomTooltip>
+      <CustomTooltip content='Sıfırla'>
+        <Button type='button' onClick={initTimer} variant='outline' size='icon'>
+          <RotateCw size={18} />
+        </Button>
+      </CustomTooltip>
       {!isBreak && secondsLeft < focusDuration * 60 && (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type='submit'
-                variant='destructive'
-                size='icon'
-                onClick={handleSubmit}
-              >
-                <Square size={18} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <span>Bitir ve Kaydet</span>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <CustomTooltip content='Bitir'>
+          <Button
+            type='button'
+            onClick={handleSubmit}
+            variant='destructive'
+            size='icon'
+          >
+            <Square size={18} />
+          </Button>
+        </CustomTooltip>
       )}
     </DialogFooter>
   );
@@ -296,7 +242,7 @@ const FocusForge: React.FC = () => {
                       ))
                     ) : isTagsLoading ? (
                       <SelectItem value='loading' disabled>
-                        <LoaderCircle size={16} className='animate-spin' />
+                        <Spinner />
                       </SelectItem>
                     ) : tagsError ? (
                       <SelectItem value='error' disabled>
