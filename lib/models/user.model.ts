@@ -14,7 +14,7 @@ interface IUser {
     name: string;
     email: string;
     password: string;
-    class?: string;
+    class?: number;
     studyField?: string;
 }
 
@@ -37,7 +37,7 @@ const userSchema = new Schema<IUserDocument, UserModel>({
         trim: true,
     },
     class: {
-        type: String,
+        type: Number,
         required: false,
         trim: false,
     },
