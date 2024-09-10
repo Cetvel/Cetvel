@@ -20,7 +20,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         await clerkClient.users.updateUserMetadata(userId, {
             publicMetadata: {
-                isOnboarded : true,
+                onboardingComplete: true,
                 studyField,
                 studentClass,
                 notification
@@ -38,12 +38,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
             userId: convexUser!._id,
             notification
         })
-        await convex.mutation(api.user.crud.updateUserImages, { clerkId: userId, defaultTemplate })
+        // await convex.mutation(api.user.crud.updateUserImages, { clerkId: userId, defaultTemplate })
         if (!convexUser) return NextResponse.json({ error: "Kullanıcı bulunamadı." }, { status: 404 })
 
         return NextResponse.json({ status: 200 })
     } catch (error) {
-        return NextResponse.json({ error }, { status: 400 })
+        return NextResponse.json({ error: "Internal server error" }, { status: 400 })
 
     }
 }
