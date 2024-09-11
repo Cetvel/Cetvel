@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         { status: 404 }
       );
 
-    await clerkClient.users.updateUserMetadata(userId, {
+    await clerkClient().users.updateUserMetadata(userId, {
       publicMetadata: {
         onboardingComplete: true,
         studyField,
@@ -45,10 +45,10 @@ export async function POST(req: NextRequest, res: NextResponse) {
       userId: convexUser!._id,
       notification,
     });
-    await convex.mutation(api.user.crud.updateUserImages, {
-      clerkId: userId,
-      defaultTemplate,
-    });
+    // await convex.mutation(api.user.crud.updateUserImages, {
+    //   clerkId: userId,
+    //   defaultTemplate,
+    // });
     if (!convexUser)
       return NextResponse.json(
         { error: 'Kullanıcı bulunamadı.' },
