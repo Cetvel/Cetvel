@@ -66,13 +66,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
         { status: 404 }
       );
 
-<<<<<<< HEAD
-    return NextResponse.json({ status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error }, { status: 400 });
-  }
-}
-=======
         const convexUser = await convex.query(api.user.crud.getUser, { clerkId: userId })
         await convex.mutation(api.user.userPreference.createUserPreference, {
             clerkId: userId,
@@ -88,4 +81,3 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     }
 }
->>>>>>> 9fef3be4a66140d3dd70bfb557b4e576fa906897
