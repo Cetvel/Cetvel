@@ -33,7 +33,7 @@ export function ColumnHeader<TData, TValue>({
     return <div className={cn(className)}>{title}</div>;
   }
 
-  if (sortable && hideable)
+  if (sortable || hideable)
     return (
       <div className={cn('flex items-center space-x-2', className)}>
         <DropdownMenu>
@@ -65,7 +65,7 @@ export function ColumnHeader<TData, TValue>({
                   <SortDesc className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
                   Azalan
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                {hideable && <DropdownMenuSeparator />}
               </>
             )}
 
