@@ -5,7 +5,7 @@ export const onboardingSchema = z
     educationLevel: z.enum(['İlkokul', 'Ortaokul', 'Lise', 'Mezun'], {
       required_error: 'Eğitim seviyesi seçmek zorunludur',
     }),
-    grade: z.string().optional(),
+    grade: z.coerce.number().optional(),
     field: z.enum(['Sayısal', 'Sözel', 'Eşit Ağırlık', 'Dil']).optional(),
     courseSubjects: z.string().optional(),
     coverImage: z.any().optional(),
