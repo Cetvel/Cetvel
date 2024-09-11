@@ -9,16 +9,16 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!)
 
 export async function POST(req: NextRequest, res: NextResponse) {
     try {
+
         const { userId } = getAuth(req)
         if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
         const { studyField, defaultTemplate, studentClass, notification } = await req.json()
-
         await connectDB()
         const user = await User.findOne({ clerkId: userId })
         if (!user) return NextResponse.json({ error: "Kullanıcı bulunamadı." }, { status: 404 })
 
-        await clerkClient.users.updateUserMetadata(userId, {
+        await clerkClient().users.updateUserMetadata(userId, {
             publicMetadata: {
                 onboardingComplete: true,
                 studyField,
@@ -41,6 +41,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         // await convex.mutation(api.user.crud.updateUserImages, { clerkId: userId, defaultTemplate })
         if (!convexUser) return NextResponse.json({ error: "Kullanıcı bulunamadı." }, { status: 404 })
 
+        console.log("denememeemememem")    
         return NextResponse.json({ status: 200 })
     } catch (error) {
         return NextResponse.json({ error: "Internal server error" }, { status: 400 })
