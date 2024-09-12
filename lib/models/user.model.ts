@@ -18,7 +18,7 @@ enum aytField {
 interface IUser {
     clerkId: string;
     name: string;
-    email: string;
+    email: [string];
     password: string;
     aytField?: aytField;
     class?: number;
@@ -63,7 +63,7 @@ const userSchema = new Schema<IUserDocument, UserModel>({
         trim: false,
     },
     email: {
-        type: String,
+        type: [String],
         required: true,
         trim: true,
         lowercase: true

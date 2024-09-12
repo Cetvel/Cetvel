@@ -56,17 +56,18 @@ export async function POST(req: Request): Promise<Response> {
     try {
         const user = evt.data as UserJSON
         await connectDB()
+        const emailsArray = user.email_addresses.map((email) => email.toString());
         const newUser = new UserData({
             clerkId: user.id,
             name: user.username,
-            email: user.email_addresses[0].email_address,
+            email: emailsArray,
         });
         await newUser.save();
 
         await convex.mutation(api.user.crud.createUser, {
             clerkId: user.id,
             mongoId: newUser._id.toString(),
-            email: user.email_addresses[0].email_address,
+            email: emailsArray,
         });
         return new Response('Webhook processed successfully', { status: 200 });
     } catch (error) {
