@@ -1,13 +1,13 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 const isOnboardingRoute = createRouteMatcher(['/onboarding']);
-const isPublicRoute = createRouteMatcher(['/']);
+const isProtectedRoute = createRouteMatcher(['/dashboard(.*)']);
 
-export default clerkMiddleware((auth, req: NextRequest) => {
+export default clerkMiddleware((auth, req) => {
   // const { userId, sessionClaims, redirectToSignIn } = auth();
 
-  // // For users visiting /onboarding, don't try to redirect
+  // For users visiting /onboarding, don't try to redirect
   // if (userId && isOnboardingRoute(req)) {
   //   return NextResponse.next();
   // }

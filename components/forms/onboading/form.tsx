@@ -1,17 +1,18 @@
-// components/forms/OnboardingForm.tsx
+'use client';
+
 import React, { useState } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { useToast } from '@/components/ui/use-toast';
 import { onboardingSchema } from '@/lib/schemas';
-import { axiosInstance } from '@/lib/utils';
 import FormStepper from '@/components/ui/form-stepper';
 import { EducationStep, InterfaceStep, NotificationStep } from './steps';
 import StepNavigation from './step-navigation';
 import { submitOnboarding } from '@/lib/services/onboarding-service';
+import { Form } from '@/components/ui/form';
 
 const steps = [
   {
@@ -34,7 +35,7 @@ const OnboardingForm: React.FC = () => {
     resolver: zodResolver(onboardingSchema),
     defaultValues: {
       educationLevel: 'Lise',
-      field: 'Sayısal',
+      field: 'SAY',
       grade: 12,
     },
   });
@@ -85,15 +86,8 @@ const OnboardingForm: React.FC = () => {
     }
   };
 
-  const handleImageUpload = async (
-    file: File,
-    imageType: 'cover' | 'timer'
-  ) => {
-    form.setValue(imageType === 'cover' ? 'coverImage' : 'timerImage', file);
-  };
-
   return (
-    <FormProvider {...form}>
+    <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className='flex flex-col space-y-4 mt-6'
@@ -115,7 +109,7 @@ const OnboardingForm: React.FC = () => {
           isSubmitting={form.formState.isSubmitting}
         />
       </form>
-    </FormProvider>
+    </Form>
   );
 };
 

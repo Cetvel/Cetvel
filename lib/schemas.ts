@@ -6,7 +6,7 @@ export const onboardingSchema = z
       required_error: 'Eğitim seviyesi seçmek zorunludur',
     }),
     grade: z.coerce.number().optional(),
-    field: z.enum(['Sayısal', 'Sözel', 'Eşit Ağırlık', 'Dil']).optional(),
+    field: z.enum(['SAY', 'SOZ', 'EA', 'DIL']).optional(),
     courseSubjects: z.string().optional(),
     coverImage: z.any().optional(),
     timerImage: z.any().optional(),
