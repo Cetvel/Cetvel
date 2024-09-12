@@ -8,8 +8,6 @@ import connectDB from '@/lib/config/connectDB';
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function POST(req: NextRequest, res: NextResponse) {
-  console.log('POST /api/onboarding this worked!');
-
   try {
     const { userId } = getAuth(req);
     if (!userId)
@@ -57,7 +55,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
         { status: 404 }
       );
 
-    console.log(res.publicMetadata);
     return NextResponse.json({ message: res.publicMetadata }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
