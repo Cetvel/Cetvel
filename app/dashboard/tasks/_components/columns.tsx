@@ -1,7 +1,7 @@
 import { ActionCell } from '@/components/global/action-cell';
 import { ColumnHeader } from '@/components/global/column-header';
 import { Badge } from '@/components/ui/badge';
-import { useTaskActions } from '@/hooks/use-task-actions';
+import { GetTaskActions } from '@/hooks/use-task-actions';
 import { ColumnDef } from '@tanstack/react-table';
 
 export const columns: ColumnDef<Task>[] = [
@@ -66,7 +66,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const actions = useTaskActions(row.original);
+      const actions = GetTaskActions(row.original);
       return (
         <ActionCell
           item={row.original}

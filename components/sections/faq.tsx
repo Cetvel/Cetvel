@@ -50,7 +50,7 @@ const Faq = () => {
   return (
     <section
       id='faq'
-      className='bg-secondary py-24 px-6 md:px-4 flex flex-col gap-10 md:items-center'
+      className='bg-secondary/50 py-24 px-6 md:px-4 flex flex-col gap-10 md:items-center'
     >
       <p className='font-bold text-primary md:text-center'>
         Merak ettikleriniz

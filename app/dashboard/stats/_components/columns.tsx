@@ -88,6 +88,14 @@ const baseColumns: ColumnDef<ExamResult>[] = [
       format(new Date(row.getValue('solvingDate') as string), 'dd MMMM yyyy', {
         locale: tr,
       }),
+    filterFn: (row, columnId, filterValue) => {
+      const filter_from = filterValue.from;
+      const filter_to = filterValue.to;
+
+      const date = new Date(row.original.solvingDate);
+
+      return date >= filter_from && date <= filter_to;
+    },
     sortingFn: 'datetime',
   },
   {

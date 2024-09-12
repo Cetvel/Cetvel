@@ -21,6 +21,7 @@ import { deleteManyExams } from '@/lib/services/exam-service';
 const ExamsTable = () => {
   const { data, isLoading, error } = useSWR('/exams', fetcher);
   const { user } = useUser();
+  console.log(user?.publicMetadata);
 
   const studyField: StudyField = useMemo(() => {
     const userStudyField = user?.publicMetadata?.studyField as string;
@@ -109,7 +110,7 @@ const ExamsTable = () => {
             <Link href={'/dashboard/calculation'}>
               <Button>
                 <Plus size={16} />
-                <span className='ml-2'>Sınav Ekle</span>
+                Sınav Ekle
               </Button>
             </Link>
           }

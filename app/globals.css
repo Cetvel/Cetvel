@@ -76,7 +76,7 @@
   }
 
   .text-gradient {
-    @apply bg-gradient-to-r from-muted-foreground to-foreground/90 text-transparent bg-clip-text;
+    @apply bg-gradient-radial from-foreground to-muted-foreground/40 text-transparent bg-clip-text;
   }
 }
 

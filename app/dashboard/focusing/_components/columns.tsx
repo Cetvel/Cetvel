@@ -2,7 +2,7 @@
 
 import { ActionCell } from '@/components/global/action-cell';
 import { Button } from '@/components/ui/button';
-import { useFocusActions } from '@/hooks/use-focus-actions';
+import { GetFocusActions } from '@/hooks/use-focus-actions';
 import { formatMinutesToHours } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
@@ -50,7 +50,7 @@ export const columns: ColumnDef<Focus>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const actions = useFocusActions(row.original);
+      const actions = GetFocusActions(row.original);
 
       return (
         <ActionCell

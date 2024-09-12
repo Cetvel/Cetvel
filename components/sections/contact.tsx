@@ -8,31 +8,33 @@ const ContactSection = () => {
   return (
     <section
       id='#contact'
-      className='py-20 bg-gradient-to-br from-background to-muted/20'
+      className='py-20 bg-gradient-to-br from-primary/80 to-primary/100'
     >
       <div className='container mx-auto px-4'>
         <div className='flex flex-col lg:flex-row items-center gap-12'>
           <div className='lg:w-1/2 space-y-6'>
-            <h2 className='text-4xl font-bold text-foreground'>
+            <h2 className='text-4xl font-bold text-foreground text-primary-foreground'>
               İletişime Geçin
             </h2>
-            <p className='text-xl text-muted-foreground'>
+            <p className='text-xl text-primary-foreground/80'>
               Bizimle iletişime geçmek için formu doldurabilir ya da doğrudan
               mail adresimizden bize ulaşabilirsiniz.
             </p>
             <div className='flex items-center space-x-4'>
-              <div className='w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center'>
-                <Mail className='w-6 h-6 text-primary' />
+              <div className='w-12 h-12 rounded-full bg-white/10 flex items-center justify-center'>
+                <Mail className='w-6 h-6 text-primary-foreground' />
               </div>
               <div>
-                <h3 className='text-lg font-semibold text-foreground'>
+                <h3 className='text-lg font-semibold text-primary-foreground'>
                   Email Gönder
                 </h3>
-                <p className='text-muted-foreground'>cetvelapp@gmail.com</p>
+                <p className='text-primary-foreground/80'>
+                  cetvelapp@gmail.com
+                </p>
               </div>
             </div>
           </div>
-          <Card className='lg:w-1/2 w-full shadow-lg'>
+          <Card className='lg:w-1/2 w-full shadow-xl'>
             <CardContent className='p-6'>
               <form className='space-y-6'>
                 <div className='space-y-2'>

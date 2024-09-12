@@ -1,4 +1,3 @@
-// hooks/useTaskActions.ts
 import { useCallback } from 'react';
 import { deleteTask, toggleTaskComplete } from '@/lib/services/task-service';
 import { CheckCircle, XCircle, Pencil, Trash } from 'lucide-react';
@@ -6,7 +5,7 @@ import { useModal } from '@/providers/modal-provider';
 import TaskForm from '@/components/forms/task-form';
 import Modal from '@/components/global/modal';
 
-export const useTaskActions = (task: Task): Action[] => {
+export const GetTaskActions = (task: Task): Action[] => {
   const { setOpen } = useModal();
 
   const handleToggleComplete = useCallback(() => {

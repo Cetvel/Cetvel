@@ -8,7 +8,7 @@ import { useModal } from '@/providers/modal-provider';
 import FocusSessionForm from '@/components/forms/focus-session-form';
 import Modal from '@/components/global/modal';
 
-export const useFocusActions = (focusSession: Focus): Action[] => {
+export const GetFocusActions = (focusSession: Focus): Action[] => {
   const { setOpen } = useModal();
 
   const handleEdit = useCallback(() => {

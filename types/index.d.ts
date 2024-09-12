@@ -63,6 +63,7 @@ declare enum TaskStatus {
 declare type UserClass = '9' | '10' | '11' | '12' | 'Mezun';
 declare type ExamType = 'TYT' | 'AYT' | 'LGS' | 'DGS' | 'YDS' | 'ALES' | 'KPSS';
 declare type AYTField = 'SAY' | 'EA' | 'SOZ';
+declare type StudyField = 'Sayısal' | 'Eşit Ağırlık' | 'Sözel' | 'Dil';
 
 declare interface FieldBase {
   name: string;
