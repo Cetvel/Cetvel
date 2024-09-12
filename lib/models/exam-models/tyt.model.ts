@@ -1,6 +1,5 @@
 import mongoose, { Schema, model, Document } from 'mongoose'
 import Exam from '../exam.model'
-import { ITytMethods, TytMethods } from '../plugins/tyt.plugins'
 
 
 export interface Section {
@@ -33,7 +32,7 @@ export interface Section {
 export interface Tyt {
     solvingTime?: number
 }
-export interface ITytDocument extends Tyt, Section, Document, ITytMethods {
+export interface ITytDocument extends Tyt, Section, Document {
     _id: Schema.Types.ObjectId;
 }
 const TytSchema = new Schema<ITytDocument>({
@@ -60,19 +59,6 @@ const TytSchema = new Schema<ITytDocument>({
     }
 });
 
-(Object.keys(TytSchema.paths) as (keyof Section)[]).forEach(section => {
-    TytSchema.virtual(`${section}.totalNet`).get(function (this: ITytDocument) {
-        return this.calculateSectionNet(section);
-    });
-});
-
-// Virtual for total net score
-TytSchema.virtual('totalNet').get(function (this: ITytDocument) {
-    return (Object.keys(this.toObject()) as (keyof Section)[])
-        .reduce((sum, section) => sum + this.calculateSectionNet(section), 0);
-});
-
-TytSchema.methods = TytMethods;
 
 const Tyt = (mongoose.models.Tyt as mongoose.Model<ITytDocument>) || 
     Exam.discriminator<ITytDocument>('TYT', TytSchema);
