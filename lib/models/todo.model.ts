@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document, Model, Types } from 'mongoose';
-import { todoStatics, ITodoStatics } from './plugins/todo.plugins';
 
 interface ITodo {
 	userId: Types.ObjectId;
@@ -19,7 +18,7 @@ export interface ITodoDocument extends ITodo, Document {
 	_id: Types.ObjectId;
 }
 
-interface TodoModel extends Model<ITodoDocument>, ITodoStatics { }
+interface TodoModel extends Model<ITodoDocument> { }
 
 const TodoSchema = new Schema<ITodoDocument>({
 	clerkId: {
@@ -62,9 +61,6 @@ const TodoSchema = new Schema<ITodoDocument>({
 }, {
 	timestamps: true
 });
-
-// Static metodları ekleme
-Object.assign(TodoSchema.statics, todoStatics);
 
 
 // Modeli oluşturma ve export etme

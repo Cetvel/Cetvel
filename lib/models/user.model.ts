@@ -1,5 +1,4 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
-import { userPlugins, IUserMethods, userMethods, IUserStaticMethods, userStaticMethods } from "./plugins/user.plugins";
 
 enum StudyField {
     YKS,
@@ -27,11 +26,11 @@ interface IUser {
 
 
 
-export interface IUserDocument extends IUser, Document, IUserMethods {
+export interface IUserDocument extends IUser, Document {
     _id: Schema.Types.ObjectId;
 }
 
-export interface UserModel extends Model<IUserDocument>, IUserStaticMethods { }
+export interface UserModel extends Model<IUserDocument> { }
 
 // Model is defined only if it hasn't been already
 const userSchema = new Schema<IUserDocument, UserModel>({
@@ -77,11 +76,6 @@ const userSchema = new Schema<IUserDocument, UserModel>({
 }, {
     timestamps: true,
 });
-
-userPlugins(userSchema);
-userSchema.methods = userMethods;
-Object.assign(userSchema.statics, userStaticMethods);
-
 
 const User = mongoose.models.User || mongoose.model<IUserDocument, UserModel>('User', userSchema);
 
