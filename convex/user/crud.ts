@@ -28,7 +28,7 @@ export const createUser = mutation({
     args: {
         clerkId: v.string(),
         mongoId: v.string(),
-        email: v.string()
+        email: v.array(v.string())
     },
     handler: async (ctx, { clerkId, mongoId, email }) => {
         try {
@@ -74,7 +74,7 @@ export const deleteUser = mutation({
 export const updateUser = mutation({
     args: {
         clerkId: v.string(),
-        email: v.string()
+        email: v.array(v.string())
     },
     handler: async (ctx, { clerkId, email }) => {
         try {

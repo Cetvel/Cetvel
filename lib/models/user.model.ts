@@ -9,14 +9,23 @@ enum StudyField {
     DGS
 }
 
+enum aytField {
+    SAY,
+    SOZ,
+    EA,
+    DIL
+}
 interface IUser {
     clerkId: string;
     name: string;
-    email: string;
+    email: [string];
     password: string;
+    aytField?: aytField;
     class?: number;
     studyField?: string;
 }
+
+
 
 export interface IUserDocument extends IUser, Document, IUserMethods {
     _id: Schema.Types.ObjectId;
@@ -47,9 +56,14 @@ const userSchema = new Schema<IUserDocument, UserModel>({
         enum: Object.values(StudyField),
         trim: false,
     },
-
-    email: {
+    aytField: {
         type: String,
+        required: false,
+        enum: Object.values(aytField),
+        trim: false,
+    },
+    email: {
+        type: [String],
         required: true,
         trim: true,
         lowercase: true

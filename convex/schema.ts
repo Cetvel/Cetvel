@@ -12,7 +12,7 @@ export default defineSchema({
         ttl : v.number()
     }),
     user: defineTable({
-        email: v.optional(v.string()),
+        email: v.optional(v.array(v.string())),
         clerkId: v.string(),
         mongoId: v.string(),
         coverPhotoId: v.optional(v.id("_storage")),
