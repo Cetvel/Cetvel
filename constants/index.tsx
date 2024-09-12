@@ -57,7 +57,6 @@ export const taskStatusses = [
 
 export const StudyFieldOptions = ['YKS', 'LGS', 'KPSS'];
 
-export const GoalUnitOptions = ['Saat', 'Dakika', 'Sayı', 'Konu sayısı'];
 export const GoalTypeOptions = ['Günlük', 'Haftalık', 'Aylık'];
 
 export const GeneralExams = ['TYT', 'AYT', 'YDT', 'DGS', 'YDS', 'ALES', 'KPSS'];
