@@ -87,7 +87,6 @@ const FeatureCard = ({
 
 const Features = () => {
   const { resolvedTheme } = useTheme();
-  console.log(resolvedTheme);
 
   return (
     <section

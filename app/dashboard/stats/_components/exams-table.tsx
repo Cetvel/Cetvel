@@ -21,7 +21,6 @@ import { deleteManyExams } from '@/lib/services/exam-service';
 const ExamsTable = () => {
   const { data, isLoading, error } = useSWR('/exams', fetcher);
   const { user } = useUser();
-  console.log(user?.publicMetadata);
 
   const studyField: StudyField = useMemo(() => {
     const userStudyField = user?.publicMetadata?.studyField as string;
