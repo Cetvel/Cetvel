@@ -20,7 +20,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         const body = await request.json();
         const tag = await TagModel.findOneAndUpdate({ _id: id }, body, { new: true });
         if (!tag) {
-            return NextResponse.json({ error: "tag not found" }, { status: 404 });
+            return NextResponse.json({ error: "Lütfen silme butonuna üst üste tıklamayınız." }, { status: 404 });
         }
         return NextResponse.json({ status: 200 });
     } catch (error) {
