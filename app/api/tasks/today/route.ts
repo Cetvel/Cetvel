@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import Todo from "@/lib/models/todo.model";
-import NodeCache from 'node-cache';
 import connectDB from "@/lib/config/connectDB";
 
 export async function GET(request: NextRequest) {
