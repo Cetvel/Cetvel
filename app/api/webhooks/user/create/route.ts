@@ -69,6 +69,13 @@ export async function POST(req: Request): Promise<Response> {
             mongoId: newUser._id.toString(),
             email: emailsArray,
         });
+        const convexUser = await convex.query(api.user.crud.getUser, {
+            clerkId : user.id,
+        });
+        await convex.mutation(api.user.userPreference.createUserPreference, {
+            clerkId: user.id,
+            userId: convexUser!._id,
+        });
         return new Response('Webhook processed successfully', { status: 200 });
     } catch (error) {
         console.error('Error occurred while processing event', error);

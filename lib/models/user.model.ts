@@ -18,9 +18,9 @@ interface IUser {
     clerkId: string;
     name: string;
     email: [string];
-    password: string;
-    aytField?: aytField;
-    class?: number;
+    password?: string;
+    field?: aytField;
+    grade?: number;
     studyField?: string;
 }
 
@@ -36,15 +36,15 @@ export interface UserModel extends Model<IUserDocument> { }
 const userSchema = new Schema<IUserDocument, UserModel>({
     clerkId: {
         type: String,
-        required: false,
+        required: true,
         trim: true
     },
     name: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
-    class: {
+    grade: {
         type: Number,
         required: false,
         trim: false,
@@ -55,7 +55,7 @@ const userSchema = new Schema<IUserDocument, UserModel>({
         enum: Object.values(StudyField),
         trim: false,
     },
-    aytField: {
+    field: {
         type: String,
         required: false,
         enum: Object.values(aytField),

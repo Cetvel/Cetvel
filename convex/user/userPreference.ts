@@ -4,19 +4,16 @@ import { v } from "convex/values";
 export const createUserPreference = mutation({
     args: {
         clerkId: v.string(),
-        userId: v.string(),
-        notification: v.boolean(),
+        userId: v.id("user"),
     },
-    handler: async (ctx, { clerkId, userId, notification }) => {
+    handler: async (ctx, { clerkId, userId }) => {
         try {
             const newUserPreference = await ctx.db.insert("userPreferences", {
-                notification,
-                clerkId,
+                notifications: true,
                 userId,
-                todoReminder: true,
+                clerkId,
+                todoReminders: true,
                 todoReminderFrequency: 2,
-                pomodoroReminder: true,
-                weeklyReport: true
             })
 
             if (!newUserPreference) {
