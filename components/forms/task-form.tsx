@@ -187,6 +187,7 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
             </Button>
             <SubmitButton
               icon={<ArrowUpFromLine size={16} />}
+              disabled={!isFormChanged}
               loading={isUpdating}
             />
           </div>

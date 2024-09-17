@@ -6,32 +6,6 @@ import CustomFormField, {
 } from '@/components/ui/custom-form-field';
 import { SelectItem } from '@/components/ui/select';
 
-const educationLevels = ['İlkokul', 'Ortaokul', 'Lise', 'Mezun'];
-const fields = [
-  {
-    label: 'Sayısal',
-    value: 'SAY',
-  },
-  {
-    label: 'Sözel',
-    value: 'SÖZ',
-  },
-  {
-    label: 'Eşit Ağırlık',
-    value: 'EA',
-  },
-  {
-    label: 'Dil',
-    value: 'DIL',
-  },
-];
-const exams = ['YKS', 'KPSS', 'DGS', 'ALES', 'YDS'];
-const gradeOptions = {
-  İlkokul: [1, 2, 3, 4],
-  Ortaokul: [5, 6, 7, 8],
-  Lise: [9, 10, 11, 12],
-};
-
 export const EducationStep: React.FC = () => {
   const { control, watch } = useFormContext();
   const watchEducationLevel = watch('educationLevel');
@@ -102,6 +76,7 @@ export const EducationStep: React.FC = () => {
 };
 
 import { FormDescription, FormLabel } from '@/components/ui/form';
+import { educationLevels } from '@/constants';
 
 export const NotificationStep: React.FC = () => {
   const { control } = useFormContext();

@@ -1,29 +1,30 @@
-import { Control } from "react-hook-form";
+import { Control } from 'react-hook-form';
 
-import { Checkbox } from "./checkbox";
+import { Checkbox } from './checkbox';
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "./form";
-import { Input } from "./input";
-import { Select, SelectContent, SelectTrigger, SelectValue } from "./select";
-import { Textarea } from "./textarea";
-import { DatePicker } from "./date-picker";
-import { Switch } from "./switch";
+} from './form';
+import { Input } from './input';
+import { Select, SelectContent, SelectTrigger, SelectValue } from './select';
+import { Textarea } from './textarea';
+import { DatePicker } from './date-picker';
+import { Switch } from './switch';
+import { cn } from '@/lib/utils';
 
 export enum FormFieldType {
-  INPUT = "input",
-  PASSWORD = "password",
-  NUMBER = "number",
-  TEXTAREA = "textarea",
-  CHECKBOX = "checkbox",
-  SWITCH = "switch",
-  DATE_PICKER = "datePicker",
-  SELECT = "select",
-  SKELETON = "skeleton",
+  INPUT = 'input',
+  PASSWORD = 'password',
+  NUMBER = 'number',
+  TEXTAREA = 'textarea',
+  CHECKBOX = 'checkbox',
+  SWITCH = 'switch',
+  DATE_PICKER = 'datePicker',
+  SELECT = 'select',
+  SKELETON = 'skeleton',
 }
 
 interface CustomProps {
@@ -42,6 +43,7 @@ interface CustomProps {
   children?: React.ReactNode;
   renderSkeleton?: (field: any) => React.ReactNode;
   fieldType: FormFieldType;
+  className?: string;
 }
 
 const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
@@ -49,24 +51,34 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
     case FormFieldType.INPUT:
       return (
         <FormControl>
-          <Input placeholder={props.placeholder} {...field} />
+          <Input
+            placeholder={props.placeholder}
+            {...field}
+            className={cn(props.className)}
+          />
         </FormControl>
       );
     case FormFieldType.PASSWORD:
       return (
         <FormControl>
-          <Input type="password" placeholder={props.placeholder} {...field} />
+          <Input
+            type='password'
+            placeholder={props.placeholder}
+            {...field}
+            className={cn(props.className)}
+          />
         </FormControl>
       );
     case FormFieldType.NUMBER:
       return (
         <FormControl>
           <Input
-            type="number"
+            type='number'
             max={props.max}
             min={props.min}
             placeholder={props.placeholder}
             {...field}
+            className={cn(props.className)}
           />
         </FormControl>
       );
@@ -77,19 +89,21 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
             placeholder={props.placeholder}
             {...field}
             disabled={props.disabled}
+            className={cn(props.className)}
           />
         </FormControl>
       );
     case FormFieldType.CHECKBOX:
       return (
         <FormControl>
-          <div className="flex items-center gap-4">
+          <div className='flex items-center gap-4'>
             <Checkbox
               id={props.name}
               checked={field.value}
               onCheckedChange={field.onChange}
+              className={cn(props.className)}
             />
-            <label htmlFor={props.name} className="checkbox-label">
+            <label htmlFor={props.name} className='checkbox-label'>
               {props.label}
             </label>
           </div>
@@ -112,11 +126,11 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
             defaultValue={field.value}
           >
             <FormControl>
-              <SelectTrigger className="shad-select-trigger">
+              <SelectTrigger className='shad-select-trigger'>
                 <SelectValue placeholder={props.placeholder} />
               </SelectTrigger>
             </FormControl>
-            <SelectContent className="shad-select-content">
+            <SelectContent className='shad-select-content'>
               {props.children}
             </SelectContent>
           </Select>
@@ -131,6 +145,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
             checked={field.value}
             onCheckedChange={field.onChange}
             disabled={props.disabled}
+            className={cn(props.className)}
           />
         </FormControl>
       );
@@ -149,11 +164,11 @@ const CustomFormField = (props: CustomProps) => {
       render={({ field }) => (
         <FormItem>
           {props.fieldType !== FormFieldType.CHECKBOX && label && (
-            <FormLabel className="shad-input-label">{label}</FormLabel>
+            <FormLabel className='shad-input-label'>{label}</FormLabel>
           )}
           <RenderInput field={field} props={props} />
 
-          <FormMessage className="shad-error" />
+          <FormMessage className='shad-error' />
         </FormItem>
       )}
     />

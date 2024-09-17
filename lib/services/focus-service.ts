@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/lib/utils';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { mutate } from 'swr';
 
 interface FocusApiResponse {
@@ -12,17 +12,14 @@ const handleApiResponse = (
   action: string
 ): boolean => {
   if (response.status >= 200 && response.status < 300) {
-    toast({
-      title: `Pomodoro ${action}`,
+    toast.success(`Pomodoro ${action}`, {
       description: 'İşlem başarıyla tamamlandı.',
     });
     mutate('/pomodoros');
     return true;
   } else {
-    toast({
-      title: `Odaklanma oturumu ${action} başarısız`,
+    toast.error(`Odaklanma oturumu ${action} başarısız`, {
       description: response.data?.error || 'Bir hata oluştu.',
-      variant: 'destructive',
     });
     return false;
   }
@@ -30,12 +27,10 @@ const handleApiResponse = (
 
 const handleApiError = (error: any, action: string): boolean => {
   console.error(`Odaklanma oturumu ${action} hatası:`, error);
-  toast({
-    title: `Odaklanma oturumu ${action} başarısız`,
+  toast.error(`Odaklanma oturumu ${action} başarısız`, {
     description:
       error.response?.data?.error ||
       `Odaklanma oturumu ${action} sırasında bir hata oluştu.`,
-    variant: 'destructive',
   });
   return false;
 };

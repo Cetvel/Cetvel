@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/lib/utils';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { mutate } from 'swr';
 
 interface TagApiResponse {
@@ -17,10 +17,8 @@ const handleApiResponse = (
     mutate('/tags');
     return true;
   } else {
-    toast({
-      title: `Etiket ${action} başarısız`,
+    toast.error(`Etiket ${action} başarısız`, {
       description: response.data?.error || 'Bir hata oluştu.',
-      variant: 'destructive',
     });
     return false;
   }
@@ -29,12 +27,10 @@ const handleApiResponse = (
 const handleApiError = (error: any, action: string): boolean => {
   console.error(`API Error for ${action}:`, error);
 
-  toast({
-    title: `Etiket ${action} başarısız`,
+  toast.error(`Etiket ${action} başarısız`, {
     description:
       error.response?.data?.error ||
       `Etiket ${action} sırasında bir hata oluştu.`,
-    variant: 'destructive',
   });
   return false;
 };

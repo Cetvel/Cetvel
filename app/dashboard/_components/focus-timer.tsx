@@ -5,7 +5,6 @@ import { useModal } from '@/providers/modal-provider';
 import { Button } from '@/components/ui/button';
 import Modal from '@/components/global/modal';
 import FocusForge from '@/components/forms/focus-timer-form';
-import { Play } from 'lucide-react';
 
 const FocusTimer = () => {
   const { setOpen } = useModal();
@@ -37,7 +36,6 @@ const FocusTimer = () => {
             }}
             size={'sm'}
           >
-            <Play className='mr-1 w-3 h-3' />
             Başlat
           </Button>
         </div>

@@ -6,13 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
-import { useToast } from '@/components/ui/use-toast';
 import { onboardingSchema } from '@/lib/schemas';
 import FormStepper from '@/components/ui/form-stepper';
 import { EducationStep, InterfaceStep, NotificationStep } from './steps';
 import StepNavigation from './step-navigation';
 import { submitOnboarding } from '@/lib/services/onboarding-service';
 import { Form } from '@/components/ui/form';
+import { toast } from 'sonner';
 
 const steps = [
   {
@@ -39,7 +39,6 @@ const OnboardingForm: React.FC = () => {
       grade: 12,
     },
   });
-  const { toast } = useToast();
   const router = useRouter();
   const { user } = useUser();
 
@@ -71,17 +70,20 @@ const OnboardingForm: React.FC = () => {
     }
 
     try {
-      const response = await submitOnboarding(data);
-      if (response) {
-        user?.reload();
+      const success = await submitOnboarding(data);
+      if (success) {
+        await user?.reload();
         router.push('/dashboard');
+      } else {
+        console.error('Onboarding failed');
+        toast.error('Onboarding başarısız', {
+          description: 'Lütfen daha sonra tekrar deneyin.',
+        });
       }
     } catch (error) {
       console.error('Onboarding error:', error);
-      toast({
-        title: 'Bir hata oluştu',
+      toast.error('Bir hata oluştu', {
         description: 'Onboarding işlemi sırasında bir hata oluştu.',
-        variant: 'destructive',
       });
     }
   };

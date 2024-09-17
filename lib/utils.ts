@@ -11,8 +11,9 @@ export const padTo2Digits = (num: number) => {
 };
 
 export const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
   timeout: 10000,
+  maxRedirects: 0,
   headers: {
     'Content-Type': 'application/json',
   },

@@ -4,12 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { DialogFooter } from '../ui/dialog';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../ui/tooltip';
 import { Slider } from '../ui/slider';
 import { Pause, Play, RotateCw, Square, Volume2, VolumeX } from 'lucide-react';
 import { SelectItem } from '../ui/select';
@@ -21,10 +15,10 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
 import { createFocusSession } from '@/lib/services/focus-service';
-import { useToast } from '../ui/use-toast';
 import { Switch } from '../ui/switch';
 import Spinner from '../ui/spinner';
 import { CustomTooltip } from '../global/custom-tooltip';
+import { toast } from 'sonner';
 
 type FocusSessionValues = z.infer<typeof FocusSessionSchema>;
 
@@ -61,7 +55,6 @@ const FocusForge: React.FC = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [isBreak, setIsBreak] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const { toast } = useToast();
 
   const secondsLeftRef = useRef(secondsLeft);
   const isPausedRef = useRef(isPaused);
@@ -138,10 +131,8 @@ const FocusForge: React.FC = () => {
   const handleSubmit = form.handleSubmit(async (data: FocusSessionValues) => {
     handlePause(true);
     if (!startDate) {
-      toast({
-        title: 'Hata',
+      toast.error('Hata', {
         description: 'Lütfen önce zamanlayıcıyı başlatın.',
-        variant: 'destructive',
       });
       return;
     }
@@ -162,6 +153,9 @@ const FocusForge: React.FC = () => {
       form.reset();
       initTimer();
       playSound('session-complete.mp3');
+      toast.success('Başarılı', {
+        description: 'Oturum başarıyla kaydedildi.',
+      });
     }
   });
 

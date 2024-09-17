@@ -1,10 +1,9 @@
-import Sidebar from "@/components/global/sidebar";
-import axios from "axios";
-import { Metadata } from "next";
+import Sidebar from '@/components/global/sidebar';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Panel",
-  description: "Cetvel",
+  title: 'Panel',
+  description: 'Cetvel',
 };
 
 export default async function RootLayout({
@@ -13,9 +12,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="min-h-screen">
+    <main className='min-h-screen'>
       <Sidebar />
-      <div className="xl:ml-64 p-2 xl:p-6 z-[30] backdrop-blur-2xl min-h-screen bg-base-100/40">
+      <div className='xl:ml-64 p-2 xl:p-6 z-[30] backdrop-blur-2xl min-h-screen bg-base-100/40'>
         {children}
       </div>
     </main>

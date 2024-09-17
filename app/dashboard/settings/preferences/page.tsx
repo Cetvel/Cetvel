@@ -1,129 +1,220 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardContent,
+  CardDescription,
 } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { useTheme } from 'next-themes';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Moon, Sun } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { useMutation } from 'convex/react';
-import { api } from '@/convex/_generated/api';
-import { useAuth } from '@clerk/clerk-react';
+import { Label } from '@/components/ui/label';
+import { SelectItem } from '@/components/ui/select';
+import { educationLevels, exams, fields, gradeOptions } from '@/constants';
+import { PreferencesSchema } from '@/lib/schemas';
+import { z } from 'zod';
+import CustomFormField, {
+  FormFieldType,
+} from '@/components/ui/custom-form-field';
 import ImageUploader from '@/components/global/image-uploader';
-
-type ImageType = 'cover' | 'timer';
-
-interface ImageUploadState {
-  file: File | null;
-  previewUrl: string | null;
-  isUploading: boolean;
-  error: string | null;
-}
+import SubmitButton from '@/components/forms/ui/submit-button';
+import { axiosInstance } from '@/lib/utils';
+import { toast } from 'sonner';
 
 const PreferencesPage = () => {
-  const { setTheme } = useTheme();
-  const { userId } = useAuth();
-  const sendCoverImage = useMutation(api.image.image.sendCoverImage);
-  const sendTimerImage = useMutation(api.image.image.sendTimerImage);
-  const generateUploadUrl = useMutation(api.image.image.generateUploadUrl);
+  const [coverImage, setCoverImage] = useState('');
+  const [timerImage, setTimerImage] = useState('');
 
-  const handleCoverImageUpload = async (file: File) => {
-    const postUrl = await generateUploadUrl();
-    const result = await fetch(postUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': file.type },
-      body: file,
-    });
-    const { storageId } = await result.json();
-    await sendCoverImage({ storageId, clerkId: userId! });
+  const form = useForm<z.infer<typeof PreferencesSchema>>({
+    resolver: zodResolver(PreferencesSchema),
+    defaultValues: {
+      educationLevel: 'Lise',
+      grade: 12,
+      field: 'SAY',
+      courseSubject: undefined,
+      notifications: true,
+      taskReminders: false,
+      reminderFrequencyHours: 1,
+      coverImage: '',
+      timerImage,
+    },
+  });
+
+  const watchEducationLevel = form.watch('educationLevel');
+
+  const handleCoverImageUpload = (imageUrl: string) => {
+    setCoverImage(imageUrl);
+    form.setValue('coverImage', imageUrl);
   };
 
-  const handleTimerImageUpload = async (file: File) => {
-    const postUrl = await generateUploadUrl();
-    const result = await fetch(postUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': file.type },
-      body: file,
-    });
-    const { storageId } = await result.json();
-    await sendTimerImage({ storageId, clerkId: userId! });
+  const handleTimerImageUpload = (imageUrl: string) => {
+    setTimerImage(imageUrl);
+    form.setValue('timerImage', imageUrl);
+  };
+
+  const onSubmit = async (values: z.infer<typeof PreferencesSchema>) => {
+    try {
+      await axiosInstance.put('/settings/userPreference', values);
+
+      toast.success('Değişiklikler kaydedildi', {
+        description: 'Değişiklikleriniz başarıyla kaydedildi.',
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error('Bir hata oluştu', {
+        description: 'Değişiklikleriniz kaydedilemedi.',
+      });
+    }
   };
 
   return (
-    <Card className='w-full'>
-      <CardHeader>
-        <CardTitle>Tercihler</CardTitle>
-        <CardDescription>Uygulama deneyiminizi özelleştirin</CardDescription>
-      </CardHeader>
-      <CardContent className='space-y-6'>
-        <div className='form-line'>
-          <Label htmlFor='theme'>Tema</Label>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant='outline' size='icon'>
-                <Sun className='h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0' />
-                <Moon className='absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100' />
-                <span className='sr-only'>Temayı değiştir</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align='end'>
-              <DropdownMenuItem onClick={() => setTheme('light')}>
-                Açık
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme('dark')}>
-                Koyu
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme('system')}>
-                Sistem
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+    <FormProvider {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+        <Card className='w-full'>
+          <CardHeader>
+            <CardTitle>Eğitim Bilgileri</CardTitle>
+            <CardDescription>
+              Eğitim bilgilerinizi buradan güncelleyebilirsiniz.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='gap-6 grid grid-cols-1 lg:grid-cols-3'>
+            <CustomFormField
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              name='educationLevel'
+              label='Eğitim Seviyen'
+            >
+              {educationLevels.map((level) => (
+                <SelectItem key={level} value={level}>
+                  {level}
+                </SelectItem>
+              ))}
+            </CustomFormField>
 
-        <div className='grid grid-cols-2 gap-4'>
-          <ImageUploader
-            label='Kapak arkaplanı'
-            onUpload={handleCoverImageUpload}
-            onError={(error) => console.error(error)}
-          />
-          <ImageUploader
-            label='Zamanlayıcı arkaplanı'
-            onUpload={handleTimerImageUpload}
-            onError={(error) => console.error(error)}
-          />
-        </div>
+            {watchEducationLevel === 'Lise' && (
+              <CustomFormField
+                fieldType={FormFieldType.SELECT}
+                control={form.control}
+                name='field'
+                label='Alanın'
+              >
+                {fields.map((field) => (
+                  <SelectItem key={field.value} value={field.value}>
+                    {field.label}
+                  </SelectItem>
+                ))}
+              </CustomFormField>
+            )}
 
-        <div className='form-line'>
-          <Label htmlFor='notifications'>Bildirimleri Etkinleştir</Label>
-          <Switch id='notifications' />
-        </div>
-        <div className='form-line'>
-          <Label htmlFor='taskReminders'>Görev Hatırlatıcıları</Label>
-          <Switch id='taskReminders' />
-        </div>
-        <div className='form-line'>
-          <Label htmlFor='reminderFrequency'>Görev Hatırlatma Sıklığı</Label>
-          <div className='flex items-center space-x-2'>
-            <Input type='number' id='reminderFrequencyHours' className='w-20' />
-            <span>saat aralıklarla hatırlatma yap</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+            {watchEducationLevel !== 'Mezun' && (
+              <CustomFormField
+                fieldType={FormFieldType.SELECT}
+                control={form.control}
+                name='grade'
+                label='Sınıfın'
+              >
+                {gradeOptions[
+                  watchEducationLevel as keyof typeof gradeOptions
+                ]?.map((grade, i) => (
+                  <SelectItem key={i} value={grade.toString()}>
+                    {grade}. Sınıf
+                  </SelectItem>
+                ))}
+              </CustomFormField>
+            )}
+
+            {watchEducationLevel === 'Mezun' && (
+              <CustomFormField
+                fieldType={FormFieldType.SELECT}
+                control={form.control}
+                name='courseSubjects'
+                label='Sınav türün'
+              >
+                {exams.map((exam, i) => (
+                  <SelectItem key={i} value={exam}>
+                    {exam}
+                  </SelectItem>
+                ))}
+              </CustomFormField>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className='w-full mb-6'>
+          <CardHeader>
+            <CardTitle>Bildirimler</CardTitle>
+            <CardDescription>
+              Bildirim tercihlerinizi buradan güncelleyebilirsiniz.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+            <div className='form-line'>
+              <Label htmlFor='notifications'>Bildirimleri Etkinleştir</Label>
+              <CustomFormField
+                fieldType={FormFieldType.SWITCH}
+                control={form.control}
+                name='notifications'
+              />
+            </div>
+            <div className='form-line'>
+              <Label htmlFor='taskReminders'>Görev Hatırlatıcıları</Label>
+              <CustomFormField
+                fieldType={FormFieldType.SWITCH}
+                control={form.control}
+                name='taskReminders'
+              />
+            </div>
+            <div className='form-line'>
+              <Label htmlFor='reminderFrequency'>
+                Görev Hatırlatma Sıklığı
+              </Label>
+              <div className='flex items-center gap-x-2'>
+                <CustomFormField
+                  fieldType={FormFieldType.NUMBER}
+                  control={form.control}
+                  name='reminderFrequencyHours'
+                  className='w-16'
+                />
+                <span className='text-xs'>saat aralıklarla hatırlatma yap</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className='w-full'>
+          <CardHeader>
+            <CardTitle>Arayüz Tercihleri</CardTitle>
+            <CardDescription>
+              Arayüz tercihlerinizi buradan güncelleyebilirsiniz.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='space-y-6'>
+            <div className='grid grid-cols-2 gap-4'>
+              <ImageUploader
+                label='Kapak arkaplanı'
+                /* @ts-ignore */
+                onUpload={handleCoverImageUpload}
+                onError={(error) => console.error(error)}
+              />
+              <ImageUploader
+                label='Zamanlayıcı arkaplanı'
+                /* @ts-ignore */
+                onUpload={handleTimerImageUpload}
+                onError={(error) => console.error(error)}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <SubmitButton
+          text='Değişiklikleri Kaydet'
+          loading={form.formState.isSubmitting}
+        />
+      </form>
+    </FormProvider>
   );
 };
 
