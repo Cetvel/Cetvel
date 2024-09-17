@@ -4,10 +4,9 @@ import './globals.css';
 import { ThemeProvider } from '@/providers/theme-provider';
 import ModalProvider from '@/providers/modal-provider';
 import { trTR } from '@clerk/localizations';
-import { dark } from '@clerk/themes';
 import { ClerkProvider } from '@clerk/nextjs';
-import { Toaster } from '@/components/ui/toaster';
-import { ConvexClientProvider } from './ConvexClientProvider';
+import { ConvexClientProvider } from '../providers/convex-client-provider';
+import { Toaster } from 'sonner';
 
 const dm_sans = DM_Sans({ subsets: ['latin'] });
 

@@ -21,10 +21,6 @@ const navigationItems: { title: string; href: string }[] = [
     title: 'Tercihler',
     href: '/dashboard/settings/preferences',
   },
-  {
-    title: 'Ödeme Bilgileri',
-    href: '/dashboard/settings/payment',
-  },
 ];
 
 export default async function RootLayout({

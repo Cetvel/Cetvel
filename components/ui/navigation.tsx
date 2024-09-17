@@ -14,10 +14,13 @@ import {
   SignUpButton,
   UserButton,
 } from '@clerk/nextjs';
+import { useTheme } from 'next-themes';
+import { dark } from '@clerk/themes';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,7 +84,6 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Login and Sign Up Buttons */}
           <div className='hidden md:flex items-center space-x-4'>
             <SignedOut>
               <SignInButton>
@@ -95,7 +97,18 @@ const Navbar: React.FC = () => {
                 </Button>
               </SignUpButton>
             </SignedOut>
-            <UserButton />
+            <SignedIn>
+              <Link href='/dashboard'>
+                <Button variant='default' size={'sm'}>
+                  Uygulamaya git
+                </Button>
+              </Link>
+            </SignedIn>
+            <UserButton
+              appearance={{
+                baseTheme: resolvedTheme === 'dark' ? dark : undefined,
+              }}
+            />
           </div>
 
           {/* Mobile Menu Button */}

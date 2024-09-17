@@ -20,7 +20,7 @@ const FocusItemsTable = () => {
 
   if (error && !isLoading) {
     return (
-      <Alert>
+      <Alert variant={'destructive'}>
         <AlertCircle size={18} />
         <AlertTitle>Bir hata oluştu.</AlertTitle>
         <AlertDescription>

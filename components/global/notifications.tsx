@@ -26,9 +26,9 @@ import { api } from '@/convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
 import { useUser } from '@clerk/nextjs';
 import { Id } from '@/convex/_generated/dataModel';
-import { useToast } from '../ui/use-toast';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 moment.locale('tr');
 
@@ -108,7 +108,6 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
 }) => {
   const { user } = useUser();
   const [activeTab, setActiveTab] = useState<string>('all');
-  const { toast } = useToast();
 
   const notificationData = useQuery(
     api.notification.notification.getNotifications,
@@ -151,10 +150,8 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
       await deleteNotificationMutation({ id });
     } catch (error) {
       console.error('Failed to delete notification:', error);
-      toast({
-        title: 'Hata',
+      toast.error('Hata', {
         description: 'Bildirim silinirken bir hata oluştu.',
-        variant: 'destructive',
       });
       setOptimisticNotifications((prev) =>
         [...prev, notificationData?.find((n) => n._id === id)!].sort(
@@ -174,10 +171,8 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
       await markAsReadMutation({ id });
     } catch (error) {
       console.error('Failed to mark notification as read:', error);
-      toast({
-        title: 'Hata',
+      toast.error('Hata', {
         description: 'Bildirim okundu olarak işaretlenirken bir hata oluştu.',
-        variant: 'destructive',
       });
       setOptimisticNotifications((prev) =>
         prev.map((notification) =>
@@ -196,10 +191,8 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
       await clearAllNotificationsMutation({ ids: ids });
     } catch (error) {
       console.error('Failed to clear all notifications:', error);
-      toast({
-        title: 'Hata',
+      toast.error('Hata', {
         description: 'Bildirimler temizlenirken bir hata oluştu.',
-        variant: 'destructive',
       });
       setOptimisticNotifications(previousNotifications);
     }
@@ -214,10 +207,8 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
       await readAllNotificationsMutation({ ids: ids });
     } catch (error) {
       console.error('Failed to clear all notifications:', error);
-      toast({
-        title: 'Hata',
+      toast.error('Hata', {
         description: 'Bildirimler temizlenirken bir hata oluştu.',
-        variant: 'destructive',
       });
       setOptimisticNotifications(previousNotifications);
     }

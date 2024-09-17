@@ -8,8 +8,6 @@ import { z } from 'zod';
 import { Form } from '../ui/form';
 import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
 import SubmitButton from './ui/submit-button';
-import { GoalTypeOptions } from '@/constants';
-import { SelectItem } from '../ui/select';
 
 const GoalForm = () => {
   const form = useForm<z.infer<typeof GoalSchema>>({

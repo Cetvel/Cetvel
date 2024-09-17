@@ -1,6 +1,6 @@
 import { mutate } from 'swr';
 import { axiosInstance } from '@/lib/utils';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 interface TaskApiResponse {
   data: any;
@@ -14,18 +14,15 @@ const handleApiResponse = (
   console.log(`API Response for ${action}:`, response);
 
   if (response.status >= 200 && response.status < 300) {
-    toast({
-      title: `Görev ${action}`,
+    toast.success(`Görev ${action}`, {
       description: 'İşlem başarıyla tamamlandı.',
     });
     mutate('/tasks/today');
     mutate('/tasks');
     return true;
   } else {
-    toast({
-      title: `Görev ${action} başarısız`,
+    toast.error(`Görev ${action} başarısız`, {
       description: response.data?.error || 'Bir hata oluştu.',
-      variant: 'destructive',
     });
     return false;
   }
@@ -34,12 +31,10 @@ const handleApiResponse = (
 const handleApiError = (error: any, action: string): boolean => {
   console.error(`API Error for ${action}:`, error);
 
-  toast({
-    title: `Görev ${action} başarısız`,
+  toast.error(`Görev ${action} başarısız`, {
     description:
       error.response?.data?.error ||
       `Görev ${action} sırasında bir hata oluştu.`,
-    variant: 'destructive',
   });
   return false;
 };

@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/lib/utils';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { mutate } from 'swr';
 
 interface ExamApiResponse {
@@ -12,17 +12,14 @@ const handleApiResponse = (
   action: string
 ): boolean => {
   if (response.status >= 200 && response.status < 300) {
-    toast({
-      title: `Sınav ${action}`,
+    toast.success(`Sınav ${action}`, {
       description: 'İşlem başarıyla tamamlandı.',
     });
     mutate('/exams');
     return true;
   } else {
-    toast({
-      title: `Sınav ${action} başarısız`,
+    toast.error(`Sınav ${action}`, {
       description: response.data?.error || 'Bir hata oluştu.',
-      variant: 'destructive',
     });
     return false;
   }
@@ -30,12 +27,10 @@ const handleApiResponse = (
 
 const handleApiError = (error: any, action: string): boolean => {
   console.error(`Sınav ${action} hatası:`, error);
-  toast({
-    title: `Sınav ${action} başarısız`,
+  toast.error(`Sınav ${action} başarısız`, {
     description:
       error.response?.data?.error ||
       `Sınav ${action} sırasında bir hata oluştu.`,
-    variant: 'destructive',
   });
   return false;
 };

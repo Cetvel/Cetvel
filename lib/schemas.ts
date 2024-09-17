@@ -1,16 +1,18 @@
 import { z } from 'zod';
 
-export const onboardingSchema = z
+export const PreferencesSchema = z
   .object({
     educationLevel: z.enum(['İlkokul', 'Ortaokul', 'Lise', 'Mezun'], {
       required_error: 'Eğitim seviyesi seçmek zorunludur',
     }),
     grade: z.coerce.number().optional(),
     field: z.enum(['SAY', 'SOZ', 'EA', 'DIL']).optional(),
-    courseSubjects: z.string().optional(),
+    courseSubject: z.enum(['YKS', 'KPSS', 'DGS', 'ALES', 'YDS']).optional(),
     coverImage: z.any().optional(),
     timerImage: z.any().optional(),
     notifications: z.boolean().default(true),
+    taskReminders: z.boolean().default(false),
+    reminderFrequencyHours: z.coerce.number().default(1),
   })
   .refine(
     (data) => {
