@@ -19,13 +19,11 @@ export default defineSchema({
         timerPhotoId: v.optional(v.id("_storage")),
     }),
     userPreferences: defineTable({
-        notification : v.boolean(),
+        notifications : v.boolean(),
         clerkId: v.string(),
-        userId: v.string(),
-        todoReminder: v.boolean(),
+        userId : v.id("user"),
+        todoReminders: v.boolean(),
         todoReminderFrequency: v.number(),
         lastTodoReminder: v.optional(v.number()),
-        pomodoroReminder: v.boolean(),
-        weeklyReport: v.boolean(),
     })
 });
