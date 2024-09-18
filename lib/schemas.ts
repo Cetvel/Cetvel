@@ -99,3 +99,17 @@ export const FocusSessionSchema = z.object({
     required_error: 'Tarih girmek zorunludur',
   }),
 });
+
+export const ContactSchema = z.object({
+  name: z
+    .string({
+      required_error: 'İsim girmek zorunludur',
+    })
+    .min(2, { message: 'İsim en az 2 karakter uzunluğunda olmalı' }),
+  email: z.string({
+    required_error: 'E-Posta girmek zorunludur',
+  }),
+  message: z.string({
+    required_error: 'Mesaj girmek zorunludur',
+  }),
+});

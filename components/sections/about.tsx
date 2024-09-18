@@ -2,17 +2,11 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { TextGenerateEffect } from '@/components/global/text-generate-effect';
-import { Button } from '../ui/button';
-import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 
 const About: React.FC = () => {
   return (
-    <section
-      id='#about'
-      className='py-24 bg-gradient-to-b from-background to-secondary/20'
-    >
+    <section id='#about' className='py-24 bg-gradient-to-b bg-secondary'>
       <div className='container mx-auto px-4'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -20,8 +14,8 @@ const About: React.FC = () => {
           transition={{ duration: 0.6 }}
           className='text-center mb-16'
         >
-          <h2 className='text-4xl font-bold mb-4'>
-            <TextGenerateEffect words='Cetvel Hakkında' />
+          <h2 className='text-4xl xl:text-6xl font-bold mb-4 text-gradient'>
+            Cetvel Hakkında
           </h2>
           <p className='text-xl text-muted-foreground max-w-2xl mx-auto'>
             Öğrencileri akıllı araçlarla destekleyerek verimli çalışma ve
@@ -38,7 +32,7 @@ const About: React.FC = () => {
             <h3 className='text-2xl font-semibold mb-4'>
               Akıllı Çalışma Asistanı
             </h3>
-            <p className='text-lg mb-12'>
+            <p className='text-lg mb-12 text-muted-foreground'>
               Yapay zeka destekli ders programı oluşturma ve görev
               önceliklendirme özelliklerimiz, daha etkili ve verimli çalışmanıza
               yardımcı olur. Cetvel&apos;in akıllı çalışma asistanı ile yeni bir
@@ -61,7 +55,7 @@ const About: React.FC = () => {
             <h3 className='text-2xl font-semibold mb-4'>
               Kişiselleştirilmiş Öğrenme Deneyimi
             </h3>
-            <p className='text-lg mb-12'>
+            <p className='text-lg mb-12 text-muted-foreground'>
               Cetvel&apos;in kişiselleştirme özellikleri, öğrenme sürecinizi
               size özel hale getirir. Zayıf yönlerinizi belirleyin, ilerlemenizi
               takip edin ve AI destekli önerilerle performansınızı artırın.

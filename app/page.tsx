@@ -17,7 +17,7 @@ const page = async () => {
       <Contact />
       <footer className='py-4 text-center bg-dark-300'>
         <span className='text-sm text-secondary-content'>
-          2024 © Muhammed. All rights reserved.
+          2024 © Cetvel. All rights reserved.
         </span>
       </footer>
     </main>

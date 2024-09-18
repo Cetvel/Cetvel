@@ -93,15 +93,13 @@ const Features = () => {
       id='features'
       className='py-20 md:pt-32 bg-dark-200 flex flex-col items-center px-6 md:px-32 mx-auto relative'
     >
-      <div className='absolute inset-0 bg-gradient-radial from-primary/20 via-secondary/10 to-transparent opacity-30' />
-
       <div className='relative z-10 w-full max-w-6xl'>
         <Image
           src={`/image/app-${resolvedTheme === 'dark' ? 'dark' : 'light'}.png`}
           alt='hero'
           height={720}
           width={1400}
-          className='mx-auto -mt-96 rounded-xl border shadow-2xl mb-20'
+          className='mx-auto -mt-96 rounded-xl border shadow-2xl mb-20 hidden lg:block'
           draggable={false}
         />
 

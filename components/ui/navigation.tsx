@@ -123,13 +123,6 @@ const Navbar: React.FC = () => {
                 <nav className='flex flex-col h-full'>
                   <div className='flex items-center justify-between mb-6'>
                     <span className='text-lg font-semibold'>Menü</span>
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <X className='h-5 w-5' />
-                    </Button>
                   </div>
                   <div className='space-y-4'>
                     {navItems.map((item) => (
@@ -143,7 +136,7 @@ const Navbar: React.FC = () => {
                       </Link>
                     ))}
                   </div>
-                  <div className='mt-auto space-y-4'>
+                  <div className='mt-auto space-y-4 flex-col flex w-full'>
                     <SignInButton>
                       <Button variant='outline'>Giriş Yap</Button>
                     </SignInButton>

@@ -8,7 +8,7 @@ import Link from 'next/link';
 const Hero: React.FC = () => {
   return (
     <section
-      className={`py-32 md:h-screen relative flex md:items-center justify-center flex-col md:py-4 dark:bg-grid-white/[0.02] bg-grid-black/[0.02] overflow-hidden`}
+      className={`py-32 h-screen relative flex md:items-center justify-center flex-col md:py-4 dark:bg-grid-white/[0.02] bg-grid-black/[0.02] overflow-hidden`}
     >
       <Navigation />
       <div className='flex flex-col gap-8 max-w-3xl md:items-center px-4 z-10 md:-mt-52 text-center'>
@@ -38,6 +38,8 @@ const Hero: React.FC = () => {
           </Link>
         </SignedIn>
       </div>
+
+      <div className='w-[50rem] h-[50rem] rounded-full bg-gradient-radial from-primary/30 to-secondary blur-3xl absolute -bottom-96' />
     </section>
   );
 };

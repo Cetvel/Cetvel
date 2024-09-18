@@ -6,7 +6,7 @@ import ModalProvider from '@/providers/modal-provider';
 import { trTR } from '@clerk/localizations';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ConvexClientProvider } from '../providers/convex-client-provider';
-import { Toaster } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 
 const dm_sans = DM_Sans({ subsets: ['latin'] });
 

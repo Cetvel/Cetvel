@@ -1,10 +1,40 @@
+'use client';
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Mail, User, MessageSquare } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { ContactSchema } from '@/lib/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form } from '../ui/form';
+import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
+import SubmitButton from '../forms/ui/submit-button';
+import { axiosInstance } from '@/lib/utils';
+import { toast } from 'sonner';
 
 const ContactSection = () => {
+  const form = useForm<z.infer<typeof ContactSchema>>({
+    resolver: zodResolver(ContactSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      message: '',
+    },
+  });
+
+  const onSubmit = async (data: z.infer<typeof ContactSchema>) => {
+    try {
+      await axiosInstance.post('/contact', data);
+      toast.success('Mesajınız başarıyla gönderildi');
+    } catch (error) {
+      toast.error('Bir hata oluştu, lütfen tekrar deneyin');
+      console.error(error);
+    }
+  };
+
   return (
     <section
       id='#contact'
@@ -13,7 +43,7 @@ const ContactSection = () => {
       <div className='container mx-auto px-4'>
         <div className='flex flex-col lg:flex-row items-center gap-12'>
           <div className='lg:w-1/2 space-y-6'>
-            <h2 className='text-4xl font-bold text-foreground text-primary-foreground'>
+            <h2 className='text-4xl font-bold text-primary-foreground'>
               İletişime Geçin
             </h2>
             <p className='text-xl text-primary-foreground/80'>
@@ -36,52 +66,39 @@ const ContactSection = () => {
           </div>
           <Card className='lg:w-1/2 w-full shadow-xl'>
             <CardContent className='p-6'>
-              <form className='space-y-6'>
-                <div className='space-y-2'>
-                  <label
-                    htmlFor='name'
-                    className='text-sm font-medium text-foreground flex items-center gap-2'
-                  >
-                    <User className='w-4 h-4' /> İsim
-                  </label>
-                  <Input
-                    id='name'
-                    placeholder='İsminiz'
-                    className='bg-background border-input'
+              <Form {...form}>
+                <form
+                  className='space-y-6'
+                  onSubmit={form.handleSubmit(onSubmit)}
+                >
+                  <CustomFormField
+                    fieldType={FormFieldType.INPUT}
+                    control={form.control}
+                    name='name'
+                    label='İsim'
+                    placeholder='İsminizi yazın'
                   />
-                </div>
-                <div className='space-y-2'>
-                  <label
-                    htmlFor='email'
-                    className='text-sm font-medium text-foreground flex items-center gap-2'
-                  >
-                    <Mail className='w-4 h-4' /> E-Posta
-                  </label>
-                  <Input
-                    id='email'
-                    type='email'
-                    placeholder='E-Posta adresiniz'
-                    className='bg-background border-input'
+                  <CustomFormField
+                    fieldType={FormFieldType.INPUT}
+                    control={form.control}
+                    name='email'
+                    label='E-Posta'
+                    placeholder='E-Posta adresinizi yazın'
                   />
-                </div>
-                <div className='space-y-2'>
-                  <label
-                    htmlFor='message'
-                    className='text-sm font-medium text-foreground flex items-center gap-2'
-                  >
-                    <MessageSquare className='w-4 h-4' /> Mesajınız
-                  </label>
-                  <Textarea
-                    id='message'
-                    placeholder='Mesajınızı buraya yazın'
-                    className='bg-background border-input'
-                    rows={4}
+                  <CustomFormField
+                    fieldType={FormFieldType.TEXTAREA}
+                    control={form.control}
+                    name='message'
+                    label='Mesaj'
+                    placeholder='Mesajınızı yazın'
                   />
-                </div>
-                <Button type='submit' className='w-full'>
-                  Email Gönder
-                </Button>
-              </form>
+                  <SubmitButton
+                    loading={form.formState.isSubmitting}
+                    text='Mesaj Gönder'
+                    className='w-full'
+                  />
+                </form>
+              </Form>
             </CardContent>
           </Card>
         </div>
