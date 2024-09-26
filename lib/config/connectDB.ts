@@ -4,7 +4,6 @@ const connectDB = async (): Promise<void> => {
     try {
         // Eğer bağlantı zaten açık ise tekrar bağlanma
         if (mongoose.connection.readyState === 1) {
-            console.log('MongoDB is already connected');
             return;
         }
 
@@ -25,7 +24,6 @@ const connectDB = async (): Promise<void> => {
         await mongoose.connect(process.env.MONGO_URI, options);
 
         console.log(`MongoDB Connected: ${mongoose.connection.host}`);
-
         // Hata ve bağlantı olaylarını dinleme
         mongoose.connection.on('error', (err) => {
             console.error('MongoDB connection error:', err);
