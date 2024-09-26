@@ -125,7 +125,7 @@ const FocusForge: React.FC = () => {
     if (!pause && !startDate) {
       setStartDate(new Date());
     }
-    playSound(pause ? 'pause.mp3' : 'resume.mp3');
+    playSound(pause ? 'pause.wav' : 'resume.wav');
   };
 
   const handleSubmit = form.handleSubmit(async (data: FocusSessionValues) => {
@@ -200,7 +200,7 @@ const FocusForge: React.FC = () => {
       <Form {...form}>
         <Tabs defaultValue='focus'>
           <TabsList className='w-full grid grid-cols-2'>
-            <TabsTrigger value='focus'>FocusForge</TabsTrigger>
+            <TabsTrigger value='focus'>Odaklanma</TabsTrigger>
             <TabsTrigger value='settings'>Ayarlar</TabsTrigger>
           </TabsList>
           <TabsContent value='focus'>
