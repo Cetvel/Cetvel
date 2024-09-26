@@ -5,6 +5,9 @@ import UserData from '@/lib/models/user.model';
 import { ConvexHttpClient } from 'convex/browser';
 import { api } from '@/convex/_generated/api';
 import connectDB from '@/lib/config/connectDB';
+import TagModel from "@/lib/models/tag.model";
+import { Tag } from 'lucide-react';
+
 
 
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
@@ -62,8 +65,26 @@ export async function POST(req: Request): Promise<Response> {
             name: user.username,
             email: emailsArray,
         });
-        await newUser.save();
 
+
+        await newUser.save();
+        TagModel.create({
+            clerkId: user.id,
+            label : 'Matematik',
+            value : 'Matematik'
+        })
+
+        TagModel.create({
+            clerkId: user.id,
+            label : 'Kitap',
+            value : 'Kitap'
+        })
+        TagModel.create({
+            clerkId: user.id,
+            label : 'Türkçe',
+            value : 'Türkçe'
+        })
+        
         await convex.mutation(api.user.crud.createUser, {
             clerkId: user.id,
             mongoId: newUser._id.toString(),
