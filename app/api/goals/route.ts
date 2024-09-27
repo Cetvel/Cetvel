@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
         const goals = await GoalModel.find({ clerkId: userId });
         return NextResponse.json(goals, { status: 200 });
     } catch (error) {
+        console.log("error oldu hocam")
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 
