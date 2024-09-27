@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
         console.log("error oldu hocam")
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
-
+//asdfasdfasdfasdf
 }
 
 export async function POST(request: NextRequest) {
