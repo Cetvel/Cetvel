@@ -17,7 +17,7 @@ const questions = [
   {
     question: 'Sınav Öğrencileri İçin Özel olarak Neler Var?',
     answer:
-      'Sınav öğrencileri için özel net hesaplama aracı bulunmaktadır. Öğrenciler dilerlerse girdikleri denemeyi kaydedebilirler ve uygulamamızın zengin analiz algoritmaları eşliğinde çeşitli veri grafikleri ile hazırlık süreçleri en iyi şekilde takip edebilirler.',
+      'Sınav öğrencileri için özel net hesaplama aracı bulunmaktadır. Öğrenciler dilerlerse girdikleri denemeyi kaydedebilirler ve ilerlemelerini takip edebilirler.',
   },
   {
     question: 'Cetvel platformlarda kullanılabilir?',
@@ -37,12 +37,12 @@ const questions = [
   {
     question: "Cetvel'a Nasıl Üye Olabilirim?",
     answer:
-      " 'Fiyatlar' kısmından uygun paketi seçerek üye olabilirsiniz. Üyelik işlemleri oldukça basit ve hızlıdır.",
+      "Cetvel'a üye olmak için uygulamamızı ziyaret edin ve 'Kayıt Ol' butonuna tıklayın. Gerekli bilgileri doldurarak üyeliğinizi oluşturabilirsiniz. Üyelik ücretsizdir.",
   },
   {
     question: 'Teknik destek nasıl alabilirim?',
     answer:
-      "Herhangi bir sorun yaşadığınızda veya yardıma ihtiyacınız olduğunda, uygulama içindeki 'Destek' bölümünden bize ulaşabilirsiniz. Mümkün olan en kısa sürede size geri döneceğiz.",
+      "Herhangi bir sorun yaşadığınızda veya yardıma ihtiyacınız olduğunda, uygulama içindeki anasayfadaki 'İletişim' bölümünden bize ulaşabilirsiniz. Mümkün olan en kısa sürede size geri döneceğiz.",
   },
 ];
 

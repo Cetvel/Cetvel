@@ -27,9 +27,7 @@ export const CustomTooltip: React.FC<CustomTooltipProps> = ({
   return (
     <TooltipProvider>
       <ShadcnTooltip delayDuration={300}>
-        <TooltipTrigger asChild>
-          <div className={cn('inline-block', className)}>{children}</div>
-        </TooltipTrigger>
+        <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent
           side={side}
           align={align}

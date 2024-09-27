@@ -183,7 +183,7 @@ const TagManager: React.FC = () => {
                   ) : (
                     <>
                       <span className='text-sm'>{tag.label}</span>
-                      <div className='opacity-0 group-hover:opacity-100'>
+                      <div className='opacity-100 lg:opacity-0 group-hover:opacity-100'>
                         <Button
                           onClick={() => setEditingTag(tag)}
                           size='icon-sm'

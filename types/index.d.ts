@@ -71,6 +71,11 @@ declare interface FieldBase {
   placeholder: string;
 }
 
+declare interface Error {
+  message: string;
+  status: number;
+}
+
 declare interface NumberField extends FieldBase {
   type: 'number';
   max: number;

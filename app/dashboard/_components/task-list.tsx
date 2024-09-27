@@ -39,7 +39,7 @@ const Tasktag = () => {
   return (
     <>
       <aside className='flex flex-col gap-4 flex-grow lg:col-span-5'>
-        <div className='items-center justify-between flex'>
+        <div className='items-start md:items-center gap-4 md:gap-0 justify-between flex flex-col md:flex-row'>
           <div className='flex flex-col md:flex-row md:items-center gap-2 md:gap-6 md:pl-4 flex-1'>
             <h2 className='text-lg font-bold text-secondary-foreground whitespace-nowrap mt-0.5'>
               Bugünün Görevleri
