@@ -50,7 +50,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(todos, {status : 200});
   } catch (error) {
     return NextResponse.json(
-      { error: "Internal Server Error" },
+    
+      { error },
       { status: 500 }
     );
   }
