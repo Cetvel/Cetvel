@@ -1,9 +1,6 @@
 import { useCallback } from 'react';
-import {
-  deleteFocusSession,
-  updateFocusSession,
-} from '@/lib/services/focus-service';
-import { Repeat, Pencil, Trash } from 'lucide-react';
+import { deleteFocusSession } from '@/lib/services/focus-service';
+import { Pencil, Trash } from 'lucide-react';
 import { useModal } from '@/providers/modal-provider';
 import FocusSessionForm from '@/components/forms/focus-session-form';
 import Modal from '@/components/global/modal';
