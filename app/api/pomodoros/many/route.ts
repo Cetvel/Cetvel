@@ -10,7 +10,7 @@ export async function DELETE(req: NextRequest) {
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-
+        // developments commit
         await connectDB()
         const { ids } = await req.json();
         if (ids && Array.isArray(ids)) {
