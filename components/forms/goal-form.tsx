@@ -36,7 +36,7 @@ const GoalForm = () => {
           label='Hedef başlığı'
         />
 
-        <div className='grid grid-cols-1 md:grid-cols-2'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <CustomFormField
             fieldType={FormFieldType.NUMBER}
             control={form.control}

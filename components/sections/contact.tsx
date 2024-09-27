@@ -37,7 +37,7 @@ const ContactSection = () => {
 
   return (
     <section
-      id='#contact'
+      id='contact'
       className='py-20 bg-gradient-to-br from-primary/80 to-primary/100'
     >
       <div className='container mx-auto px-4'>

@@ -42,7 +42,6 @@ const Navbar: React.FC = () => {
   const navItems = [
     { name: 'Hakkında', href: '#about' },
     { name: 'Özellikler', href: '#features' },
-    { name: 'Fiyatlar', href: '#pricing' },
     { name: 'İletişim', href: '#contact' },
   ];
 
@@ -100,7 +99,7 @@ const Navbar: React.FC = () => {
             <SignedIn>
               <Link href='/dashboard'>
                 <Button variant='default' size={'sm'}>
-                  Uygulamaya git
+                  Panele git
                 </Button>
               </Link>
             </SignedIn>
@@ -136,14 +135,29 @@ const Navbar: React.FC = () => {
                       </Link>
                     ))}
                   </div>
-                  <div className='mt-auto space-y-4 flex-col flex w-full'>
-                    <SignInButton>
-                      <Button variant='outline'>Giriş Yap</Button>
-                    </SignInButton>
-                    <SignUpButton>
-                      <Button variant='default'>Kayıt Ol</Button>
-                    </SignUpButton>
-                  </div>
+                  <SignedOut>
+                    <div className='mt-auto space-y-4 flex-col flex w-full'>
+                      <SignInButton>
+                        <Button variant='outline'>Giriş Yap</Button>
+                      </SignInButton>
+                      <SignUpButton>
+                        <Button variant='default'>Kayıt Ol</Button>
+                      </SignUpButton>
+                    </div>
+                  </SignedOut>
+                  <SignedIn>
+                    <div className='mt-auto space-y-4 flex-row flex w-full'>
+                      <Link href='/dashboard'>
+                        <Button variant='default'>Panele git</Button>
+                      </Link>
+                      <UserButton
+                        appearance={{
+                          baseTheme:
+                            resolvedTheme === 'dark' ? dark : undefined,
+                        }}
+                      />
+                    </div>
+                  </SignedIn>
                 </nav>
               </SheetContent>
             </Sheet>

@@ -99,7 +99,7 @@ const Features = () => {
           alt='hero'
           height={720}
           width={1400}
-          className='mx-auto -mt-96 rounded-xl border shadow-2xl mb-20 hidden lg:block'
+          className='mx-auto -mt-[300px] rounded-xl border shadow-2xl mb-20 hidden lg:block'
           draggable={false}
         />
 
