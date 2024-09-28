@@ -9,8 +9,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
-
-        const { id } = params;
+// asdfasdfasdf
+        const { id } = params;//PKZOASD]OKASDKASDPKASDFPASDFPOASDFASDFASDSDPFOKasdfasdfasdfasdf
         if (!id) {
             return NextResponse.json({ error: "Request paramater is empty" }, { status: 400 });
         }
