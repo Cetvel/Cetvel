@@ -30,7 +30,6 @@ import {
 } from '../ui/select';
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
