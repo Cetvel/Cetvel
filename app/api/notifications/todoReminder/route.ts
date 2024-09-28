@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   if (!clerkId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
+/// akiyor burasi akiyoe aga
   // Türkiye saatine göre (UTC+3) şu anki zamanı al
   const now = new Date();
   const turkeyOffset = 3 * 60 * 60 * 1000; // 3 saat
