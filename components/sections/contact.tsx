@@ -27,7 +27,8 @@ const ContactSection = () => {
 
   const onSubmit = async (data: z.infer<typeof ContactSchema>) => {
     try {
-      await axiosInstance.post('/contact', data);
+      const res = await axiosInstance.post('/contact', data);
+      console.log(res)
       toast.success('Mesajınız başarıyla gönderildi');
     } catch (error) {
       toast.error('Bir hata oluştu, lütfen tekrar deneyin');
