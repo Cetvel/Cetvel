@@ -2,6 +2,7 @@ import React from 'react';
 import { Meteors } from '@/components/global/meteors';
 import Link from 'next/link';
 import { Button } from '../ui/button';
+import { SignUpButton } from '@clerk/nextjs';
 
 export function Start() {
   return (
@@ -11,10 +12,9 @@ export function Start() {
           Yapay zeka destekli kişiselleştirilmiş öğrenme platformu ile sınav
           stresi sona, başarı sana gelsin. Hemen dene, farkı hisset!
         </h2>
-
-        <Link href='/register'>
+        <SignUpButton>
           <Button size='lg'>Hemen Başla</Button>
-        </Link>
+        </SignUpButton>
 
         <Meteors number={40} />
       </div>
