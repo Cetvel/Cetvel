@@ -50,7 +50,7 @@ export default function RootLayout({
             </ThemeProvider>
           </ConvexClientProvider>
         </body>
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS!} />
+        <GoogleAnalytics gaId='G-S2VDTGJF87' />
       </html>
     </ClerkProvider>
   );
