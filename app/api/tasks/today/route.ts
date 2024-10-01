@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import Todo from "@/lib/models/todo.model";
 import connectDB from "@/lib/config/connectDB";
 
@@ -47,7 +47,7 @@ function createErrorResponse(error: APIError | Error) {
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
+    const { userId } = auth();
     if (!userId) {
       throw new APIError("Unauthorized", 401);
     }
