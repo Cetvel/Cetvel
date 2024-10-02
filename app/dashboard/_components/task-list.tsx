@@ -16,7 +16,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, CircleSlash2 } from 'lucide-react';
 import TasksLoader from './tasks-loader';
 
-const TaskList = () => {
+const Tasktag = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
@@ -79,8 +79,6 @@ const TaskList = () => {
                   </Alert>
                 )}
                 {tasks.length !== 0 &&
-                  !isLoading &&
-                  !error &&
                   filterTasks(tasks, selectedTag, selectedStatus).map(
                     (task) => <Task key={task._id} task={task} />
                   )}
@@ -93,4 +91,4 @@ const TaskList = () => {
   );
 };
 
-export default TaskList;
+export default Tasktag;
