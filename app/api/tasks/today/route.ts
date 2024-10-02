@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
 
     await connectDB();
 
-    const todos = await Todo.find({
+    const tasks = await Todo.find({
       clerkId: userId,
       $or: [
         // Başlangıç zamanı bugün içinde
@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
 
   
 
-    return NextResponse.json({ message: "Todos retrieved successfully", data: todos }, { status: 200 });
+    return NextResponse.json(tasks);
 
   } catch (error) {
     if (error instanceof APIError) {
