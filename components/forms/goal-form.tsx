@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { Form } from '../ui/form';
 import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
 import SubmitButton from './ui/submit-button';
+import { createGoal } from '@/lib/services/goal-service';
 
 const GoalForm = () => {
   const form = useForm<z.infer<typeof GoalSchema>>({
@@ -22,7 +23,7 @@ const GoalForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   async function onSubmit(values: z.infer<typeof GoalSchema>) {
-    setLoading(true);
+    const res = await createGoal(values);
   }
 
   return (

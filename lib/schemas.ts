@@ -59,7 +59,7 @@ export const GoalSchema = z.object({
   title: z.string({
     required_error: 'Hedef girmek zorunludur',
   }),
-  target: z.number({
+  target: z.coerce.number({
     required_error: 'Hedef sayı girmek zorunludur',
   }),
   startsAt: z.date({
