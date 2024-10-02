@@ -147,7 +147,7 @@ const FocusForge: React.FC = () => {
   };
 
   const renderTimerControls = () => (
-    <DialogFooter className='flex flex-row justify-center gap-2 m-0'>
+    <DialogFooter className='!flex !flex-row !justify-center gap-2 m-0'>
       <CustomTooltip content={isPaused ? 'Başlat' : 'Duraklat'}>
         <Button
           type='button'
