@@ -90,9 +90,7 @@ export async function GET(request: NextRequest) {
       ]
     }).sort({ startsAt: 1 });
 
-    if (!todos || todos.length === 0) {
-      return NextResponse.json({ message: "No todos found for today", data: [] }, { status: 200 });
-    }
+  
 
     return NextResponse.json({ message: "Todos retrieved successfully", data: todos }, { status: 200 });
 
