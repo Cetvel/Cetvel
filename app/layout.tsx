@@ -7,7 +7,7 @@ import { trTR } from '@clerk/localizations';
 import { ClerkProvider } from '@clerk/nextjs';
 import { ConvexClientProvider } from '../providers/convex-client-provider';
 import { Toaster } from '@/components/ui/sonner';
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 const dm_sans = DM_Sans({ subsets: ['latin'] });
 
@@ -37,6 +37,7 @@ export default function RootLayout({
         className='antialised scroll-smooth'
         suppressHydrationWarning
       >
+        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM!} />
         <body className={dm_sans.className}>
           <ConvexClientProvider>
             <ThemeProvider
@@ -50,7 +51,6 @@ export default function RootLayout({
             </ThemeProvider>
           </ConvexClientProvider>
         </body>
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS!} />
       </html>
     </ClerkProvider>
   );
