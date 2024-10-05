@@ -1,6 +1,6 @@
-"use client";
-import { createContext, useContext, useEffect, useState } from "react";
-import { useEventListener, useIsMounted } from "usehooks-ts";
+'use client';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { useEventListener, useIsMounted } from 'usehooks-ts';
 
 interface ModalProviderProps {
   children: React.ReactNode;
@@ -30,8 +30,8 @@ const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     }
   };
 
-  useEventListener("keydown", (e: KeyboardEvent) => {
-    if (e.key === "Escape") {
+  useEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
       setClose();
     }
   });
@@ -53,7 +53,7 @@ const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
 export const useModal = () => {
   const context = useContext(ModalContext);
   if (!context) {
-    throw new Error("useModal must be used within the modal provider");
+    throw new Error('useModal must be used within the modal provider');
   }
   return context;
 };

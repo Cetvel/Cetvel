@@ -6,8 +6,13 @@ import { useModal } from '@/providers/modal-provider';
 import { UserButton } from '@clerk/nextjs';
 import { useTheme } from 'next-themes';
 import { dark } from '@clerk/themes';
-import { Maximize, Minimize } from 'lucide-react';
+import { Maximize, Menu, Minimize } from 'lucide-react';
 import NotificationsButton from './notifications';
+import Link from 'next/link';
+import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '../ui/sheet';
+import { menuLinks } from '@/constants';
+import { cn } from '@/lib/utils';
+import { usePathname } from 'next/navigation';
 
 type Props = {
   title: string;
@@ -17,6 +22,10 @@ const PageHeader = ({ title }: Props) => {
   const { setOpen } = useModal();
   const { resolvedTheme } = useTheme();
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const pathname = usePathname();
+  const splitPath = pathname!.split('/');
+  const path = splitPath.slice(0, 3).join('/');
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
@@ -47,7 +56,7 @@ const PageHeader = ({ title }: Props) => {
   }, []);
 
   return (
-    <div className='flex w-full items-center justify-between z-50 mb-6'>
+    <aside className='flex px-2 lg:px-0 w-full items-center justify-between z-50 mb-6'>
       <h1 className='text-2xl lg:text-3xl font-bold'>{title}</h1>
       <div className='items-center border rounded-xl flex p-1 shadow-sm'>
         <Button variant={'ghost'} size={'icon'} onClick={toggleFullscreen}>
@@ -61,8 +70,49 @@ const PageHeader = ({ title }: Props) => {
             }}
           />
         </div>
+        <aside className='xl:hidden'>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant='ghost' size='icon'>
+                <Menu size={24} />
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <h2 className='text-2xl font-semibold select-none'>Cetvel</h2>
+              </SheetHeader>
+
+              <nav className='flex flex-col gap-2 mt-10'>
+                {menuLinks.map(
+                  (
+                    link: {
+                      label: string;
+                      href: string;
+                      icon: JSX.Element;
+                    },
+                    index: number
+                  ) => (
+                    <Link
+                      key={index}
+                      href={link.href}
+                      className={cn(
+                        'flex items-center rounded-xl px-4 gap-[0.65rem] md:w-[290px] py-2.5 text-secondary-content hover:text-accent-content',
+                        {
+                          '!text-white bg-primary': path === link.href,
+                        }
+                      )}
+                    >
+                      {link.icon}
+                      <span>{link.label}</span>
+                    </Link>
+                  )
+                )}
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </aside>
       </div>
-    </div>
+    </aside>
   );
 };
 

@@ -2,7 +2,8 @@ import React from 'react';
 import { Meteors } from '@/components/global/meteors';
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { SignUpButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut, SignUpButton } from '@clerk/nextjs';
+import { Sparkles } from 'lucide-react';
 
 export function Start() {
   return (
@@ -12,9 +13,22 @@ export function Start() {
           Yapay zeka destekli kişiselleştirilmiş öğrenme platformu ile sınav
           stresi sona, başarı sana gelsin. Hemen dene, farkı hisset!
         </h2>
-        <SignUpButton>
-          <Button size='lg'>Hemen Başla</Button>
-        </SignUpButton>
+        <SignedOut>
+          <SignUpButton>
+            <Button size='lg' className='w-max'>
+              <Sparkles size={14} className='mr-1' />
+              Hemen Başla
+            </Button>
+          </SignUpButton>
+        </SignedOut>
+        <SignedIn>
+          <Link href='/dashboard'>
+            <Button size='lg'>
+              <Sparkles size={14} className='mr-1' />
+              Hemen Başla
+            </Button>
+          </Link>
+        </SignedIn>
 
         <Meteors number={40} />
       </div>

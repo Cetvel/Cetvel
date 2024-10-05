@@ -146,16 +146,18 @@ const Navbar: React.FC = () => {
                     </div>
                   </SignedOut>
                   <SignedIn>
-                    <div className='mt-auto space-y-4 flex-row flex w-full'>
-                      <Link href='/dashboard'>
-                        <Button variant='default'>Panele git</Button>
-                      </Link>
+                    <div className='mt-auto space-y-4 flex flex-col w-full gap-2'>
                       <UserButton
                         appearance={{
                           baseTheme:
                             resolvedTheme === 'dark' ? dark : undefined,
                         }}
                       />
+                      <Link href='/dashboard'>
+                        <Button variant='default' className='w-full'>
+                          Panele git
+                        </Button>
+                      </Link>
                     </div>
                   </SignedIn>
                 </nav>
