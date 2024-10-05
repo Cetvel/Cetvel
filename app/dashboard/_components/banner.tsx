@@ -1,10 +1,11 @@
 'use client';
 
-import { useUser } from '@clerk/nextjs';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+
 import React from 'react';
 
 const Banner = () => {
-  const { user } = useUser();
+  const { user } = useKindeBrowserClient();
 
   return (
     <div
@@ -19,7 +20,7 @@ const Banner = () => {
     >
       <div className='flex flex-col gap-2 w-full '>
         <h2 className='text-3xl md:text-4xl text-white font-bold'>
-          Hoşgeldin {user?.username}!
+          Hoşgeldin {user?.given_name}!
         </h2>
         <p className='text-primary-foreground'>
           <span className='font-medium'>

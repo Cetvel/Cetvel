@@ -1,5 +1,7 @@
 import Sidebar from '@/components/global/sidebar';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'Panel',
@@ -11,6 +13,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { isAuthenticated } = getKindeServerSession();
+
+  if (!isAuthenticated) {
+    redirect('/api/auth/login');
+  }
+
   return (
     <main className='min-h-screen'>
       <Sidebar />

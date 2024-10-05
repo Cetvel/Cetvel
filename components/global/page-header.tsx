@@ -3,9 +3,7 @@
 import React, { useState, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { useModal } from '@/providers/modal-provider';
-import { UserButton } from '@clerk/nextjs';
 import { useTheme } from 'next-themes';
-import { dark } from '@clerk/themes';
 import { Maximize, Menu, Minimize } from 'lucide-react';
 import NotificationsButton from './notifications';
 import Link from 'next/link';
@@ -19,7 +17,6 @@ type Props = {
 };
 
 const PageHeader = ({ title }: Props) => {
-  const { setOpen } = useModal();
   const { resolvedTheme } = useTheme();
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -63,13 +60,7 @@ const PageHeader = ({ title }: Props) => {
           {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
         </Button>
         <NotificationsButton />
-        <div className='h-5 flex items-center justify-center px-4 pr-3 border-l-2'>
-          <UserButton
-            appearance={{
-              baseTheme: resolvedTheme === 'dark' ? dark : undefined,
-            }}
-          />
-        </div>
+        <div className='h-5 flex items-center justify-center px-4 pr-3 border-l-2'></div>
         <aside className='xl:hidden'>
           <Sheet>
             <SheetTrigger asChild>

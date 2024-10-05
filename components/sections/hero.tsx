@@ -1,9 +1,11 @@
 import { TextGenerateEffect } from '@/components/global/text-generate-effect';
 import Navigation from '../ui/navigation';
 import { Button } from '../ui/button';
-import { SignedIn, SignedOut, SignUpButton } from '@clerk/nextjs';
 import { Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { RegisterLink } from '@kinde-oss/kinde-auth-nextjs/components';
+import SignedOutClient from '../global/signed-out-client';
+import SignedInClient from '../global/signed-in-client';
 
 const Hero: React.FC = () => {
   return (
@@ -24,22 +26,22 @@ const Hero: React.FC = () => {
           optimize edin, ilerlemelerinizi takip edin ve akademik hedeflerinize
           ulaşın.
         </p>
-        <SignedOut>
-          <SignUpButton>
+        <SignedOutClient>
+          <RegisterLink>
             <Button size='lg' className='w-max'>
               <Sparkles size={14} className='mr-1' />
               Hemen Başla
             </Button>
-          </SignUpButton>
-        </SignedOut>
-        <SignedIn>
+          </RegisterLink>
+        </SignedOutClient>
+        <SignedInClient>
           <Link href='/dashboard'>
             <Button size='lg'>
               <Sparkles size={14} className='mr-1' />
               Hemen Başla
             </Button>
           </Link>
-        </SignedIn>
+        </SignedInClient>
       </div>
 
       <div className='w-[50rem] h-[50rem] rounded-full bg-gradient-radial from-primary/30 to-secondary blur-3xl absolute -bottom-96' />

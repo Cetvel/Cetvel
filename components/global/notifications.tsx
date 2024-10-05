@@ -24,11 +24,11 @@ import moment from 'moment';
 import 'moment/locale/tr';
 import { api } from '@/convex/_generated/api';
 import { useMutation, useQuery } from 'convex/react';
-import { useUser } from '@clerk/nextjs';
 import { Id } from '@/convex/_generated/dataModel';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 moment.locale('tr');
 
@@ -106,7 +106,7 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { user } = useUser();
+  const { user } = useKindeBrowserClient();
   const [activeTab, setActiveTab] = useState<string>('all');
 
   const notificationData = useQuery(
@@ -315,7 +315,7 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
 const NotificationsButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
-  const { user } = useUser();
+  const { user } = useKindeBrowserClient();
 
   const notificationData = useQuery(
     api.notification.notification.getNotifications,

@@ -4,23 +4,23 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import Image from 'next/image';
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-  UserButton,
-} from '@clerk/nextjs';
 import { useTheme } from 'next-themes';
-import { dark } from '@clerk/themes';
+import {
+  LoginLink,
+  RegisterLink,
+} from '@kinde-oss/kinde-auth-nextjs/components';
+import SignedInClient from '../global/signed-in-client';
+import SignedOutClient from '../global/signed-out-client';
+import UserButton from '../global/user-button';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { resolvedTheme } = useTheme();
+  const { isAuthenticated } = useKindeBrowserClient();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,30 +84,26 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className='hidden md:flex items-center space-x-4'>
-            <SignedOut>
-              <SignInButton>
-                <Button variant='outline' size={'sm'}>
-                  Giriş Yap
-                </Button>
-              </SignInButton>
-              <SignUpButton>
-                <Button variant='default' size={'sm'}>
-                  Kayıt Ol
-                </Button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
+            <SignedInClient>
               <Link href='/dashboard'>
                 <Button variant='default' size={'sm'}>
                   Panele git
                 </Button>
               </Link>
-            </SignedIn>
-            <UserButton
-              appearance={{
-                baseTheme: resolvedTheme === 'dark' ? dark : undefined,
-              }}
-            />
+              <UserButton />
+            </SignedInClient>
+            <SignedOutClient>
+              <LoginLink>
+                <Button variant='outline' size={'sm'}>
+                  Giriş Yap
+                </Button>
+              </LoginLink>
+              <RegisterLink>
+                <Button variant='default' size={'sm'}>
+                  Kayıt Ol
+                </Button>
+              </RegisterLink>
+            </SignedOutClient>
           </div>
 
           {/* Mobile Menu Button */}
@@ -135,31 +131,23 @@ const Navbar: React.FC = () => {
                       </Link>
                     ))}
                   </div>
-                  <SignedOut>
-                    <div className='mt-auto space-y-4 flex-col flex w-full'>
-                      <SignInButton>
-                        <Button variant='outline'>Giriş Yap</Button>
-                      </SignInButton>
-                      <SignUpButton>
-                        <Button variant='default'>Kayıt Ol</Button>
-                      </SignUpButton>
-                    </div>
-                  </SignedOut>
-                  <SignedIn>
-                    <div className='mt-auto space-y-4 flex flex-col w-full gap-2'>
-                      <UserButton
-                        appearance={{
-                          baseTheme:
-                            resolvedTheme === 'dark' ? dark : undefined,
-                        }}
-                      />
-                      <Link href='/dashboard'>
-                        <Button variant='default' className='w-full'>
-                          Panele git
-                        </Button>
-                      </Link>
-                    </div>
-                  </SignedIn>
+                  <div className='mt-auto space-y-4 flex-col flex w-full'></div>
+                  <SignedInClient>
+                    <Link href='/dashboard'>
+                      <Button variant='default' size={'sm'}>
+                        Panele git
+                      </Button>
+                    </Link>
+                    <UserButton />
+                  </SignedInClient>
+                  <SignedOutClient>
+                    <LoginLink>
+                      <Button variant='outline'>Giriş Yap</Button>
+                    </LoginLink>
+                    <RegisterLink>
+                      <Button variant='default'>Kayıt Ol</Button>
+                    </RegisterLink>
+                  </SignedOutClient>
                 </nav>
               </SheetContent>
             </Sheet>

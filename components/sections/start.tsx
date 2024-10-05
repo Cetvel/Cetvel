@@ -1,9 +1,13 @@
+'use client';
+
 import React from 'react';
 import { Meteors } from '@/components/global/meteors';
-import Link from 'next/link';
 import { Button } from '../ui/button';
-import { SignedIn, SignedOut, SignUpButton } from '@clerk/nextjs';
 import { Sparkles } from 'lucide-react';
+import { RegisterLink } from '@kinde-oss/kinde-auth-nextjs';
+import SignedOutClient from '../global/signed-out-client';
+import SignedInClient from '../global/signed-in-client';
+import Link from 'next/link';
 
 export function Start() {
   return (
@@ -13,22 +17,22 @@ export function Start() {
           Yapay zeka destekli kişiselleştirilmiş öğrenme platformu ile sınav
           stresi sona, başarı sana gelsin. Hemen dene, farkı hisset!
         </h2>
-        <SignedOut>
-          <SignUpButton>
+        <SignedOutClient>
+          <RegisterLink>
             <Button size='lg' className='w-max'>
               <Sparkles size={14} className='mr-1' />
               Hemen Başla
             </Button>
-          </SignUpButton>
-        </SignedOut>
-        <SignedIn>
+          </RegisterLink>
+        </SignedOutClient>
+        <SignedInClient>
           <Link href='/dashboard'>
             <Button size='lg'>
               <Sparkles size={14} className='mr-1' />
               Hemen Başla
             </Button>
           </Link>
-        </SignedIn>
+        </SignedInClient>
 
         <Meteors number={40} />
       </div>
