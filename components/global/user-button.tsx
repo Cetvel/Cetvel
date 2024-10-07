@@ -13,33 +13,10 @@ import {
   LogoutLink,
   useKindeBrowserClient,
 } from '@kinde-oss/kinde-auth-nextjs';
-import { redirect } from 'next/navigation';
 import { LogOut } from 'lucide-react';
 
-interface UserProps {
-  onLogout?: () => void;
-  onLogin?: () => void;
-}
-
-const UserButton: React.FC<UserProps> = ({ onLogout, onLogin }) => {
-  const { isAuthenticated, user } = useKindeBrowserClient();
-
-  const handleLogout = () => {};
-
-  const handleLogin = () => {
-    redirect('/api/auth/login');
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <Button
-        onClick={handleLogin}
-        className='bg-blue-500 hover:bg-blue-600 text-white'
-      >
-        Giriş Yap
-      </Button>
-    );
-  }
+const UserButton = () => {
+  const { user } = useKindeBrowserClient();
 
   return (
     <DropdownMenu>

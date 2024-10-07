@@ -11,6 +11,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '../ui/sheet';
 import { menuLinks } from '@/constants';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
+import UserButton from './user-button';
 
 type Props = {
   title: string;
@@ -60,7 +61,9 @@ const PageHeader = ({ title }: Props) => {
           {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
         </Button>
         <NotificationsButton />
-        <div className='h-5 flex items-center justify-center px-4 pr-3 border-l-2'></div>
+        <div className='h-5 flex items-center justify-center px-4 pr-3 border-l-2'>
+          <UserButton />
+        </div>
         <aside className='xl:hidden'>
           <Sheet>
             <SheetTrigger asChild>
