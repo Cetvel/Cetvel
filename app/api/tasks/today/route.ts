@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import Todo from "@/lib/models/todo.model";
 import connectDB from "@/lib/config/connectDB";
-
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+const {getUser} = getKindeServerSession();
 // Özel hata sınıfı
 class APIError extends Error {
   constructor(
@@ -47,7 +47,8 @@ function createErrorResponse(error: APIError | Error) {
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = auth();
+    const kindeUser = await getUser();
+    const userId= kindeUser?.id;
     if (!userId) {
       throw new APIError("Yetkilendirme Hatası", 401);
     }
