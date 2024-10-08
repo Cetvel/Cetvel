@@ -13,14 +13,14 @@ export const generateUploadUrl = mutation(async (ctx) => {
 export const sendCoverImage = mutation({
     args: {
         storageId: v.id("_storage"),
-        clerkId: v.string(),
+        kindeId: v.string(),
     },
     handler: async (ctx, args) => {
         try {
             console.log("args", args);
             const userArray = await ctx.db
                 .query("user")
-                .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+                .filter((q) => q.eq(q.field("kindeId"), args.kindeId))
                 .collect();
             const user = userArray[0];
 
@@ -46,14 +46,14 @@ export const sendCoverImage = mutation({
 export const sendTimerImage = mutation({
     args: {
         storageId: v.id("_storage"),
-        clerkId: v.string(),
+        kindeId: v.string(),
     },
     handler: async (ctx, args) => {
         try {
             console.log("args", args);
             const userArray = await ctx.db
                 .query("user")
-                .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+                .filter((q) => q.eq(q.field("kindeId"), args.kindeId))
                 .collect();
             const user = userArray[0];
 
@@ -85,11 +85,11 @@ export const deleteById = mutation({
 });
 
 export const getUser = query({
-    args: { clerkId: v.string() },
+    args: { kindeId: v.string() },
     handler: async (ctx, args) => {
         const user = await ctx.db
             .query("user")
-            .filter((q) => q.eq("clerkId", args.clerkId))
+            .filter((q) => q.eq("kindeId", args.kindeId))
             .unique();
 
         return user;
@@ -98,13 +98,13 @@ export const getUser = query({
 
 export const deleteCoverImage = mutation({
     args: {
-        clerkId: v.string(),
+        kindeId: v.string(),
     },
     handler: async (ctx:any, args:any) => {
         try {
             const userArray = await ctx.db
                 .query("user")
-                .filter((q:any) => q.eq(q.field("clerkId"), args.clerkId))
+                .filter((q:any) => q.eq(q.field("kindeId"), args.kindeId))
                 .collect();
             const user = userArray[0];
 
@@ -131,13 +131,13 @@ export const deleteCoverImage = mutation({
 
 export const deleteTimerImage = mutation({
     args: {
-        clerkId: v.string(),
+        kindeId: v.string(),
     },
     handler: async (ctx:any, args:any) => {
         try {
             const userArray = await ctx.db
                 .query("user")
-                .filter((q:any) => q.eq(q.field("clerkId"), args.clerkId))
+                .filter((q:any) => q.eq(q.field("kindeId"), args.kindeId))
                 .collect();
             const user = userArray[0];
 

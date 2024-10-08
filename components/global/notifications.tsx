@@ -38,7 +38,7 @@ interface Notification {
   _id: Id<'notification'>;
   _creationTime: number;
   type: string;
-  clerkId: string;
+  kindeId: string;
   title: string;
   message: string;
   timeStamp: number;
@@ -112,7 +112,7 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({
   const notificationData = useQuery(
     api.notification.notification.getNotifications,
     {
-      clerkId: user?.id!,
+      kindeId: user?.id!,
     }
   );
 
@@ -320,7 +320,7 @@ const NotificationsButton: React.FC = () => {
   const notificationData = useQuery(
     api.notification.notification.getNotifications,
     {
-      clerkId: user?.id!,
+      kindeId: user?.id!,
     }
   );
 

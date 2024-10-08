@@ -8,9 +8,9 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
 
   const { searchParams } = new URL(request.url);
-  const clerkId = searchParams.get('clerkId');
-  if (!clerkId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const kindeId = searchParams.get('kindeId');
+  if (!kindeId) {
+    return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
   }
 /// akiyor burasi akiyoe aga
   // Türkiye saatine göre (UTC+3) şu anki zamanı al
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
   try {
     await connectDB()
     const count = await Todo.countDocuments({
-      clerkId,
+      kindeId,
       status: 'incomplete',
       startsAt: { $lte: endOfDay },
       endsAt: { $gte: startOfDay }
@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
     
     return NextResponse.json({ count },{ status: 200});
     } catch (error) {
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  console.log(error);  
+return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
   }
 }

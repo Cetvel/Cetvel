@@ -2,7 +2,7 @@ import mongoose, {Schema, Document} from 'mongoose';
 
 export interface ITagDocument extends Document {
     _id: Schema.Types.ObjectId,
-    clerkId : string,
+    kindeId : string,
     value: string;
     label: string;
 }
@@ -10,7 +10,7 @@ export interface ITagDocument extends Document {
 interface ITagModel extends mongoose.Model<ITagDocument> {}
 
 const tagSchema = new Schema({
-    clerkId: {type: String, required: true},
+    kindeId: {type: String, required: true},
     label: {type: String, required: true},
     value: {type: String, required: true},
     color: {type: String, required: false},

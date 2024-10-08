@@ -8,7 +8,7 @@ export async function DELETE(req: NextRequest) {
     try {
         const { userId } = getAuth(req);
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
         // developments commit
         await connectDB()
@@ -29,7 +29,7 @@ export async function PUT(req: NextRequest) {
 
         const { userId } = getAuth(req);
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
 
         const { ids, updateData } = await req.json();

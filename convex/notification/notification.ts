@@ -3,13 +3,13 @@ import { v } from 'convex/values';
 
 export const getNotifications = query({
     args: {
-        clerkId: v.string(),
+        kindeId: v.string(),
     },
-    handler: async (ctx, { clerkId }) => {
+    handler: async (ctx, { kindeId }) => {
         try {
             const notifications = await ctx.db
                 .query("notification")
-                .filter((q) => q.eq(q.field("clerkId"), clerkId))
+                .filter((q) => q.eq(q.field("kindeId"), kindeId))
                 .collect()
             return notifications.reverse();
         } catch (error: any) {

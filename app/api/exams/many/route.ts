@@ -1,16 +1,17 @@
 import Exam from '@/lib/models/exam.model';
 import { NextResponse, NextRequest } from 'next/server';
 import connectDB from '@/lib/config/connectDB';
-import { getAuth } from '@clerk/nextjs/server';
-
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+const { getUser } = getKindeServerSession();
 
 export async function DELETE(req: NextRequest) {
-    const { userId } = getAuth(req);
-    if (!userId) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     try {
+        const kindeUser = await getUser()
+        const userId = kindeUser.id
+        if (!userId) {
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
+        }
+
         const { ids } = await req.json();
         if (ids && Array.isArray(ids)) {
             await connectDB();
@@ -25,9 +26,10 @@ export async function DELETE(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-    const { userId } = getAuth(req);
+    const kindeUser = await getUser()
+    const userId = kindeUser.id
     if (!userId) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
     }
     try {
         const { ids, updateData } = await req.json();

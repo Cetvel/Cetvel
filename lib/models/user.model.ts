@@ -15,7 +15,7 @@ enum aytField {
     DIL
 }
 interface IUser {
-    clerkId: string;
+    kindeId: string;
     name: string;
     email: [string];
     password?: string;
@@ -34,7 +34,7 @@ export interface UserModel extends Model<IUserDocument> { }
 
 // Model is defined only if it hasn't been already
 const userSchema = new Schema<IUserDocument, UserModel>({
-    clerkId: {
+    kindeId: {
         type: String,
         required: true,
         trim: true

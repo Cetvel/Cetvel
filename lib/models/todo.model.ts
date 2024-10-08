@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 
 interface ITodo {
 	userId: Types.ObjectId;
-	clerkId: string;
+	kindeId: string;
 	title: string;
 	description?: string;
 	tag: string;
@@ -21,7 +21,7 @@ export interface ITodoDocument extends ITodo, Document {
 interface TodoModel extends Model<ITodoDocument> { }
 
 const TodoSchema = new Schema<ITodoDocument>({
-	clerkId: {
+	kindeId: {
 		type: String,
 		required: true,
 	},

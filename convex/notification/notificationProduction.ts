@@ -11,7 +11,7 @@ export const produceNotifications = internalAction({
                 if (!userPref.notifications) return
                 if (userPref.todoReminders) {
                     await ctx.runAction(internal.notification.todoReminder.checkAndProduceTodoReminder, {
-                        clerkId: userPref.clerkId,
+                        kindeId: userPref.kindeId,
                         currentTime,
                         frequency: userPref.todoReminderFrequency,
                         lastReminder: userPref.lastTodoReminder

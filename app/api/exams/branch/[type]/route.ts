@@ -1,31 +1,35 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+var { getUser } = getKindeServerSession();
 import BranchExam, { BranchType } from "@/lib/models/exam-models/branch.model";
 import connectDB from "@/lib/config/connectDB";
 export async function GET(request: NextRequest, { params }: { params: { type: string } }) {
     try {
-        const { userId } = getAuth(request);
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
         const { type } = params;
 
         await connectDB();
-        const exams = await BranchExam.find({ clerkId: getAuth(request).userId, type });
+        const exams = await BranchExam.find({ kindeId: userId, type });
         return NextResponse.json(exams, { status: 200 });
 
     } catch (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        console.log(error);
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 
 }
 
 export async function POST(request: NextRequest, { params }: { params: { type: string } }) {
     try {
-        const { userId } = getAuth(request);
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
         const { type } = params;
 
@@ -33,21 +37,19 @@ export async function POST(request: NextRequest, { params }: { params: { type: s
 
         const body = await request.json();
 
-        if (!body) {
-            return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
-        }
 
         await connectDB()
         const branchExam = new BranchExam({
-            clerkId: getAuth(request).userId,
+            kindeId: userId,
             type,
             ...body,
         });
 
         await branchExam.save();
-        return NextResponse.json({ status: 201 });
+        return NextResponse.json({ status: 200 });
 
     } catch (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        console.log(error);
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 }

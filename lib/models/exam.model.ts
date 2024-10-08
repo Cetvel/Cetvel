@@ -2,7 +2,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 
 interface Exam {
     userId: mongoose.Types.ObjectId,
-    clerkId: string,
+    kindeId: string,
     examName: string,
     examDate: Date,
     solvingDate: Date
@@ -15,7 +15,7 @@ export interface ExamDocument extends Exam, Document {
 interface ExamModel extends Model<ExamDocument> {}
 
 const examSchema = new mongoose.Schema<ExamDocument, ExamModel>({
-    clerkId: {
+    kindeId: {
         type: String,
         required: true,
         index: true

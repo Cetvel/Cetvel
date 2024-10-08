@@ -5,13 +5,13 @@ import { update } from "lodash";
 
 export const getUser = query({
     args: {
-        clerkId: v.string()
+        kindeId: v.string()
     },
-    handler: async (ctx, { clerkId }) => {
+    handler: async (ctx, { kindeId }) => {
         try {
             const user = await ctx.db
                 .query("user")
-                .filter((q) => q.eq(q.field("clerkId"), clerkId))
+                .filter((q) => q.eq(q.field("kindeId"), kindeId))
                 .first();
             if (!user) {
                 throw new Error("Kullanıcı bulunamadı.")
@@ -26,13 +26,13 @@ export const getUser = query({
 
 export const createUser = mutation({
     args: {
-        clerkId: v.string(),
+        kindeId: v.string(),
         mongoId: v.string(),
         email: v.array(v.string())
     },
-    handler: async (ctx, { clerkId, mongoId, email }) => {
+    handler: async (ctx, { kindeId, mongoId, email }) => {
         try {
-            const newUser = await ctx.db.insert("user", { clerkId, mongoId, email })
+            const newUser = await ctx.db.insert("user", { kindeId, mongoId, email })
             if (!newUser) {
                 throw new Error("User could not be created")
             }
@@ -46,13 +46,13 @@ export const createUser = mutation({
 
 export const deleteUser = mutation({
     args: {
-        clerkId: v.string()
+        kindeId: v.string()
     },
-    handler: async (ctx, { clerkId }) => {
+    handler: async (ctx, { kindeId }) => {
         try {
             const userToDelete = await ctx.db
                 .query("user")
-                .filter((q) => q.eq(q.field("clerkId"), clerkId))
+                .filter((q) => q.eq(q.field("kindeId"), kindeId))
                 .first();
 
             // Eğer kullanıcı bulunamazsa, hata fırlat
@@ -73,18 +73,18 @@ export const deleteUser = mutation({
 
 export const updateUser = mutation({
     args: {
-        clerkId: v.string(),
+        kindeId: v.string(),
         email: v.array(v.string())
     },
-    handler: async (ctx, { clerkId, email }) => {
+    handler: async (ctx, { kindeId, email }) => {
         try {
             const user = await ctx.db
                 .query("user")
-                .filter((q) => q.eq(q.field("clerkId"), clerkId))
+                .filter((q) => q.eq(q.field("kindeId"), kindeId))
                 .first();
 
             if (!user) {
-                throw new Error(`User with clerkId ${clerkId} not found`);
+                throw new Error(`User with kindeId ${kindeId} not found`);
             }
 
             user.email = email
@@ -99,21 +99,21 @@ export const updateUser = mutation({
 
 export const updateUserImages = mutation({
     args: {
-        clerkId: v.string(),
+        kindeId: v.string(),
         defaultTemplate: v.optional(v.object({
             coverPhotoId: v.id("_storage"),
             timerPhotoId: v.id("_storage"),
         })),
     },
-    handler: async (ctx, { clerkId, defaultTemplate }) => {
+    handler: async (ctx, { kindeId, defaultTemplate }) => {
         try {
             const user = await ctx.db
                 .query("user")
-                .filter((q) => q.eq(q.field("clerkId"), clerkId))
+                .filter((q) => q.eq(q.field("kindeId"), kindeId))
                 .first();
 
             if (!user) {
-                throw new Error(`User with clerkId ${clerkId} not found`);
+                throw new Error(`User with kindeId ${kindeId} not found`);
             }
             user.coverPhotoId = defaultTemplate!.coverPhotoId!
             user.timerPhotoId = defaultTemplate!.timerPhotoId!

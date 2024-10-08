@@ -8,8 +8,9 @@ export async function POST(res:NextRequest) {
         await connectDB()
         const { name, email, message } = await res.json()
         Contact.create({ name, email, message })
-        return NextResponse.json({ status: 201})
+        return NextResponse.json({ status: 200})
     } catch (error) {
-        return NextResponse.json({ status: 500, error: "Internal server error" })
+        console.log(error)
+        return NextResponse.json({ status: 500,  message : "Beklenmedik Sunucu Hatası" })
     }
 }

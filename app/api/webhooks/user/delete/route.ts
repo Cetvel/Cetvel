@@ -56,7 +56,7 @@ export async function POST(req: Request): Promise<Response> {
         const userDeleted = evt.data;
         await connectDB();
         const deletedUser = await UserData.findOneAndDelete({
-            clerkId: userDeleted.id,
+            kindeId: userDeleted.id,
         });
 
         if (!deletedUser) {
@@ -64,7 +64,7 @@ export async function POST(req: Request): Promise<Response> {
         }
 
         await convex.mutation(api.user.crud.deleteUser, {
-            clerkId: userDeleted.id!,
+            kindeId: userDeleted.id!,
         });
 
 

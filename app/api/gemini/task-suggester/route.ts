@@ -18,7 +18,7 @@ export async function GET() {
   try {
     const { userId } = auth();
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Yetkilendirme Hatası' }, { status: 401 });
     }
 
     await connectDB();
@@ -27,13 +27,13 @@ export async function GET() {
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
     const recentTodos = await Todo.find(
-      { clerkId: userId, createdAt: { $gte: oneWeekAgo } },
+      { kindeId: userId, createdAt: { $gte: oneWeekAgo } },
       { title: 1, tag: 1, status: 1, description: 1, _id: 0 }
     ).lean();
     console.log('Recent todos fetched:', recentTodos.length);
 
     const recentPomodoros = await Pomodoro.find(
-      { clerkId: userId, startsAt: { $gte: oneWeekAgo } },
+      { kindeId: userId, startsAt: { $gte: oneWeekAgo } },
       { title: 1, tag: 1, duration: 1, description: 1, _id: 0 }
     ).lean();
     console.log('Recent pomodoros fetched:', recentPomodoros.length);

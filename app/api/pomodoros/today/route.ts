@@ -5,10 +5,11 @@ import connectDB from '@/lib/config/connectDB';
 
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = getAuth(request);
+    const kindeUser = await getUser();
+        const userId = kindeUser?.id;
 
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Yetkilendirme Hatası' }, { status: 401 });
     }
 
     // Türkiye saat dilimi için offset (UTC+3)
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
     const result = await Pomodoro.aggregate([
       {
         $match: {
-          clerkId: userId,
+          kindeId: userId,
           startsAt: { $gte: new Date(sevenDaysAgo.getTime() - turkeyOffset) }
         }
       },

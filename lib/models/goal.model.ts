@@ -1,7 +1,7 @@
 import mongoose, { Schema, Model, Document, Types } from 'mongoose';
 
 interface IGoal {
-    clerkId: string;
+    kindeId: string;
     title: string;
     target : string;
     totalUnits: number;
@@ -20,7 +20,7 @@ interface GoalModel extends Model<IGoalDocument> { }
 
 
 const goalSchema = new Schema<IGoalDocument, GoalModel>({
-    clerkId: {
+    kindeId: {
         type: String,
         required: true,
         index: true

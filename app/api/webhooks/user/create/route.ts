@@ -61,7 +61,7 @@ export async function POST(req: Request): Promise<Response> {
         await connectDB()
         const emailsArray = user.email_addresses.map((email) => email.toString());
         const newUser = new UserData({
-            clerkId: user.id,
+            kindeId: user.id,
             name: user.username,
             email: emailsArray,
         });
@@ -69,32 +69,32 @@ export async function POST(req: Request): Promise<Response> {
 
         await newUser.save();
         TagModel.create({
-            clerkId: user.id,
+            kindeId: user.id,
             label : 'Matematik',
             value : 'Matematik'
         })
 
         TagModel.create({
-            clerkId: user.id,
+            kindeId: user.id,
             label : 'Kitap',
             value : 'Kitap'
         })
         TagModel.create({
-            clerkId: user.id,
+            kindeId: user.id,
             label : 'Türkçe',
             value : 'Türkçe'
         })
         
         await convex.mutation(api.user.crud.createUser, {
-            clerkId: user.id,
+            kindeId: user.id,
             mongoId: newUser._id.toString(),
             email: emailsArray,
         });
         const convexUser = await convex.query(api.user.crud.getUser, {
-            clerkId : user.id,
+            kindeId : user.id,
         });
         await convex.mutation(api.user.userPreference.createUserPreference, {
-            clerkId: user.id,
+            kindeId: user.id,
             userId: convexUser!._id,
         });
         return new Response('Webhook processed successfully', { status: 200 });

@@ -57,7 +57,7 @@ export async function POST(req: Request): Promise<Response> {
 
         const userUpdated = evt.data as UserJSON
         await connectDB()
-        const updatedUser = await UserData.findOne({ clerkId: userUpdated.id });
+        const updatedUser = await UserData.findOne({ kindeId: userUpdated.id });
         const emailsArray = userUpdated.email_addresses.map((email) => email.toString());
         // Update the user in the database
         if (updatedUser) {
@@ -68,7 +68,7 @@ export async function POST(req: Request): Promise<Response> {
             console.error('User not found for update:', userUpdated.id);
         }
         await convex.mutation(api.user.crud.updateUser, {
-            clerkId: userUpdated.id!,
+            kindeId: userUpdated.id!,
             email: emailsArray,
         });
 

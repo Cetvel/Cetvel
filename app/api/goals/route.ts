@@ -1,59 +1,53 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { auth, getAuth } from "@clerk/nextjs/server";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+var { getUser } = getKindeServerSession();
 import GoalModel from "@/lib/models/goal.model";
 import { IGoalDocument } from "@/lib/models/goal.model";
 import connectDB from "@/lib/config/connectDB";
 
 export async function GET(request: NextRequest) {
     try {
-        const { userId } = getAuth(request);
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
         await connectDB();
-        const goals = await GoalModel.find({ clerkId: userId });
+        const goals = await GoalModel.find({ kindeId: userId });
         if (goals == undefined) {
             console.log("goals could not find")
-            return NextResponse.json({ error: "Internal Server Error" }, { status: 404 });
+            return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 404 });
         }
         return NextResponse.json(goals, { status: 200 });
     } catch (error) {
         console.log(error)
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 }
 
 export async function POST(request: NextRequest) {
     try {
 
-        const { userId } = auth();
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
+
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
 
         const body = await request.json();
-        if (!body) {
-            return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
-        }
         await connectDB();
 
         const goal = new GoalModel({
-            clerkId: userId,
+            kindeId: userId,
             ...body
         }) as IGoalDocument
-
-        try {
-            await goal.save();
-        } catch (err) {
-            console.log(err);
-            return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
-        }
-
-        return NextResponse.json({ status: 201 });
+        await goal.save();
+        return NextResponse.json({ status: 200 });
     } catch (error) {
         console.log(error)
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 }
 

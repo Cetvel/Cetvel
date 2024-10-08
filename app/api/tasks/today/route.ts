@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
   try {
     const { userId } = auth();
     if (!userId) {
-      throw new APIError("Unauthorized", 401);
+      throw new APIError("Yetkilendirme Hatası", 401);
     }
 
     // Türkiye saat dilimi için offset (UTC+3)
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     await connectDB();
 
     const tasks = await Todo.find({
-      clerkId: userId,
+      kindeId: userId,
       $or: [
         // Başlangıç zamanı bugün içinde
         {

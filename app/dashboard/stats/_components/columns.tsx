@@ -24,7 +24,7 @@ import { ColumnHeader } from '@/components/global/column-header';
 
 export interface ExamResult {
   _id: string;
-  clerkId: string;
+  kindeId: string;
   examName: string;
   solvingDate: string;
   examType: ExamType;

@@ -1,13 +1,15 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+var { getUser } = getKindeServerSession();
 import PomodoroModel from "@/lib/models/pomodoro.model";
 import connectDB from "@/lib/config/connectDB";
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
     try {
-        const { userId } = getAuth(request);
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
 
         const { id } = params;
@@ -16,26 +18,25 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         }
 
         const body = await request.json();
-        if (!body) {
-            return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
-        }
-        await connectDB();
+               await connectDB();
         const pomodoro = await PomodoroModel.findOneAndUpdate({ _id: id }, body, { new: true });
         if (!pomodoro) {
             return NextResponse.json({ error: "pomodoro not found" }, { status: 404 });
         }
         return NextResponse.json({ status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+      console.log(error);  
+return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 }
 
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
     try {
-        const { userId } = getAuth(request);
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
 
         const { id } = params;
@@ -49,6 +50,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
         }
         return NextResponse.json({ status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+      console.log(error);  
+return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 }

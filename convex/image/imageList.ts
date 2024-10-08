@@ -2,12 +2,12 @@ import { query } from "../_generated/server";
 import { v } from "convex/values";
 
 export const getCoverImageUrl = query({
-    args: { clerkId: v.string() },
+    args: { kindeId: v.string() },
     handler: async (ctx, args) => {
 
         const user = await ctx.db
             .query("user")
-            .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+            .filter((q) => q.eq(q.field("kindeId"), args.kindeId))
             .collect();
         console.log("user", user);
 
@@ -19,13 +19,13 @@ export const getCoverImageUrl = query({
 
 export const getTimerImageUrl = query({
     args: {
-        clerkId: v.string(),
+        kindeId: v.string(),
     },
     handler: async (ctx, args) => {
         try {
             const user = await ctx.db
                 .query("user")
-                .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+                .filter((q) => q.eq(q.field("kindeId"), args.kindeId))
                 .collect();
             if(!user) throw new Error("Kullanıcı bulunamadı")
             const storageId = user[0].timerPhotoId!

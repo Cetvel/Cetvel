@@ -2,7 +2,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface INotification extends Document {
-    clerkId : string,
+    kindeId : string,
     user: mongoose.Types.ObjectId;
     type: 'dailyTodoReminder' | 'upcomingStudySession';
     content: string;
@@ -18,7 +18,7 @@ export interface INotification extends Document {
 }
 
 const NotificationSchema: Schema = new Schema({
-    clerkId: {
+    kindeId: {
         type: String,
         required: true,
         index : true

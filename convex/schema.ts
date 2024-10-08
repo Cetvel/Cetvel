@@ -3,7 +3,7 @@ import { v } from 'convex/values';
 
 export default defineSchema({
     notification: defineTable({
-        clerkId: v.string(),
+        kindeId: v.string(),
         title: v.string(),
         message: v.string(),
         type: v.string(),
@@ -13,14 +13,14 @@ export default defineSchema({
     }),
     user: defineTable({
         email: v.optional(v.array(v.string())),
-        clerkId: v.string(),
+        kindeId: v.string(),
         mongoId: v.string(),
         coverPhotoId: v.optional(v.id("_storage")),
         timerPhotoId: v.optional(v.id("_storage")),
     }),
     userPreferences: defineTable({
         notifications : v.boolean(),
-        clerkId: v.string(),
+        kindeId: v.string(),
         userId : v.id("user"),
         todoReminders: v.boolean(),
         todoReminderFrequency: v.number(),

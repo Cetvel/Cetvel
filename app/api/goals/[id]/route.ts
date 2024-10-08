@@ -1,14 +1,16 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+var { getUser } = getKindeServerSession();
 import GoalModel from "@/lib/models/goal.model";
 import connectDB from '@/lib/config/connectDB';
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
     try {
-        const { userId } = getAuth(request);
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
 
         const { id } = params;
@@ -23,7 +25,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         }
         return NextResponse.json({ status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+      console.log(error);  
+return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 
 }
@@ -31,9 +34,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
     try {
-        const { userId } = getAuth(request);
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
 
         const { id } = params;
@@ -48,6 +52,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
         return NextResponse.json({status: 200});
     } catch (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+      console.log(error);  
+return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 }

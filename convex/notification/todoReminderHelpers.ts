@@ -3,10 +3,10 @@ import { v } from "convex/values";
 
 
 export const fetchTodoCounts = internalAction({
-    args: { clerkId: v.string() },
-    handler: async (ctx, { clerkId }) => {
+    args: { kindeId: v.string() },
+    handler: async (ctx, { kindeId }) => {
         try {
-            const response = await fetch(`https://cetvel.app/api/notifications/todoReminder?clerkId=${clerkId}`);
+            const response = await fetch(`https://cetvel.app/api/notifications/todoReminder?kindeId=${kindeId}`);
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(`API request failed with status ${response.status}: ${errorText}`);
@@ -21,8 +21,8 @@ export const fetchTodoCounts = internalAction({
 
 
 export const createTodoReminder = internalMutation({
-    args: { clerkId: v.string(), todoCounts: v.number() },
-    handler: async (ctx, { clerkId, todoCounts }) => {
+    args: { kindeId: v.string(), todoCounts: v.number() },
+    handler: async (ctx, { kindeId, todoCounts }) => {
         try {
             let message
             if (todoCounts > 0) {
@@ -31,7 +31,7 @@ export const createTodoReminder = internalMutation({
                 message = "Bugün yapılacak göreviniz yok. Oluşturmak ister misiniz?"
             }
             await ctx.db.insert("notification", {
-                clerkId,
+                kindeId,
                 title: "Görev Hatırlatıcısı",
                 message,
                 type: "info",

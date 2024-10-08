@@ -34,7 +34,7 @@ const TagForm = () => {
     try {
       const res = await axiosInstance.post('/tag', data);
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         form.reset();
         toast.success(values.label, {
           description: 'Etiket oluşturuldu',

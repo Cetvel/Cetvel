@@ -8,13 +8,13 @@ import connectDB from '@/lib/config/connectDB';
 export async function GET(request: NextRequest) {
 
 	if (!getAuth(request).userId) {
-		return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+		return NextResponse.json({ error: 'Yetkilendirme Hatası' }, { status: 401 });
 	}
 
 	try {
 
 		await connectDB()
-		const todos = await TodoModel.find({ clerkId: getAuth(request).userId });
+		const todos = await TodoModel.find({ kindeId: getAuth(request).userId });
 		return NextResponse.json(todos, {
 			headers: {
 				'X-Cache-Status': 'MISS',
@@ -37,9 +37,10 @@ export async function POST(request: NextRequest) {
 				{ status: 400 }
 			);
 		}
-		const { userId } = getAuth(request);
+		const kindeUser = await getUser();
+        const userId = kindeUser?.id;
 		if (!userId) {
-			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+			return NextResponse.json({ error: 'Yetkilendirme Hatası' }, { status: 401 });
 		}
 
 		if (!body.tag)
@@ -47,12 +48,12 @@ export async function POST(request: NextRequest) {
 
 		// Todo oluştur
 		const todo = new TodoModel({
-			clerkId: getAuth(request).userId,
+			kindeId: getAuth(request).userId,
 			...body,
 		}) as ITodoDocument;
 
 		await todo.save();
-		const response = NextResponse.json({ status: 201 });
+		const response = NextResponse.json({ status: 200 });
 		response.headers.set(
 			'Cache-Control',
 			's-maxage=60, stale-while-revalidate'

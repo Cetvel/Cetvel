@@ -1,7 +1,7 @@
 import mongoose, { Schema, Model, Document, Types } from "mongoose";
 
 interface IPomodoro extends Document {
-    clerkId?: string
+    kindeId?: string
     title: string;
     tag: string;
     userId: Types.ObjectId;
@@ -20,7 +20,7 @@ interface PomodoroModel extends Model<PomodoroDocument> { }
 
 
 const PomodoroSchema = new Schema({
-    clerkId: { type: String, required: false },
+    kindeId: { type: String, required: false },
     userId: { type: Types.ObjectId, required: false, ref: 'User' },
     title: { type: String, required: true },
     tag: { type: String, required: true },

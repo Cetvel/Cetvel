@@ -11,8 +11,8 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function PUT(req: NextRequest, res: NextResponse) {
     try {
-        const clerkId = getAuth(req).userId
-        if (!clerkId) return NextResponse.json({ error: "unauthorized" }, { status: 401 })
+        const kindeId = getAuth(req).userId
+        if (!kindeId) return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 })
 
         const {
             field, // ayt alani
@@ -28,7 +28,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
             notifications
         }
 
-        await clerkClient().users.updateUser(clerkId, {
+        await clerkClient().users.updateUser(kindeId, {
             publicMetadata: {
                 field,
                 grade,
@@ -38,7 +38,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
 
         await connectDB()
         const user = await User.findOneAndUpdate(
-            { clerkId },
+            { kindeId },
             { field, grade },
             { new: true }
         );
@@ -46,7 +46,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
 
         await convex.mutation(
             api.user.userPreference.updateUserPreference,
-            { clerkId, props }
+            { kindeId, props }
         )
         return NextResponse.json({ status: 200 })
     } catch (error: any) {

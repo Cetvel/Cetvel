@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAuth } from "@clerk/nextjs/server";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+var { getUser } = getKindeServerSession();
 import AytModel from "@/lib/models/exam-models/ayt.model";
 import { AytDocument } from "@/lib/models/exam-models/ayt.model";
 import connectDB from "@/lib/config/connectDB";
 export async function GET(request: NextRequest, { params }: { params: { aytType: string } }) {
     try {
-        const { userId } = getAuth(request);
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
 
         const { aytType } = params;
@@ -29,31 +31,30 @@ export async function GET(request: NextRequest, { params }: { params: { aytType:
 
         await connectDB()
         const exams = await AytModel.find({
-            clerkId: userId,
+            kindeId: userId,
             aytType: field
         }) as AytDocument[];
 
         return NextResponse.json(exams, { status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        console.log(error);
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 
 }
 
 export async function POST(request: NextRequest, { params }: { params: { aytType: string } }) {
     try {
-        const { userId } = getAuth(request);
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
 
         const { aytType } = params;
         if (aytType !== 'say' && aytType !== 'ea' && aytType !== 'soz') return NextResponse.json({ error: "Geçerli bir Ayt formatı giriniz." }, { status: 400 });
         const body = await request.json();
 
-        if (!body) {
-            return NextResponse.json({ error: "Request body is empty" }, { status: 400 });
-        }
 
         let field
         switch (aytType) {
@@ -70,14 +71,15 @@ export async function POST(request: NextRequest, { params }: { params: { aytType
 
         await connectDB()
         const exam = new AytModel({
-            clerkId: userId,
+            kindeId: userId,
             field,
             ...body
         }) as AytDocument
 
         await exam.save();
-        return NextResponse.json({ status: 201 });
+        return NextResponse.json({ status: 200 });
     } catch (error) {
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        console.log(error);
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 }

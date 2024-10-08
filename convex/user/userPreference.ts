@@ -3,15 +3,15 @@ import { v } from "convex/values";
 
 export const createUserPreference = mutation({
     args: {
-        clerkId: v.string(),
+        kindeId: v.string(),
         userId: v.id("user"),
     },
-    handler: async (ctx, { clerkId, userId }) => {
+    handler: async (ctx, { kindeId, userId }) => {
         try {
             const newUserPreference = await ctx.db.insert("userPreferences", {
                 notifications: true,
                 userId,
-                clerkId,
+                kindeId,
                 todoReminders: true,
                 todoReminderFrequency: 2,
             })
@@ -31,18 +31,18 @@ export const createUserPreference = mutation({
 
 export const updateUserPreference = mutation({
     args: {
-        clerkId: v.string(),
+        kindeId: v.string(),
         props: v.any()
     },
-    handler: async (ctx, { clerkId, props }) => {
+    handler: async (ctx, { kindeId, props }) => {
         try {
             const userPreferenceToUpdate = await ctx.db
                 .query("userPreferences")
-                .filter((q) => q.eq(q.field("clerkId"), clerkId))
+                .filter((q) => q.eq(q.field("kindeId"), kindeId))
                 .first();
 
             if (!userPreferenceToUpdate) {
-                throw new Error(`User Preference with clerkId ${clerkId} not found`);
+                throw new Error(`User Preference with kindeId ${kindeId} not found`);
             }
 
             await ctx.db.patch(userPreferenceToUpdate._id, { ...props });
@@ -56,7 +56,7 @@ export const updateUserPreference = mutation({
 
 export const internal_UpdateUserPreference = internalMutation({
     args: {
-        clerkId: v.string(),
+        kindeId: v.string(),
         props: v.object({
             notification: v.optional(v.boolean()),
             todoReminder: v.optional(v.boolean()),
@@ -66,16 +66,16 @@ export const internal_UpdateUserPreference = internalMutation({
             weeklyReport: v.optional(v.boolean()),
         })
     },
-    handler: async (ctx, { clerkId, props }) => {
+    handler: async (ctx, { kindeId, props }) => {
         try {
             const userPreferenceToUpdate = await ctx.db
                 .query("userPreferences")
-                .filter((q) => q.eq(q.field("clerkId"), clerkId))
+                .filter((q) => q.eq(q.field("kindeId"), kindeId))
                 .first();
 
             // Eğer kullanıcı bulunamazsa, hata fırlat
             if (!userPreferenceToUpdate) {
-                throw new Error(`User Preference with clerkId ${clerkId} not found`);
+                throw new Error(`User Preference with kindeId ${kindeId} not found`);
             }
 
             // Kullanıcıyı sil
