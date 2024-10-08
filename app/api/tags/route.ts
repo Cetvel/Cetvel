@@ -8,24 +8,26 @@ import connectDB from "@/lib/config/connectDB";
 
 export async function GET(request: NextRequest) {
     try {
-        if (!getAuth(request).userId) {
-            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 })
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
+        if (!userId) {
+            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
         await connectDB();
-        const tags = await TagModel.find({ kindeId: getAuth(request).userId });
+        const tags = await TagModel.find({ kindeId: userId });
         return NextResponse.json(tags, { status: 200 });
     } catch (error) {
-      console.log(error);  
-return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
+        console.log(error);
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 
 }
 
 export async function POST(request: NextRequest) {
     try {
-        const body = await request.json();
-               const kindeUser = await getUser();
+        const kindeUser = await getUser();
         const userId = kindeUser?.id;
+        const body = await request.json();
         if (!userId) {
             return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }
@@ -37,15 +39,15 @@ export async function POST(request: NextRequest) {
         // tag oluştur
         await connectDB()
         const tag = new TagModel({
-            kindeId: getAuth(request).userId,
+            kindeId: userId,
             ...body
         }) as ITagDocument
 
         await tag.save();
         return NextResponse.json({ status: 200 });
     } catch (error) {
-      console.log(error);  
-return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
+        console.log(error);
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 }
 

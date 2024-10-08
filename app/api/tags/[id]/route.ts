@@ -4,7 +4,6 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 var { getUser } = getKindeServerSession();
 import TagModel from "@/lib/models/tag.model";
 import connectDB from "@/lib/config/connectDB";
-//kkkjjjjjjjjk
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
     try {
         const kindeUser = await getUser();
@@ -26,8 +25,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         }
         return NextResponse.json({ status: 200 });
     } catch (error) {
-      console.log(error);  
-return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
+        console.log(error);
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 
 }
@@ -52,7 +51,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
         }
         return NextResponse.json({ status: 200 });
     } catch (error) {
-      console.log(error);  
-return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
+        console.log(error);
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 }
