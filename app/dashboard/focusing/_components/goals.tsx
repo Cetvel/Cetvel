@@ -56,14 +56,7 @@ const Goals = () => {
         <ScrollArea className='h-[300px]'>
           <div className='flex flex-col space-y-4'>
             {goals.length ? (
-              goals?.map((goal: any) => (
-                <Goal
-                  key={goal.id}
-                  goal={goal.title}
-                  progress={goal.progress}
-                  max={goal.target}
-                />
-              ))
+              goals?.map((goal: Goal) => <Goal key={goal._id} goal={goal} />)
             ) : (
               <Alert>
                 <CircleSlash2 size={18} />

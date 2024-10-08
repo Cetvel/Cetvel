@@ -14,6 +14,8 @@ import { deleteMultipleFocusSessions } from '@/lib/services/focus-service';
 const FocusItemsTable = () => {
   const { data, isLoading, error } = useSWR('/pomodoros', fetcher);
 
+  console.log(data);
+
   if (isLoading) {
     return <Skeleton className='h-20' />;
   }
@@ -33,7 +35,7 @@ const FocusItemsTable = () => {
   return (
     <BaseDataTable
       columns={columns}
-      data={data}
+      data={data.pomodoros}
       searchableColumn='title'
       dateColumn='startsAt'
       initialSortColumn='startsAt'

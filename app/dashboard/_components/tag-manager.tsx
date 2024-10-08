@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useTransition } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,43 +18,60 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
 import Spinner from '@/components/ui/spinner';
-
-interface Tag {
-  _id: string;
-  label: string;
-  value: string;
-}
+import { useOptimistic } from 'react';
 
 const TagManager: React.FC = () => {
-  const { data: tags, isLoading, error } = useSWR<Tag[]>('/tags', fetcher);
+  const {
+    data: tags,
+    isLoading,
+    error,
+    mutate,
+  } = useSWR<Tag[]>('/tags', fetcher);
   const [newTagName, setNewTagName] = useState('');
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
+
+  const [optimisticTags, setOptimisticTags] = useOptimistic(
+    tags,
+    (state, newTags: Tag[]) => newTags
+  );
 
   const handleCreateTag = useCallback(async () => {
     if (!newTagName.trim()) return;
 
+    const tempId = `temp-${Date.now()}`;
     const newTag = {
-      _id: `temp-${Date.now()}`,
+      _id: tempId,
       label: newTagName,
       value: newTagName,
     };
 
-    mutate('/tag', [...(tags || []), newTag], false);
-
+    setOptimisticTags((currentTags) => [...(currentTags || []), newTag]);
     setNewTagName('');
-    const success = await createTag({
-      label: newTagName,
-      value: newTagName,
-    });
-    if (!success) {
-      mutate('/tag', tags, false);
-    } else {
-      mutate('/tag');
+
+    try {
+      const createdTag = await createTag({
+        label: newTagName,
+        value: newTagName,
+      });
+
+      if (createdTag) {
+        setOptimisticTags((currentTags) =>
+          currentTags?.map((tag) =>
+            tag._id === tempId ? { ...tag, _id: createdTag._id } : tag
+          )
+        );
+        mutate();
+      }
+    } catch (error) {
+      console.error('Error creating tag:', error);
+      setOptimisticTags((currentTags) =>
+        currentTags?.filter((tag) => tag._id !== tempId)
+      );
     }
-  }, [newTagName, tags]);
+  }, [newTagName, setOptimisticTags, mutate]);
 
   const handleKeyPress = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -75,21 +92,26 @@ const TagManager: React.FC = () => {
         value: editingTag.label,
       };
 
-      mutate(
-        '/tag',
-        tags?.map((t) => (t._id === tag._id ? updatedTag : t)),
-        false
+      setOptimisticTags(
+        (currentTags) =>
+          currentTags?.map((t) => (t._id === tag._id ? updatedTag : t)) || []
       );
 
-      const success = await updateTag(tag._id, updatedTag);
-      if (!success) {
-        mutate('/tag', tags, false);
-      } else {
-        mutate('/tag');
+      try {
+        const success = await updateTag(tag._id, updatedTag);
+        if (success) {
+          mutate();
+        }
+      } catch (error) {
+        console.error('Error updating tag:', error);
+        setOptimisticTags(
+          (currentTags) =>
+            currentTags?.map((t) => (t._id === tag._id ? tag : t)) || []
+        );
       }
       setEditingTag(null);
     },
-    [editingTag, tags]
+    [editingTag, setOptimisticTags, mutate]
   );
 
   const handleEditKeyPress = useCallback(
@@ -103,25 +125,27 @@ const TagManager: React.FC = () => {
 
   const handleDeleteTag = useCallback(
     async (tagId: string) => {
-      mutate(
-        '/tag',
-        tags?.filter((tag) => tag._id !== tagId),
-        false
+      setOptimisticTags(
+        (currentTags) => currentTags?.filter((tag) => tag._id !== tagId) || []
       );
 
-      const success = await deleteTag(tagId);
-      if (!success) {
-        mutate('/tag', tags, false);
-      } else {
-        mutate('/tag');
+      try {
+        await deleteTag(tagId);
+        mutate();
+      } catch (error) {
+        console.error('Error deleting tag:', error);
+        setOptimisticTags((currentTags) => [
+          ...(currentTags || []),
+          ...(tags?.filter((tag) => tag._id === tagId) || []),
+        ]);
       }
     },
-    [tags]
+    [tags, setOptimisticTags, mutate]
   );
 
   if (isLoading) return <Spinner />;
   if (error) {
-    console.log('Error fetching tags:', error);
+    console.error('Error fetching tags:', error);
     return <AlertCircle size={18} className='text-destructive' />;
   }
 
@@ -144,8 +168,8 @@ const TagManager: React.FC = () => {
             />
           </div>
           <div className='max-h-60 overflow-y-auto'>
-            {tags && tags.length > 0 ? (
-              tags.map((tag) => (
+            {optimisticTags && optimisticTags.length > 0 ? (
+              optimisticTags.map((tag) => (
                 <div
                   key={tag._id}
                   className='flex items-center justify-between gap-2 border rounded-md p-1 pl-3 mb-2 group'

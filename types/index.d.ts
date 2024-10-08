@@ -30,8 +30,7 @@ declare type Tag = {
 declare type Goal = {
   _id: string;
   title: string;
-  type: string;
-  unit: string;
+  totalUnits: number;
   target: number;
   startsAt: Date;
   endsAt: Date;

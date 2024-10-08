@@ -27,22 +27,27 @@ export const PreferencesSchema = z
     }
   );
 
-export const TaskSchema = z.object({
-  title: z
-    .string({
-      required_error: 'Başlık girmek zorunludur',
-    })
-    .min(2, { message: 'Başlık en az 2 karakter uzunluğunda olmalı' }),
-  startsAt: z.date({
-    required_error: 'Başlangıç tarihi girmek zorunludur',
-  }),
-  endsAt: z.date({
-    required_error: 'Bitiş tarihi girmek zorunludur',
-  }),
-  tag: z.string({
-    required_error: 'Etiket seçmek zorunludur',
-  }),
-});
+export const TaskSchema = z
+  .object({
+    title: z
+      .string({
+        required_error: 'Başlık girmek zorunludur',
+      })
+      .min(2, { message: 'Başlık en az 2 karakter uzunluğunda olmalı' }),
+    startsAt: z.date({
+      required_error: 'Başlangıç tarihi girmek zorunludur',
+    }),
+    endsAt: z.date({
+      required_error: 'Bitiş tarihi girmek zorunludur',
+    }),
+    tag: z.string({
+      required_error: 'Etiket seçmek zorunludur',
+    }),
+  })
+  .refine((data) => data.endsAt >= data.startsAt, {
+    message: 'Bitiş tarihi başlangıç tarihinden önce olamaz',
+    path: ['endsAt'],
+  });
 
 export const TagSchema = z.object({
   label: z
@@ -64,6 +69,9 @@ export const GoalSchema = z.object({
   }),
   startsAt: z.date({
     required_error: 'Başlangıç tarihi girmek zorunludur',
+  }),
+  endsAt: z.date({
+    required_error: 'Bitiş tarihi girmek zorunludur',
   }),
 });
 

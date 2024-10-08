@@ -12,7 +12,7 @@ const handleApiResponse = (
   action: string
 ): boolean => {
   if (response.status >= 200 && response.status < 300) {
-    toast.success(`Pomodoro ${action}`, {
+    toast.success(`Odaklanma oturumu ${action}`, {
       description: 'İşlem başarıyla tamamlandı.',
     });
     mutate('/pomodoros');
