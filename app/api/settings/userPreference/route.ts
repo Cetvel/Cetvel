@@ -1,17 +1,18 @@
 import { NextResponse, NextRequest } from "next/server";
 import { ConvexHttpClient } from 'convex/browser';
 import { api } from "@/convex/_generated/api";
-import { getAuth, clerkClient } from "@clerk/nextjs/server";
 import User from '@/lib/models/user.model';
 import connectDB from '@/lib/config/connectDB';
-
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+const { getUser} = getKindeServerSession();
 const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 
 
 export async function PUT(req: NextRequest, res: NextResponse) {
     try {
-        const kindeId = getAuth(req).userId
+        const kindeUser = await getUser();
+        const kindeId = kindeUser?.id;
         if (!kindeId) return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 })
 
         const {
@@ -28,13 +29,6 @@ export async function PUT(req: NextRequest, res: NextResponse) {
             notifications
         }
 
-        await clerkClient().users.updateUser(kindeId, {
-            publicMetadata: {
-                field,
-                grade,
-                notifications,
-            },
-        });
 
         await connectDB()
         const user = await User.findOneAndUpdate(
