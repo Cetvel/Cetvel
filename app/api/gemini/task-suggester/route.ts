@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
 import Todo from '@/lib/models/todo.model';
 import Pomodoro from '@/lib/models/pomodoro.model';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import connectDB from '@/lib/config/connectDB';
-
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 if (!process.env.GEMINI_API_KEY) {
   throw new Error('Missing GEMINI_API_KEY environment variable');
 }
 
+const {getUser} = getKindeServerSession();
 interface TagCount {
   tag: string;
   count: number;
@@ -16,7 +16,8 @@ interface TagCount {
 
 export async function GET() {
   try {
-    const { userId } = auth();
+    const kindeUser  = await getUser();
+    const userId  = kindeUser.id;
     if (!userId) {
       return NextResponse.json({ error: 'Yetkilendirme Hatası' }, { status: 401 });
     }

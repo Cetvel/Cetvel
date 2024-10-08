@@ -25,8 +25,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
         }
         return NextResponse.json({ status: 200 });
     } catch (error) {
-      console.log(error);  
-return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
+        console.log(error);
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 
 }
@@ -50,9 +50,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
             return NextResponse.json({ error: "goal not found" }, { status: 404 });
         }
 
-        return NextResponse.json({status: 200});
+        return NextResponse.json({ status: 200 });
     } catch (error) {
-      console.log(error);  
-return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
+        console.log(error);
+        return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 }

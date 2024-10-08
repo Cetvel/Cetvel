@@ -33,12 +33,9 @@ export async function POST(request: NextRequest, { params }: { params: { type: s
         }
         const { type } = params;
 
-        if (!Object.values(BranchType).includes(type as BranchType)) return NextResponse.json({ error: "Invalid branch type" }, { status: 400 });
-
         const body = await request.json();
-
-
         await connectDB()
+
         const branchExam = new BranchExam({
             kindeId: userId,
             type,
@@ -47,7 +44,6 @@ export async function POST(request: NextRequest, { params }: { params: { type: s
 
         await branchExam.save();
         return NextResponse.json({ status: 200 });
-
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });

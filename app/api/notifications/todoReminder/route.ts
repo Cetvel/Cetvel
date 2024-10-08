@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
   if (!kindeId) {
     return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
   }
-/// akiyor burasi akiyoe aga
+  /// akiyor burasi akiyoe aga
   // Türkiye saatine göre (UTC+3) şu anki zamanı al
   const now = new Date();
   const turkeyOffset = 3 * 60 * 60 * 1000; // 3 saat
@@ -32,10 +32,10 @@ export async function GET(request: NextRequest) {
       startsAt: { $lte: endOfDay },
       endsAt: { $gte: startOfDay }
     });
-    
-    return NextResponse.json({ count },{ status: 200});
-    } catch (error) {
-  console.log(error);  
-return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
+
+    return NextResponse.json({ count }, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
   }
 }
