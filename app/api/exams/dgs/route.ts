@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-var { getUser } = getKindeServerSession();
 import DgsModel from "@/lib/models/exam-models/dgs.model";
 import connectDB from "@/lib/config/connectDB";
+const { getUser } = getKindeServerSession();
 
 export async function GET(request: NextRequest) {
   try {

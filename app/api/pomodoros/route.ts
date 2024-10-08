@@ -8,46 +8,48 @@ import connectDB from "@/lib/config/connectDB";
 
 
 export async function GET(request: NextRequest) {
-    if (!getAuth(request).userId) {
-      return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
+
+  try {
+
+
+
+    const kindeUser = await getUser();
+    const userId = kindeUser?.id;
+    if (!userId) {
+      return NextResponse.json({ error: 'Yetkilendirme Hatası' }, { status: 401 });
     }
-  
-    try {
-      await connectDB();
-      const pomodoros = await PomodoroModel.find({ kindeId: getAuth(request).userId });
-      return NextResponse.json(pomodoros, {
-        headers: {
-          "X-Cache-Status": "MISS",
-        },
-      });
-    } catch (error) {
-    console.log(error);  
-return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
-    }
+
+    await connectDB();
+    const pomodoros = await PomodoroModel.find({ kindeId: userId });
+    return NextResponse.json({pomodoros, status : 200});
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
   }
-  
+}
+
 
 export async function POST(request: NextRequest) {
-    try {
+  try {
 
-        const kindeUser = await getUser();
-        const userId = kindeUser?.id;
-        if (!userId) {
-            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
-        }
-
-        const body = await request.json();
-               
-        await connectDB();
-        const pomodoro = new PomodoroModel({
-            kindeId: getAuth(request).userId,
-            ...body
-        }) as PomodoroDocument
-        
-        await pomodoro.save();
-        return NextResponse.json({ status: 200 });
-    } catch (error) {
-      console.log(error);  
-return NextResponse.json({  message : "Beklenmedik Sunucu Hatası" }, { status: 500 });
+    const kindeUser = await getUser();
+    const userId = kindeUser?.id;
+    if (!userId) {
+      return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
     }
+
+    const body = await request.json();
+
+    await connectDB();
+    const pomodoro = new PomodoroModel({
+      kindeId: userId,
+      ...body
+    }) as PomodoroDocument
+
+    await pomodoro.save();
+    return NextResponse.json({ status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
+  }
 }

@@ -1,10 +1,11 @@
 // app/api/exam/dgs/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-var { getUser } = getKindeServerSession();
 import AlesModel from "@/lib/models/exam-models/ales.model";
 import connectDB from "@/lib/config/connectDB";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+const  { getUser } = getKindeServerSession();
+
 export async function GET(request: NextRequest) {
   try {
     const kindeUser = await getUser();

@@ -2,14 +2,16 @@ import Pomodoro from '@/lib/models/pomodoro.model';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/config/connectDB';
-import { getAuth } from '@clerk/nextjs/server';
-
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+const { getUser } = getKindeServerSession();
 export async function DELETE(req: NextRequest) {
     try {
-        const { userId } = getAuth(req);
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
+            return NextResponse.json({ error: 'Yetkilendirme Hatası' }, { status: 401 });
         }
+
         // developments commit
         await connectDB()
         const { ids } = await req.json();
@@ -27,7 +29,9 @@ export async function DELETE(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     try {
 
-        const { userId } = getAuth(req);
+        const kindeUser = await getUser();
+        const userId = kindeUser?.id;
+
         if (!userId) {
             return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
         }

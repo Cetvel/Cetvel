@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import ExamModel from "@/lib/models/exam.model"
 import connectDB from '@/lib/config/connectDB';
-var { getUser } = getKindeServerSession();
+const { getUser } = getKindeServerSession();
 
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {

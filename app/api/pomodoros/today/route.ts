@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
+
 import Pomodoro from '@/lib/models/pomodoro.model';
 import connectDB from '@/lib/config/connectDB';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+const {getUser }= getKindeServerSession()
 
 export async function GET(request: NextRequest) {
   try {
     const kindeUser = await getUser();
-        const userId = kindeUser?.id;
+    const userId = kindeUser?.id;
 
     if (!userId) {
       return NextResponse.json({ error: 'Yetkilendirme Hatası' }, { status: 401 });
@@ -21,7 +23,7 @@ export async function GET(request: NextRequest) {
     // Türkiye'de bugünün başlangıcı (00:00)
     const todayStartInTurkey = new Date(nowInTurkey);
     todayStartInTurkey.setUTCHours(0, 0, 0, 0);
-    
+
     // 7 gün öncesinin başlangıcı (Türkiye zamanı)
     const sevenDaysAgo = new Date(nowInTurkey);
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
@@ -133,12 +135,12 @@ export async function GET(request: NextRequest) {
       lastWeekStatistics: {
         totalDuration: weekStatistics.totalDuration,
         totalPomodoros: weekStatistics.count,
-        averageDuration: weekStatistics.count > 0 
-          ? Math.round(weekStatistics.totalDuration / weekStatistics.count) 
+        averageDuration: weekStatistics.count > 0
+          ? Math.round(weekStatistics.totalDuration / weekStatistics.count)
           : 0
       },
       chartData: chartData
-    },{status: 200});
+    }, { status: 200 });
 
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
