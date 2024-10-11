@@ -6,6 +6,7 @@ import ModalProvider from '@/providers/modal-provider';
 import { ConvexClientProvider } from '../providers/convex-client-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { EdgeStoreProvider } from '../lib/edgestore';
 
 const dm_sans = DM_Sans({ subsets: ['latin'] });
 
@@ -39,6 +40,7 @@ export default function RootLayout({
             }}
           ></iframe>
         </noscript>
+        <EdgeStoreProvider>
         <ConvexClientProvider>
           <ThemeProvider
             attribute='class'
@@ -50,6 +52,7 @@ export default function RootLayout({
             <Toaster />
           </ThemeProvider>
         </ConvexClientProvider>
+        </EdgeStoreProvider>
       </body>
     </html>
   );
