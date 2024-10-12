@@ -2,29 +2,35 @@ import { axiosInstance } from '@/lib/utils';
 import { toast } from 'sonner';
 import { mutate } from 'swr';
 
+interface Tag {
+  _id: string;
+  label: string;
+  value: string;
+}
+
 interface TagApiResponse {
-  data: any;
+  data: Tag;
   status: number;
 }
 
 const handleApiResponse = (
   response: TagApiResponse,
   action: string
-): boolean => {
+): Tag | null => {
   console.log(`API Response for ${action}:`, response);
 
   if (response.status >= 200 && response.status < 300) {
     mutate('/tags');
-    return true;
+    return response.data;
   } else {
     toast.error(`Etiket ${action} başarısız`, {
-      description: response.data?.error || 'Bir hata oluştu.',
+      description: 'Bir hata oluştu.',
     });
-    return false;
+    return null;
   }
 };
 
-const handleApiError = (error: any, action: string): boolean => {
+const handleApiError = (error: any, action: string): null => {
   console.error(`API Error for ${action}:`, error);
 
   toast.error(`Etiket ${action} başarısız`, {
@@ -32,12 +38,14 @@ const handleApiError = (error: any, action: string): boolean => {
       error.response?.data?.error ||
       `Etiket ${action} sırasında bir hata oluştu.`,
   });
-  return false;
+  return null;
 };
 
-export const createTag = async (values: any): Promise<boolean> => {
+export const createTag = async (
+  values: Omit<Tag, '_id'>
+): Promise<Tag | null> => {
   try {
-    const res = await axiosInstance.post('/tags', values);
+    const res = await axiosInstance.post<Tag>('/tags', values);
     return handleApiResponse(
       { data: res.data, status: res.status },
       'oluşturma'
@@ -49,10 +57,10 @@ export const createTag = async (values: any): Promise<boolean> => {
 
 export const updateTag = async (
   tagId: string,
-  values: any
-): Promise<boolean> => {
+  values: Partial<Omit<Tag, '_id'>>
+): Promise<Tag | null> => {
   try {
-    const res = await axiosInstance.put(`/tags/${tagId}`, values);
+    const res = await axiosInstance.put<Tag>(`/tags/${tagId}`, values);
     return handleApiResponse(
       { data: res.data, status: res.status },
       'güncelleme'
@@ -65,8 +73,13 @@ export const updateTag = async (
 export const deleteTag = async (tagId: string): Promise<boolean> => {
   try {
     const res = await axiosInstance.delete(`/tags/${tagId}`);
-    return handleApiResponse({ data: res.data, status: res.status }, 'silme');
+    const result = handleApiResponse(
+      { data: res.data, status: res.status },
+      'silme'
+    );
+    return result !== null;
   } catch (error: any) {
-    return handleApiError(error, 'silme');
+    handleApiError(error, 'silme');
+    return false;
   }
 };

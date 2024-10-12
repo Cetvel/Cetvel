@@ -7,9 +7,15 @@ import { z } from 'zod';
 import { Form } from '../ui/form';
 import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
 import SubmitButton from './ui/submit-button';
-import { createGoal, updateGoal } from '@/lib/services/goal-service';
+import {
+  createGoal,
+  deleteGoal,
+  updateGoal,
+} from '@/lib/services/goal-service';
 import { useModal } from '@/providers/modal-provider';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Button } from '../ui/button';
+import Spinner from '../ui/spinner';
 
 interface GoalFormProps {
   initialData?: Goal;
@@ -18,6 +24,7 @@ interface GoalFormProps {
 
 const GoalForm: React.FC<GoalFormProps> = ({ initialData, onSuccess }) => {
   const { setClose } = useModal();
+  const [deleting, setDeleting] = useState(false);
 
   const form = useForm<z.infer<typeof GoalSchema>>({
     resolver: zodResolver(GoalSchema),
@@ -59,6 +66,20 @@ const GoalForm: React.FC<GoalFormProps> = ({ initialData, onSuccess }) => {
     }
   }
 
+  async function onDelete(_id: string) {
+    setDeleting(true);
+
+    try {
+      await deleteGoal(_id);
+      setClose();
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
@@ -89,10 +110,23 @@ const GoalForm: React.FC<GoalFormProps> = ({ initialData, onSuccess }) => {
             label='Bitiş tarihi'
           />
         </div>
-        <SubmitButton
-          text={initialData ? 'Güncelle' : 'Ekle'}
-          loading={form.formState.isSubmitting}
-        />
+
+        <div className='flex justify-end items-center gap-4'>
+          <SubmitButton
+            text={initialData ? 'Güncelle' : 'Ekle'}
+            loading={form.formState.isSubmitting}
+          />
+          {initialData && (
+            <Button
+              variant='destructive'
+              onClick={() => onDelete(initialData._id)}
+              disabled={deleting}
+            >
+              {deleting && <Spinner />}
+              Sil
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );

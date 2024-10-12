@@ -72,11 +72,7 @@ const Navbar: React.FC = () => {
           <div className='hidden md:flex flex-grow justify-start pl-6'>
             <div className='flex items-center space-x-2'>
               {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className='text-secondary-foreground transition-colors hover:text-primary px-3 py-2 rounded-md text-sm font-medium'
-                >
+                <Link key={item.name} href={item.href} className='nav-link'>
                   {item.name}
                 </Link>
               ))}

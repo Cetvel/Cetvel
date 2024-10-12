@@ -6,6 +6,7 @@ import { updateGoal } from '@/lib/services/goal-service';
 import { useModal } from '@/providers/modal-provider';
 import GoalForm from '@/components/forms/goal-form';
 import Modal from '@/components/global/modal';
+import { cn } from '@/lib/utils';
 
 const Goal = ({ goal }: { goal: Goal }) => {
   const { _id, title, target, totalUnits, startsAt, endsAt } = goal;
@@ -47,14 +48,27 @@ const Goal = ({ goal }: { goal: Goal }) => {
   };
 
   return (
-    <div className='p-4 bg-card rounded-lg border group'>
+    <div
+      className={cn(
+        'p-4 bg-card rounded-lg border group',
+        currentProgress === Number(target) ? 'border-primary' : 'border-border'
+      )}
+    >
       <div className='flex items-center justify-between mb-2'>
         <h3 className='font-semibold'>{title}</h3>
         <div className='flex space-x-2 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity'>
-          <Button size='icon-sm' onClick={handleDecrement}>
+          <Button
+            size='icon-sm'
+            onClick={handleDecrement}
+            disabled={currentProgress === 0}
+          >
             <Minus className='h-4 w-4' />
           </Button>
-          <Button size='icon-sm' onClick={handleIncrement}>
+          <Button
+            disabled={currentProgress === Number(target)}
+            size='icon-sm'
+            onClick={handleIncrement}
+          >
             <Plus className='h-4 w-4' />
           </Button>
           <Button

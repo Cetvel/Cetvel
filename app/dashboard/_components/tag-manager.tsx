@@ -1,15 +1,14 @@
 'use client';
 
-import React, { useState, useCallback, useTransition } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
-  PlusIcon,
   Pencil,
   Trash2,
   Check,
   X,
-  Tag,
+  Tag as TagIcon,
   AlertCircle,
 } from 'lucide-react';
 import { createTag, updateTag, deleteTag } from '@/lib/services/tag-service';
@@ -33,22 +32,19 @@ const TagManager: React.FC = () => {
   const [newTagName, setNewTagName] = useState('');
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
 
-  const [optimisticTags, setOptimisticTags] = useOptimistic(
-    tags,
-    (state, newTags: Tag[]) => newTags
-  );
+  const [optimisticTags, setOptimisticTags] = useOptimistic<Tag[]>(tags ?? []);
 
   const handleCreateTag = useCallback(async () => {
     if (!newTagName.trim()) return;
 
     const tempId = `temp-${Date.now()}`;
-    const newTag = {
+    const newTag: Tag = {
       _id: tempId,
       label: newTagName,
       value: newTagName,
     };
 
-    setOptimisticTags((currentTags) => [...(currentTags || []), newTag]);
+    setOptimisticTags([...optimisticTags, newTag]);
     setNewTagName('');
 
     try {
@@ -59,19 +55,23 @@ const TagManager: React.FC = () => {
 
       if (createdTag) {
         setOptimisticTags((currentTags) =>
-          currentTags?.map((tag) =>
-            tag._id === tempId ? { ...tag, _id: createdTag._id } : tag
+          currentTags.map((tag) =>
+            tag._id === tempId ? { ...createdTag } : tag
           )
         );
         mutate();
+      } else {
+        setOptimisticTags((currentTags) =>
+          currentTags.filter((tag) => tag._id !== tempId)
+        );
       }
     } catch (error) {
       console.error('Error creating tag:', error);
       setOptimisticTags((currentTags) =>
-        currentTags?.filter((tag) => tag._id !== tempId)
+        currentTags.filter((tag) => tag._id !== tempId)
       );
     }
-  }, [newTagName, setOptimisticTags, mutate]);
+  }, [newTagName, optimisticTags, setOptimisticTags, mutate]);
 
   const handleKeyPress = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -93,8 +93,7 @@ const TagManager: React.FC = () => {
       };
 
       setOptimisticTags(
-        (currentTags) =>
-          currentTags?.map((t) => (t._id === tag._id ? updatedTag : t)) || []
+        optimisticTags.map((t) => (t._id === tag._id ? updatedTag : t))
       );
 
       try {
@@ -105,13 +104,12 @@ const TagManager: React.FC = () => {
       } catch (error) {
         console.error('Error updating tag:', error);
         setOptimisticTags(
-          (currentTags) =>
-            currentTags?.map((t) => (t._id === tag._id ? tag : t)) || []
+          optimisticTags.map((t) => (t._id === tag._id ? tag : t))
         );
       }
       setEditingTag(null);
     },
-    [editingTag, setOptimisticTags, mutate]
+    [editingTag, optimisticTags, setOptimisticTags, mutate]
   );
 
   const handleEditKeyPress = useCallback(
@@ -125,22 +123,20 @@ const TagManager: React.FC = () => {
 
   const handleDeleteTag = useCallback(
     async (tagId: string) => {
-      setOptimisticTags(
-        (currentTags) => currentTags?.filter((tag) => tag._id !== tagId) || []
-      );
+      setOptimisticTags(optimisticTags.filter((tag) => tag._id !== tagId));
 
       try {
         await deleteTag(tagId);
         mutate();
       } catch (error) {
         console.error('Error deleting tag:', error);
-        setOptimisticTags((currentTags) => [
-          ...(currentTags || []),
+        setOptimisticTags([
+          ...optimisticTags,
           ...(tags?.filter((tag) => tag._id === tagId) || []),
         ]);
       }
     },
-    [tags, setOptimisticTags, mutate]
+    [tags, optimisticTags, setOptimisticTags, mutate]
   );
 
   if (isLoading) return <Spinner />;
@@ -153,7 +149,7 @@ const TagManager: React.FC = () => {
     <Popover>
       <PopoverTrigger asChild>
         <Button variant='outline' size='icon-sm'>
-          <Tag className='h-4 w-4' />
+          <TagIcon className='h-4 w-4' />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-80'>
@@ -168,7 +164,7 @@ const TagManager: React.FC = () => {
             />
           </div>
           <div className='max-h-60 overflow-y-auto'>
-            {optimisticTags && optimisticTags.length > 0 ? (
+            {optimisticTags.length > 0 ? (
               optimisticTags.map((tag) => (
                 <div
                   key={tag._id}

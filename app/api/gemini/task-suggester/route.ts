@@ -8,7 +8,7 @@ if (!process.env.GEMINI_API_KEY) {
   throw new Error('Missing GEMINI_API_KEY environment variable');
 }
 
-const {getUser} = getKindeServerSession();
+const { getUser } = getKindeServerSession();
 interface TagCount {
   tag: string;
   count: number;
@@ -16,10 +16,13 @@ interface TagCount {
 
 export async function GET() {
   try {
-    const kindeUser  = await getUser();
-    const userId  = kindeUser.id;
+    const kindeUser = await getUser();
+    const userId = kindeUser.id;
     if (!userId) {
-      return NextResponse.json({ error: 'Yetkilendirme Hatası' }, { status: 401 });
+      return NextResponse.json(
+        { error: 'Yetkilendirme Hatası' },
+        { status: 401 }
+      );
     }
 
     await connectDB();
@@ -40,7 +43,9 @@ export async function GET() {
     console.log('Recent pomodoros fetched:', recentPomodoros.length);
 
     // Tag analizi
-    const tagAnalysis = [...recentTodos, ...recentPomodoros].reduce<Record<string, number>>((acc, item) => {
+    const tagAnalysis = [...recentTodos, ...recentPomodoros].reduce<
+      Record<string, number>
+    >((acc, item) => {
       acc[item.tag] = (acc[item.tag] || 0) + 1;
       return acc;
     }, {});
@@ -50,11 +55,11 @@ export async function GET() {
       .map(([tag, count]) => ({ tag, count }));
 
     const prompt = `
-      My task and pomodoro list for the last week:
+      My task and Focus session list for the last week:
 
       Tasks: ${JSON.stringify(recentTodos, null, 2)}
 
-      Pomodoros: ${JSON.stringify(recentPomodoros, null, 2)}
+      Focus Sessions: ${JSON.stringify(recentPomodoros, null, 2)}
 
       Tag Analysis: ${JSON.stringify(sortedTags, null, 2)}
 
@@ -62,7 +67,7 @@ export async function GET() {
 
       1. Prioritize topics that were studied the least (according to tag analysis).
       2. Consider incomplete tasks.
-      3. Analyze work intensity based on pomodoro durations.
+      3. Analyze work intensity based on focus session durations.
       4. Detail each suggestion, focusing on a specific topic or concept.
       5. Include a brief explanation of why you are recommending this topic for each suggestion.
 
@@ -104,7 +109,10 @@ export async function GET() {
     } catch (error) {
       console.error('Error parsing JSON response:', error);
       return NextResponse.json(
-        { error: 'Invalid JSON response from AI model', details: (error as Error).message },
+        {
+          error: 'Invalid JSON response from AI model',
+          details: (error as Error).message,
+        },
         { status: 500 }
       );
     }
