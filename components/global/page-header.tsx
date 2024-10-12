@@ -5,7 +5,6 @@ import { Button } from '../ui/button';
 import { useModal } from '@/providers/modal-provider';
 import { useTheme } from 'next-themes';
 import { Maximize, Menu, Minimize } from 'lucide-react';
-import NotificationsButton from './notifications';
 import Link from 'next/link';
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '../ui/sheet';
 import { menuLinks } from '@/constants';
@@ -60,7 +59,6 @@ const PageHeader = ({ title }: Props) => {
         <Button variant={'ghost'} size={'icon'} onClick={toggleFullscreen}>
           {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
         </Button>
-        <NotificationsButton />
         <div className='h-5 flex items-center justify-center px-4 pr-3 border-l-2'>
           <UserButton />
         </div>

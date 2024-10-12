@@ -3,9 +3,9 @@ import { DM_Sans } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/providers/theme-provider';
 import ModalProvider from '@/providers/modal-provider';
-import { ConvexClientProvider } from '../providers/convex-client-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { EdgeStoreProvider } from '../lib/edgestore';
 
 const dm_sans = DM_Sans({ subsets: ['latin'] });
 
@@ -39,7 +39,7 @@ export default function RootLayout({
             }}
           ></iframe>
         </noscript>
-        <ConvexClientProvider>
+        <EdgeStoreProvider>
           <ThemeProvider
             attribute='class'
             defaultTheme='system'
@@ -49,7 +49,7 @@ export default function RootLayout({
             <ModalProvider>{children}</ModalProvider>
             <Toaster />
           </ThemeProvider>
-        </ConvexClientProvider>
+        </EdgeStoreProvider>
       </body>
     </html>
   );
