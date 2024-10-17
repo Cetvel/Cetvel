@@ -1,5 +1,3 @@
-//! Here is used by Convex
-
 
 import connectDB from "@/lib/config/connectDB";
 import Todo from "@/lib/models/todo.model";
@@ -10,7 +8,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const kindeId = searchParams.get('kindeId');
   if (!kindeId) {
-    return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
+    return NextResponse.json({ message: "Yetkilendirme Hatası" }, { status: 401 });
   }
   /// akiyor burasi akiyoe aga
   // Türkiye saatine göre (UTC+3) şu anki zamanı al

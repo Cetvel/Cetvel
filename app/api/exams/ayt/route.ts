@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const kindeUser = await getUser();
     const userId = kindeUser?.id;
     if (!userId) {
-      return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
+      return NextResponse.json({ message: "Yetkilendirme Hatası" }, { status: 401 });
     }
 
     await connectDB()

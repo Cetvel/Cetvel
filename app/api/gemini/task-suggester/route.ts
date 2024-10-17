@@ -20,7 +20,7 @@ export async function GET() {
     const userId = kindeUser.id;
     if (!userId) {
       return NextResponse.json(
-        { error: 'Yetkilendirme Hatası' },
+        { message: 'Yetkilendirme Hatası' },
         { status: 401 }
       );
     }
