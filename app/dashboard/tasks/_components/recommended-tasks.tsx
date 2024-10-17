@@ -4,18 +4,13 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, RotateCcw } from 'lucide-react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import useSWR from 'swr';
 import { motion, AnimatePresence } from 'framer-motion';
 import RecommendedTask from './recommended-task';
 import { fetcher } from '@/lib/utils';
 import { CustomTooltip } from '@/components/global/custom-tooltip';
 import Spinner from '@/components/ui/spinner';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type Task = {
   title: string;
@@ -49,7 +44,7 @@ const RecommendedTasks: React.FC = () => {
   const isRefreshDisabled = refreshCount >= MAX_REFRESH_COUNT || isValidating;
 
   return (
-    <Card className='h-full'>
+    <Card className='h-[350px]'>
       <CardHeader className='flex items-center flex-row justify-between'>
         <h3 className='mt-1 flex'>
           <Sparkles className='w-6 h-6 mr-2 text-primary' />
@@ -72,7 +67,7 @@ const RecommendedTasks: React.FC = () => {
           </Button>
         </CustomTooltip>
       </CardHeader>
-      <CardContent className='flex flex-col gap-2'>
+      <CardContent>
         {error && (
           <motion.p
             initial={{ opacity: 0 }}
@@ -85,21 +80,24 @@ const RecommendedTasks: React.FC = () => {
         )}
 
         <AnimatePresence>
-          {isValidating ||
-            (isLoading && !tasks && <Spinner size={24} className='mx-auto' />)}
+          <ScrollArea className='h-full'>
+            {isValidating && !tasks && (
+              <Spinner size={24} className='mx-auto' />
+            )}
 
-          {tasks &&
-            tasks.map((task, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-              >
-                <RecommendedTask task={task} />
-              </motion.div>
-            ))}
+            {tasks &&
+              tasks.map((task, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
+                  <RecommendedTask task={task} />
+                </motion.div>
+              ))}
+          </ScrollArea>
         </AnimatePresence>
 
         {refreshCount >= MAX_REFRESH_COUNT && (

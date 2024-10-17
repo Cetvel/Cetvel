@@ -15,7 +15,7 @@ const page = async () => {
       <Faq />
       <Start />
       <Contact />
-      <footer className='py-4 text-center bg-dark-300'>
+      <footer className='py-4 text-center bg-secondary mt-10'>
         <span className='text-sm text-secondary-content'>
           2024 © Cetvel. All rights reserved.
         </span>
