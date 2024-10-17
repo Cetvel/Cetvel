@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,19 +20,43 @@ import {
 import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
 import Spinner from '@/components/ui/spinner';
-import { useOptimistic } from 'react';
+
+// Custom hook for optimistic updates
+const useOptimisticState = <T,>(initialState: T) => {
+  const [state, setState] = useState<T>(initialState);
+  const optimisticState = useRef<T>(initialState);
+
+  const updateOptimistically = useCallback(
+    (updateFn: (currentState: T) => T) => {
+      const newState = updateFn(optimisticState.current);
+      optimisticState.current = newState;
+      setState(newState);
+    },
+    []
+  );
+
+  const resetOptimisticState = useCallback((newState: T) => {
+    optimisticState.current = newState;
+    setState(newState);
+  }, []);
+
+  return [state, updateOptimistically, resetOptimisticState] as const;
+};
 
 const TagManager: React.FC = () => {
-  const {
-    data: tags,
-    isLoading,
-    error,
-    mutate,
-  } = useSWR<Tag[]>('/tags', fetcher);
+  const { data: tags, isLoading, error } = useSWR<Tag[]>('/tags', fetcher);
   const [newTagName, setNewTagName] = useState('');
   const [editingTag, setEditingTag] = useState<Tag | null>(null);
 
-  const [optimisticTags, setOptimisticTags] = useOptimistic<Tag[]>(tags ?? []);
+  const [optimisticTags, updateOptimisticTags, resetOptimisticTags] =
+    useOptimisticState<Tag[]>([]);
+
+  // Update optimisticTags when tags data changes
+  useEffect(() => {
+    if (tags) {
+      resetOptimisticTags(tags);
+    }
+  }, [tags, resetOptimisticTags]);
 
   const handleCreateTag = useCallback(async () => {
     if (!newTagName.trim()) return;
@@ -44,34 +68,21 @@ const TagManager: React.FC = () => {
       value: newTagName,
     };
 
-    setOptimisticTags([...optimisticTags, newTag]);
+    updateOptimisticTags((currentTags) => [...currentTags, newTag]);
     setNewTagName('');
 
     try {
-      const createdTag = await createTag({
+      await createTag({
         label: newTagName,
         value: newTagName,
       });
-
-      if (createdTag) {
-        setOptimisticTags((currentTags) =>
-          currentTags.map((tag) =>
-            tag._id === tempId ? { ...createdTag } : tag
-          )
-        );
-        mutate();
-      } else {
-        setOptimisticTags((currentTags) =>
-          currentTags.filter((tag) => tag._id !== tempId)
-        );
-      }
     } catch (error) {
       console.error('Error creating tag:', error);
-      setOptimisticTags((currentTags) =>
+      updateOptimisticTags((currentTags) =>
         currentTags.filter((tag) => tag._id !== tempId)
       );
     }
-  }, [newTagName, optimisticTags, setOptimisticTags, mutate]);
+  }, [newTagName, updateOptimisticTags]);
 
   const handleKeyPress = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -92,24 +103,21 @@ const TagManager: React.FC = () => {
         value: editingTag.label,
       };
 
-      setOptimisticTags(
-        optimisticTags.map((t) => (t._id === tag._id ? updatedTag : t))
+      updateOptimisticTags((currentTags) =>
+        currentTags.map((t) => (t._id === tag._id ? updatedTag : t))
       );
 
       try {
-        const success = await updateTag(tag._id, updatedTag);
-        if (success) {
-          mutate();
-        }
+        await updateTag(tag._id, updatedTag);
       } catch (error) {
         console.error('Error updating tag:', error);
-        setOptimisticTags(
-          optimisticTags.map((t) => (t._id === tag._id ? tag : t))
+        updateOptimisticTags((currentTags) =>
+          currentTags.map((t) => (t._id === tag._id ? tag : t))
         );
       }
       setEditingTag(null);
     },
-    [editingTag, optimisticTags, setOptimisticTags, mutate]
+    [editingTag, updateOptimisticTags]
   );
 
   const handleEditKeyPress = useCallback(
@@ -123,20 +131,20 @@ const TagManager: React.FC = () => {
 
   const handleDeleteTag = useCallback(
     async (tagId: string) => {
-      setOptimisticTags(optimisticTags.filter((tag) => tag._id !== tagId));
+      updateOptimisticTags((currentTags) =>
+        currentTags.filter((tag) => tag._id !== tagId)
+      );
 
       try {
         await deleteTag(tagId);
-        mutate();
       } catch (error) {
         console.error('Error deleting tag:', error);
-        setOptimisticTags([
-          ...optimisticTags,
-          ...(tags?.filter((tag) => tag._id === tagId) || []),
-        ]);
+        if (tags) {
+          resetOptimisticTags(tags);
+        }
       }
     },
-    [tags, optimisticTags, setOptimisticTags, mutate]
+    [updateOptimisticTags, resetOptimisticTags, tags]
   );
 
   if (isLoading) return <Spinner />;

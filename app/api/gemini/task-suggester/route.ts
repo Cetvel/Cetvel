@@ -55,29 +55,29 @@ export async function GET() {
       .map(([tag, count]) => ({ tag, count }));
 
     const prompt = `
-      My task and Focus session list for the last week:
+      Benim görevlerim, etiketlerim ve odaklanma oturumlarım şu şekilde:
 
-      Tasks: ${JSON.stringify(recentTodos, null, 2)}
+      Görevlerim: ${JSON.stringify(recentTodos, null, 2)}
 
-      Focus Sessions: ${JSON.stringify(recentPomodoros, null, 2)}
+      Odaklanma oturumlarım: ${JSON.stringify(recentPomodoros, null, 2)}
 
-      Tag Analysis: ${JSON.stringify(sortedTags, null, 2)}
+      Etiketlerim: ${JSON.stringify(sortedTags, null, 2)}
 
-      Based on this data, please suggest 3 tasks considering the following criteria:
+      Bu verilere dayanarak bana 10 tane görev önerisi yapabilir misiniz? Önerilerinizi yaparken şu kriterlere dikkat edin:
 
-      1. Prioritize topics that were studied the least (according to tag analysis).
-      2. Consider incomplete tasks.
-      3. Analyze work intensity based on focus session durations.
-      4. Detail each suggestion, focusing on a specific topic or concept.
-      5. Include a brief explanation of why you are recommending this topic for each suggestion.
+      - Görevlerin başlıkları fazla uzun olmasın
+      - Etiketleri tutarlı olsun
+      - Önceki görevleri ve odaklanma oturumlarını dikkate alın
+      - Bir eğitim koçu gibi düşünün ve önerilerinizi ona göre yapın
+      - Önerilerinizi JSON formatında aşağıdaki örnekteki gibi verin
 
-      Example suggestion format:
+      Örnek öneri formatı:
       {
-        "title": "Identify 5 different types of derivatives in the calculus topic. Solve 3 questions for each type and write the solution steps in detail. Then solve 25 derivative questions and time yourself.",
-        "tag": "Mathematics"
+        "title": "Örnek bir görev başlığı",
+        "tag": "GÖrev etiketi",
       }
 
-      Please respond clearly and specifically, in plain JSON format and in Turkish. Do not use Markdown code blocks, only provide pure JSON.
+      Lütfen sade ve anlaşılır bir dil kullanın. JSON formatında döndürün.
 
     `;
 

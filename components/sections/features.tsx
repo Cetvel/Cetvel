@@ -13,6 +13,8 @@ import {
   Bell,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { SectionWrapper } from '@/app/_components';
+import { slideIn } from '@/lib/motion';
 
 const features = [
   {
@@ -71,7 +73,7 @@ const FeatureCard = ({
   return (
     <motion.div
       className={`bg-gradient-to-br ${gradient} p-1 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 h-full`}
-      whileHover={{ scale: 1.05, rotate: 1 }}
+      whileHover={{ scale: 1.15, rotate: 1 }}
       whileTap={{ scale: 0.95 }}
     >
       <div className='bg-dark-100 p-6 rounded-xl h-full flex flex-col items-center text-center'>
@@ -89,40 +91,28 @@ const Features = () => {
   const { resolvedTheme } = useTheme();
 
   return (
-    <section
-      id='features'
-      className='py-20 md:pt-32 bg-dark-200 flex flex-col items-center px-6 md:px-32 mx-auto relative'
-    >
-      <div className='relative z-10 w-full max-w-6xl'>
-        <Image
-          src={`/image/app-${resolvedTheme === 'dark' ? 'dark' : 'light'}.png`}
-          alt='hero'
-          height={720}
-          width={1400}
-          className='mx-auto -mt-[300px] rounded-xl border shadow-2xl mb-20 hidden lg:block'
-          draggable={false}
-        />
+    <div className='relative w-full mt-20'>
+      <Image
+        src={`/image/app-${resolvedTheme === 'dark' ? 'dark' : 'light'}.png`}
+        alt='hero'
+        height={720}
+        width={1400}
+        className='mx-auto -mt-[300px] rounded-xl border shadow-2xl mb-20'
+        draggable={false}
+      />
 
-        <motion.div
-          className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, staggerChildren: 0.1 }}
-        >
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <FeatureCard {...feature} />
-            </motion.div>
-          ))}
-        </motion.div>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+        {features.map((feature, index) => (
+          <motion.div
+            key={index}
+            variants={slideIn('up', '', index * 0.1, 0.4)}
+          >
+            <FeatureCard {...feature} />
+          </motion.div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 };
 
-export default Features;
+export default SectionWrapper(Features, 'features');

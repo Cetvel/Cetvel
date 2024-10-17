@@ -1,5 +1,4 @@
 import PageHeader from '@/components/global/page-header';
-import Scheduler from './_components/scheduler';
 import React from 'react';
 import RecommendedTasks from './_components/recommended-tasks';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';

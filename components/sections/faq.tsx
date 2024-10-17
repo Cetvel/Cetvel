@@ -7,6 +7,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../ui/accordion';
+import { motion } from 'framer-motion';
+import { fadeIn, slideIn, textVariant } from '@/lib/motion';
+import { SectionWrapper } from '@/app/_components';
 
 const questions = [
   {
@@ -48,27 +51,32 @@ const questions = [
 
 const Faq = () => {
   return (
-    <section
-      id='faq'
-      className='py-24 px-6 md:px-4 flex flex-col gap-10 md:items-center'
-    >
-      <p className='font-bold text-primary md:text-center'>
+    <>
+      <motion.p
+        variants={textVariant(0)}
+        className='font-bold text-primary md:text-center'
+      >
         Merak ettikleriniz
-      </p>
-      <h1 className='text-3xl lg:text-5xl -mt-6 font-bold text-gradient mb-10 md:text-center leading-snug'>
+      </motion.p>
+      <motion.h1
+        variants={textVariant(0.2)}
+        className='text-3xl lg:text-5xl font-bold text-gradient mb-10 md:text-center leading-snug'
+      >
         Sıkça Sorulan Sorular
-      </h1>
+      </motion.h1>
 
-      <Accordion type='single' collapsible className='w-full max-w-6xl'>
-        {questions.map((q, i) => (
-          <AccordionItem key={i} value={i.toString()}>
-            <AccordionTrigger>{q.question}</AccordionTrigger>
-            <AccordionContent>{q.answer}</AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </section>
+      <motion.div variants={fadeIn('up', '', 0, 0.4)}>
+        <Accordion type='single' collapsible className='w-full'>
+          {questions.map((q, i) => (
+            <AccordionItem key={i} value={i.toString()}>
+              <AccordionTrigger>{q.question}</AccordionTrigger>
+              <AccordionContent>{q.answer}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </motion.div>
+    </>
   );
 };
 
-export default Faq;
+export default SectionWrapper(Faq, '');
