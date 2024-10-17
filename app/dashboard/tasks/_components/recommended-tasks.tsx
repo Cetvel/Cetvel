@@ -11,6 +11,7 @@ import { fetcher } from '@/lib/utils';
 import { CustomTooltip } from '@/components/global/custom-tooltip';
 import Spinner from '@/components/ui/spinner';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { fadeIn } from '@/lib/motion';
 
 type Task = {
   title: string;
@@ -44,7 +45,7 @@ const RecommendedTasks: React.FC = () => {
   const isRefreshDisabled = refreshCount >= MAX_REFRESH_COUNT || isValidating;
 
   return (
-    <Card className='h-[350px]'>
+    <Card>
       <CardHeader className='flex items-center flex-row justify-between'>
         <h3 className='mt-1 flex'>
           <Sparkles className='w-6 h-6 mr-2 text-primary' />
@@ -80,23 +81,22 @@ const RecommendedTasks: React.FC = () => {
         )}
 
         <AnimatePresence>
-          <ScrollArea className='h-full'>
+          <ScrollArea className='h-[250px] w-full gap-4'>
             {isValidating && !tasks && (
               <Spinner size={24} className='mx-auto' />
             )}
 
-            {tasks &&
-              tasks.map((task, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                >
-                  <RecommendedTask task={task} />
-                </motion.div>
-              ))}
+            <div className='flex flex-col gap-2'>
+              {tasks &&
+                tasks.map((task, index) => (
+                  <motion.div
+                    key={index}
+                    variants={fadeIn('down', '', index * 0.2, 0.3)}
+                  >
+                    <RecommendedTask task={task} />
+                  </motion.div>
+                ))}
+            </div>
           </ScrollArea>
         </AnimatePresence>
 

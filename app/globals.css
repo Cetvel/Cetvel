@@ -67,7 +67,7 @@
 }
 @layer utilities {
   .form-line {
-    @apply border px-3 py-2 rounded-xl flex items-center justify-between;
+    @apply border px-4 py-0.5 rounded-xl flex items-center justify-between;
   }
 
   .form-line label {

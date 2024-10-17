@@ -10,7 +10,7 @@ const Page = async () => {
       <PageHeader title='Görevler' />
       <div className='grid grid-cols-1 lg:grid-cols-6 gap-6 mb-6'>
         <div className='lg:col-span-4'>
-          <Card>
+          <Card className='lg:h-[360px]'>
             <CardHeader>
               <h2 className='text-lg font-semibold'>Görevler</h2>
             </CardHeader>
@@ -19,7 +19,7 @@ const Page = async () => {
             </CardContent>
           </Card>
         </div>
-        <div className='lg:col-span-2'>
+        <div className='lg:col-span-2 lg:h-[360px]'>
           <RecommendedTasks />
         </div>
       </div>

@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import {
   Card,
   CardHeader,
@@ -14,13 +13,9 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useModal } from '@/providers/modal-provider';
-import Modal from '../global/modal';
-import SubmitButton from './ui/submit-button';
 
 export default function UserSettingsForm() {
   const [emails, setEmails] = useState(['user@example.com']);
-  const { setOpen } = useModal();
 
   const addEmail = (newEmail: any) => {
     setEmails([...emails, newEmail]);
@@ -52,7 +47,13 @@ export default function UserSettingsForm() {
                   <AvatarImage src='/image/avatar.svg' alt='@shadcn' />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <Input type='file'>Profil Fotoğrafını Değiştir</Input>
+                <Label>
+                  Profil fotoğrafını değiştir
+                  <Input
+                    type='file'
+                    className='mt-2 border-dashed cursor-pointer'
+                  />
+                </Label>
               </div>
               <div className='grid w-full items-center gap-1.5'>
                 <Label htmlFor='name'>İsim</Label>
@@ -101,6 +102,7 @@ export default function UserSettingsForm() {
                   className='w-[300px]'
                   id='current-password'
                   type='password'
+                  placeholder='Mevcut şifrenizi girin'
                 />
               </div>
               <div className='grid w-full items-center gap-1.5'>
@@ -109,6 +111,7 @@ export default function UserSettingsForm() {
                   className='w-[300px]'
                   id='new-password'
                   type='password'
+                  placeholder='Yeni şifrenizi girin'
                 />
               </div>
               <div className='grid w-full items-center gap-1.5'>
@@ -117,6 +120,7 @@ export default function UserSettingsForm() {
                   className='w-[300px]'
                   id='confirm-password'
                   type='password'
+                  placeholder='Yeni şifrenizi onaylayın'
                 />
               </div>
               <Button>Şifreyi Değiştir</Button>
