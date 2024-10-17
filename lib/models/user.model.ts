@@ -22,6 +22,9 @@ interface IUser {
     field?: aytField;
     grade?: number;
     studyField?: string;
+    cover_picture?: string;
+    timer_picture?: string;
+    profile_picture?: string;
 }
 
 
@@ -73,6 +76,21 @@ const userSchema = new Schema<IUserDocument, UserModel>({
         trim: true,
         minlength: 4
     },
+    cover_picture: {
+        type: String,
+        required: false,
+        trim: true,
+    },
+    timer_picture: {
+        type: String,
+        required: false,
+        trim: true,
+    },
+    profile_picture: {
+        type: String,
+        required: false,
+        trim: true,
+    }
 }, {
     timestamps: true,
 });

@@ -4,7 +4,6 @@ interface ITodo {
 	userId: Types.ObjectId;
 	kindeId: string;
 	title: string;
-	description?: string;
 	tag: string;
 	status: 'incomplete' | 'in-progress' | 'completed';
 	updatedAt: Date;
