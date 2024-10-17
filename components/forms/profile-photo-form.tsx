@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone, FileRejection, DropzoneOptions } from 'react-dropzone';
-import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -53,41 +52,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, onError }) => {
   );
 };
 
-interface ImageCropperProps {
-  image: string;
-  onCropComplete: (crop: PixelCrop) => void;
-}
-
-const ImageCropper: React.FC<ImageCropperProps> = ({
-  image,
-  onCropComplete,
-}) => {
-  const [crop, setCrop] = useState<Crop>({
-    unit: '%',
-    width: 50,
-    height: 50,
-    x: 25,
-    y: 25,
-  });
-
-  return (
-    <ReactCrop
-      src={image}
-      crop={crop}
-      onChange={(_, percentCrop) => setCrop(percentCrop)}
-      onComplete={(c) => onCropComplete(c)}
-      aspect={1}
-    >
-      <NextImage
-        src={image}
-        alt='Kırpılacak fotoğraf'
-        width={400}
-        height={400}
-      />
-    </ReactCrop>
-  );
-};
-
 // Ana bileşen
 const ProfilePhotoUpload: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -105,49 +69,6 @@ const ProfilePhotoUpload: React.FC = () => {
 
   const handleError = (errorMessage: string) => {
     setError(errorMessage);
-  };
-
-  const handleCropComplete = (cropResult: PixelCrop) => {
-    if (!previewImage) return;
-
-    const image = new Image();
-    image.src = previewImage;
-
-    image.onload = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        setError('Canvas context is not supported.');
-        return;
-      }
-
-      const scaleX = image.naturalWidth / image.width;
-      const scaleY = image.naturalHeight / image.height;
-
-      canvas.width = cropResult.width;
-      canvas.height = cropResult.height;
-
-      ctx.drawImage(
-        image,
-        cropResult.x * scaleX,
-        cropResult.y * scaleY,
-        cropResult.width * scaleX,
-        cropResult.height * scaleY,
-        0,
-        0,
-        cropResult.width,
-        cropResult.height
-      );
-
-      canvas.toBlob((blob) => {
-        if (!blob) {
-          setError('Failed to create image blob.');
-          return;
-        }
-        const croppedImageUrl = URL.createObjectURL(blob);
-        setCroppedImageUrl(croppedImageUrl);
-      }, 'image/jpeg');
-    };
   };
 
   const handleUpload = () => {

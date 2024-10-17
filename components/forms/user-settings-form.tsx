@@ -58,7 +58,7 @@ export default function UserSettingsForm() {
                   onClick={() =>
                     setOpen(
                       <Modal title='Profil Fotoğrafını Değiştir'>
-                        <ProfilePhotoUpload />
+                        <p>ehu</p>
                       </Modal>
                     )
                   }
@@ -75,7 +75,7 @@ export default function UserSettingsForm() {
                   placeholder='İsminizi girin'
                 />
               </div>
-              <SubmitButton text='Kaydet' />
+              <Button type='submit'>Kaydet</Button>
             </form>
           </TabsContent>
           <TabsContent value='account'>
