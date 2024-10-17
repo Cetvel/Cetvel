@@ -9,7 +9,7 @@ export async function DELETE(req: NextRequest) {
         const kindeUser = await getUser()
         const userId = kindeUser.id
         if (!userId) {
-            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
+            return NextResponse.json({ message: "Yetkilendirme Hatası" }, { status: 401 });
         }
 
         const { ids } = await req.json();
@@ -29,7 +29,7 @@ export async function PUT(req: NextRequest) {
     const kindeUser = await getUser()
     const userId = kindeUser.id
     if (!userId) {
-        return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
+        return NextResponse.json({ message: "Yetkilendirme Hatası" }, { status: 401 });
     }
     try {
         const { ids, updateData } = await req.json();

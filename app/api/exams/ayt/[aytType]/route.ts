@@ -9,7 +9,7 @@ export async function GET(request: NextRequest, { params }: { params: { aytType:
         const kindeUser = await getUser();
         const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
+            return NextResponse.json({ message: "Yetkilendirme Hatası" }, { status: 401 });
         }
 
         const { aytType } = params;
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest, { params }: { params: { aytType
         const kindeUser = await getUser();
         const userId = kindeUser?.id;
         if (!userId) {
-            return NextResponse.json({ error: "Yetkilendirme Hatası" }, { status: 401 });
+            return NextResponse.json({ message: "Yetkilendirme Hatası" }, { status: 401 });
         }
 
         const { aytType } = params;

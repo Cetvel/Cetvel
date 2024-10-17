@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const userId = kindeUser?.id;
 
     if (!userId) {
-      return NextResponse.json({ error: 'Yetkilendirme Hatası' }, { status: 401 });
+      return NextResponse.json({ message: 'Yetkilendirme Hatası' }, { status: 401 });
     }
 
     // Türkiye saat dilimi için offset (UTC+3)
