@@ -16,7 +16,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useModal } from '@/providers/modal-provider';
 import Modal from '../global/modal';
-import ProfilePhotoUpload from './profile-photo-form';
 import SubmitButton from './ui/submit-button';
 
 export default function UserSettingsForm() {
@@ -53,19 +52,7 @@ export default function UserSettingsForm() {
                   <AvatarImage src='/image/avatar.svg' alt='@shadcn' />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
-                <Button
-                  type='button'
-                  onClick={() =>
-                    setOpen(
-                      <Modal title='Profil Fotoğrafını Değiştir'>
-                        <p>ehu</p>
-                      </Modal>
-                    )
-                  }
-                  variant='secondary'
-                >
-                  Profil Fotoğrafını Değiştir
-                </Button>
+                <Input type='file'>Profil Fotoğrafını Değiştir</Input>
               </div>
               <div className='grid w-full items-center gap-1.5'>
                 <Label htmlFor='name'>İsim</Label>

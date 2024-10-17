@@ -74,7 +74,6 @@
     "react-big-calendar": "^1.13.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
-    "react-dropzone": "^14.2.9",
     "react-hook-form": "^7.52.1",
     "recharts": "^2.12.7",
     "socket.io": "^4.7.5",
