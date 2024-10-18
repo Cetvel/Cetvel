@@ -14,10 +14,6 @@ const navigationItems: { title: string; href: string }[] = [
     href: '/dashboard/settings',
   },
   {
-    title: 'Bildirimler',
-    href: '/dashboard/settings/notifications',
-  },
-  {
     title: 'Tercihler',
     href: '/dashboard/settings/preferences',
   },
@@ -33,31 +29,15 @@ export default async function RootLayout({
       <PageHeader title='Ayarlar' />
       <NavigationMenu className='mb-6'>
         <NavigationMenuList>
-          <NavigationMenuItem>
-            <Link href='/dashboard/settings' legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Hesap
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link
-              href='/dashboard/settings/preferences'
-              legacyBehavior
-              passHref
-            >
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Tercihler
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href='/dashboard/settings/payment' legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Abonelik
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
+          {navigationItems.map((item, index) => (
+            <NavigationMenuItem key={index}>
+              <Link href={item.href} passHref legacyBehavior>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  {item.title}
+                </NavigationMenuLink>
+              </Link>
+            </NavigationMenuItem>
+          ))}
         </NavigationMenuList>
       </NavigationMenu>
       {children}

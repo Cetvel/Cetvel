@@ -160,3 +160,19 @@ export const YDSBranchExams = [
   'yds-islam',
   'yds-philosophy',
 ];
+
+const steps = [
+  {
+    tour: 'dashboard',
+    steps: [
+      {
+        target: '.sidebar',
+        content: 'Bu kısım menüdür',
+      },
+      {
+        target: '.content',
+        content: 'Bu kısım içerik alanıdır',
+      },
+    ],
+  },
+];

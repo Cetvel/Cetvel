@@ -16,13 +16,15 @@ import {
   StudyField,
 } from '@/app/dashboard/calculation/utils/exam-filter';
 import { deleteManyExams } from '@/lib/services/exam-service';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 const ExamsTable = () => {
+  const { getUser } = useKindeBrowserClient();
+  const user = getUser();
   const { data, isLoading, error } = useSWR('/exams', fetcher);
-  const { user } = useUser();
 
   const studyField: StudyField = useMemo(() => {
-    const userStudyField = user?.publicMetadata?.studyField as string;
+    const userStudyField = user?.studyField as string;
     return userStudyField
       ? (StudyField as any)[userStudyField]
       : StudyField.YKS;

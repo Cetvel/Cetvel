@@ -25,9 +25,6 @@ import { axiosInstance } from '@/lib/utils';
 import { toast } from 'sonner';
 
 const PreferencesForm = () => {
-  const [coverImage, setCoverImage] = useState('');
-  const [timerImage, setTimerImage] = useState('');
-
   const form = useForm<z.infer<typeof PreferencesSchema>>({
     resolver: zodResolver(PreferencesSchema),
     defaultValues: {
@@ -38,22 +35,10 @@ const PreferencesForm = () => {
       notifications: true,
       taskReminders: false,
       reminderFrequencyHours: 1,
-      coverImage: '',
-      timerImage,
     },
   });
 
   const watchEducationLevel = form.watch('educationLevel');
-
-  const handleCoverImageUpload = (imageUrl: string) => {
-    setCoverImage(imageUrl);
-    form.setValue('coverImage', imageUrl);
-  };
-
-  const handleTimerImageUpload = (imageUrl: string) => {
-    setTimerImage(imageUrl);
-    form.setValue('timerImage', imageUrl);
-  };
 
   const onSubmit = async (values: z.infer<typeof PreferencesSchema>) => {
     try {
@@ -143,7 +128,7 @@ const PreferencesForm = () => {
           </CardContent>
         </Card>
 
-        <Card className='w-full mb-6'>
+        {/* <Card className='w-full mb-6'>
           <CardHeader>
             <CardTitle>Bildirimler</CardTitle>
             <CardDescription>
@@ -182,7 +167,7 @@ const PreferencesForm = () => {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Card className='w-full'>
           <CardHeader>
@@ -193,8 +178,14 @@ const PreferencesForm = () => {
           </CardHeader>
           <CardContent className='space-y-6'>
             <div className='grid grid-cols-2 gap-4'>
-              <ImageUploader label='Kapak arkaplanı' />
-              <ImageUploader label='Zamanlayıcı arkaplanı' />
+              <ImageUploader
+                label='Karşılayıcı arkaplanı'
+                apiEndpoint='picture/cover/url'
+              />
+              <ImageUploader
+                label='Zamanlayıcı arkaplanı'
+                apiEndpoint='picture/timer/url'
+              />
             </div>
           </CardContent>
         </Card>

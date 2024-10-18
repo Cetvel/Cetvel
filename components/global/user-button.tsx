@@ -16,7 +16,8 @@ import {
 import { LogOut } from 'lucide-react';
 
 const UserButton = () => {
-  const { user } = useKindeBrowserClient();
+  const { getUser } = useKindeBrowserClient();
+  const user = getUser();
 
   return (
     <DropdownMenu>
@@ -25,10 +26,10 @@ const UserButton = () => {
           <Avatar className='h-8 w-8'>
             <AvatarImage
               src={user?.picture || '/avatar.svg'}
-              alt={user?.given_name || 'Avatar'}
+              alt={user?.username || user?.given_name || 'Avatar'}
             />
             <AvatarFallback>
-              {user?.given_name?.[0] || 'Kullanıcı'}
+              {user?.username || user?.given_name || 'Kullanıcı'}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -37,7 +38,7 @@ const UserButton = () => {
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
             <p className='text-sm font-medium leading-none'>
-              {user?.given_name} {user?.family_name}
+              {user?.username || user?.given_name}
             </p>
             <p className='text-xs leading-none text-muted-foreground'>
               {user?.email}
