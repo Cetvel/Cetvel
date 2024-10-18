@@ -13,7 +13,10 @@ const Sidebar = () => {
   const path = splitPath.slice(0, 3).join('/');
 
   return (
-    <aside className='bg-card border-r fixed w-64 p-6 hidden h-[500rem] xl:flex flex-col gap-6'>
+    <aside
+      id='sidebar'
+      className='bg-card border-r fixed w-64 p-6 hidden h-[500rem] xl:flex flex-col gap-6'
+    >
       <div className='flex gap-3 items-center'>
         <Logo size={30} />
         <h2 className='text-2xl font-semibold text-accent-content select-none'>

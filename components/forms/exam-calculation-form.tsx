@@ -21,7 +21,6 @@ import {
   TableRow,
 } from '../ui/table';
 import { useModal } from '@/providers/modal-provider';
-import { useUser } from '@clerk/nextjs';
 import {
   getAvailableExams,
   StudyField,
@@ -412,7 +411,6 @@ const ModularExamForm: React.FC = () => {
   const [selectedField, setSelectedField] = useState<string | null>(null);
 
   const { setOpen } = useModal();
-  const { user } = useUser();
 
   const studyField: StudyField = useMemo(() => {
     const userStudyField = user?.publicMetadata?.studyField as string;

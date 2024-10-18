@@ -13,9 +13,13 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 export default function UserSettingsForm() {
-  const [emails, setEmails] = useState(['user@example.com']);
+  const { getUser } = useKindeBrowserClient();
+
+  const user = getUser();
+  const [emails, setEmails] = useState([user?.email]);
 
   const addEmail = (newEmail: any) => {
     setEmails([...emails, newEmail]);
@@ -35,7 +39,7 @@ export default function UserSettingsForm() {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue='profile'>
-          <TabsList className='grid w-full grid-cols-3'>
+          <TabsList className='grid w-full grid-cols-3 mb-8'>
             <TabsTrigger value='profile'>Profil</TabsTrigger>
             <TabsTrigger value='account'>Hesap</TabsTrigger>
             <TabsTrigger value='security'>Güvenlik</TabsTrigger>
@@ -44,8 +48,13 @@ export default function UserSettingsForm() {
             <form className='space-y-4 mt-8'>
               <div className='flex items-center space-x-4'>
                 <Avatar className='h-24 w-24'>
-                  <AvatarImage src='/image/avatar.svg' alt='@shadcn' />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarImage
+                    src={user?.picture || '/image/avatar.svg'}
+                    alt='Profil fotoğrafı'
+                  />
+                  <AvatarFallback>
+                    {user?.given_name?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
                 <Label>
                   Profil fotoğrafını değiştir
@@ -61,6 +70,7 @@ export default function UserSettingsForm() {
                   className='w-[300px]'
                   id='name'
                   placeholder='İsminizi girin'
+                  value={user?.given_name || ''}
                 />
               </div>
               <Button type='submit'>Kaydet</Button>
@@ -91,7 +101,6 @@ export default function UserSettingsForm() {
                   </Button>
                 </div>
               </div>
-              <Button>Hesap Ayarlarını Kaydet</Button>
             </form>
           </TabsContent>
           <TabsContent value='security'>

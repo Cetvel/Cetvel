@@ -15,16 +15,16 @@ export default async function RootLayout({
 }>) {
   const { isAuthenticated } = getKindeServerSession();
 
-  if (!isAuthenticated) {
-    redirect('/api/auth/login');
-  }
+  console.log('İsAuth?', await isAuthenticated());
 
-  return (
+  return (await isAuthenticated()) ? (
     <main className='min-h-screen'>
       <Sidebar />
       <div className='xl:ml-64 p-2 xl:p-6 z-[30] backdrop-blur-2xl min-h-screen bg-base-100/40'>
         {children}
       </div>
     </main>
+  ) : (
+    redirect('/api/auth/login')
   );
 }
