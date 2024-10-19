@@ -11,6 +11,7 @@ import { menuLinks } from '@/constants';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import UserButton from './user-button';
+import { ThemeController } from '../ui/theme-controller';
 
 type Props = {
   title: string;
@@ -55,11 +56,15 @@ const PageHeader = ({ title }: Props) => {
   return (
     <aside className='flex px-2 lg:px-0 w-full items-center justify-between z-50 mb-6'>
       <h1 className='text-2xl lg:text-3xl font-bold'>{title}</h1>
-      <div className='items-center border rounded-xl flex p-1 shadow-sm'>
+      <div
+        id='header-user-actions'
+        className='items-center border rounded-xl flex p-1 shadow-sm'
+      >
         <Button variant={'ghost'} size={'icon'} onClick={toggleFullscreen}>
           {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
         </Button>
-        <div className='h-5 flex items-center justify-center px-4 pr-3 border-l-2'>
+        <ThemeController />
+        <div className='h-5 flex items-center justify-center px-4 pr-3 border-l-2 ml-2'>
           <UserButton />
         </div>
         <aside className='xl:hidden'>
