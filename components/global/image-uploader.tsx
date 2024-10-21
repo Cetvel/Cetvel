@@ -19,6 +19,7 @@ export default function ImageUploader({
 }: ImageUploaderProps) {
   const [file, setFile] = React.useState<File>();
   const [progress, setProgress] = React.useState<number>(0);
+
   const { edgestore } = useEdgeStore();
 
   return (
@@ -34,6 +35,7 @@ export default function ImageUploader({
         />
         <Button
           type='button'
+          size={'sm'}
           disabled={!file}
           onClick={async () => {
             if (file) {

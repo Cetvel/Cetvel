@@ -1,7 +1,5 @@
 import {
   BarChart,
-  Book,
-  Calendar,
   LayoutGrid,
   Logs,
   Rocket,
@@ -159,20 +157,4 @@ export const YDSBranchExams = [
   'yds-fisheries',
   'yds-islam',
   'yds-philosophy',
-];
-
-const steps = [
-  {
-    tour: 'dashboard',
-    steps: [
-      {
-        target: '.sidebar',
-        content: 'Bu kısım menüdür',
-      },
-      {
-        target: '.content',
-        content: 'Bu kısım içerik alanıdır',
-      },
-    ],
-  },
 ];
