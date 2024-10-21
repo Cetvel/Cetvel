@@ -7,6 +7,7 @@ import Todo from "@/lib/models/todo.model";
 import Exam from "@/lib/models/exam.model";
 import Goal from "@/lib/models/goal.model";
 import Tag from "@/lib/models/tag.model";
+import connectDB from "@/lib/config/connectDB";
 
 // The Kinde issuer URL should already be in your `.env` file
 // from when you initially set up Kinde. This will fetch your
@@ -31,29 +32,33 @@ export async function POST(req: Request) {
     // Verify the token
     const key = await client.getSigningKey(kid);
     const signingKey = key.getPublicKey();
-    const event =  jwt.verify(token, signingKey) as jwt.JwtPayload;
+    const event = jwt.verify(token, signingKey) as jwt.JwtPayload;
 
     // Handle various events
     switch (event?.type) {
       case "user.updated":
 
         const { user: updatedUser } = event.data;
-        await User.findOneAndUpdate({ kindeId: updatedUser.id }, { ...updatedUser }).then(() => console.log('User updated'));
-
+        await connectDB();
+        await User.findOneAndUpdate(
+          { kindeId: updatedUser.id },
+          { name: updatedUser.first_name, ...updatedUser })
         break;
       case "user.created":
-        const {user} = event.data 
-        const mongoUser = new User(
+        const { user } = event.data
+        await connectDB();
+        await User.create(
           {
             email: user.email,
             name: user.first_name,
             kindeId: user.id,
+            password: user.password
           }
-        );
-        mongoUser.save().then(() => console.log('User created'))          
+        ).then(() => console.log('User created'));
         break;
       case "user.deleted":
         const { user: deletedUser } = event.data;
+        await connectDB();
         await User.findOneAndDelete({ kindeId: deletedUser.id }).then(() => console.log('User deleted'));
         await Pomodoro.deleteMany({ kindeId: deletedUser.id }).then(() => console.log('Pomodoros deleted'));
         await Todo.deleteMany({ kindeId: deletedUser.id }).then(() => console.log('Todos deleted'));
