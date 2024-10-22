@@ -15,13 +15,12 @@ enum aytField {
     DIL
 }
 interface IUser {
-    kindeId: string;
-    name: string;
-    email: [string];
-    password?: string;
-    field?: aytField;
-    grade?: number;
-    studyField?: string;
+    kindeId: string; // Kinde ID
+    name: string;   // Username
+    password?: string;  // Password
+    field?: aytField;   // Ayt Field if user is a high school student
+    grade?: number; // Grade
+    studyField?: string; // Study Field highschool, university etc.
     cover_picture?: string;
     timer_picture?: string;
     profile_picture?: string;
@@ -63,12 +62,6 @@ const userSchema = new Schema<IUserDocument, UserModel>({
         required: false,
         enum: Object.values(aytField),
         trim: false,
-    },
-    email: {
-        type: [String],
-        required: true,
-        trim: true,
-        lowercase: true
     },
     password: {
         type: String,
