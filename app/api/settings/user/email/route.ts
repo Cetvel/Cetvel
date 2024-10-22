@@ -6,7 +6,7 @@ import UserMongo from '@/lib/models/user.model';
 
 init();
 
-export async function PUT(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
     const user = await getKindeServerSession().getUser();
     if (!user) {
@@ -32,7 +32,7 @@ export async function PUT(req: NextRequest) {
     console.log('error request', error.request);
     if (error.request.errors['429'] == 'Request was throttled.') {
       return NextResponse.json(
-        { message: 'Bu e-posta adresi zaten kullanılıyor.' },
+        { message: 'Bu mail önceden eklenmiş.' },
         { status: 429 }
       );
     }

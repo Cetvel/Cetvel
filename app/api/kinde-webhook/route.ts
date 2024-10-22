@@ -8,6 +8,7 @@ import Exam from "@/lib/models/exam.model";
 import Goal from "@/lib/models/goal.model";
 import Tag from "@/lib/models/tag.model";
 import connectDB from "@/lib/config/connectDB";
+import Email from "@/lib/models/email.model";
 
 // The Kinde issuer URL should already be in your `.env` file
 // from when you initially set up Kinde. This will fetch your
@@ -39,32 +40,51 @@ export async function POST(req: Request) {
       case "user.updated":
 
         const { user: updatedUser } = event.data;
+        console.log(updatedUser);
         await connectDB();
         await User.findOneAndUpdate(
           { kindeId: updatedUser.id },
-          { name: updatedUser.first_name, ...updatedUser })
+          {
+            name: updatedUser.username ?? updatedUser.first_name
+          })
         break;
       case "user.created":
         const { user } = event.data
         await connectDB();
+        console.log(user);
         await User.create(
           {
-            email: user.email,
-            name: user.first_name,
+            name: user.username ?? user.first_name,
             kindeId: user.id,
             password: user.password
           }
-        ).then(() => console.log('User created'));
+        ).then(() => console.log(`${user.username ?? user.first_name} User created`));
+
+        await Email.create({
+          kindeId: user.id,
+          value: user.email,
+          isPrimary: true
+        }).then(() => console.log(`${user.username ?? user.first_name} Email created`));
+
+        await Tag.insertMany([
+          { kindeId: user.id, label: 'Matematik', value: 'Matematik' },
+          { kindeId: user.id, label: 'Türkçe', value: 'Türkçe' },
+          { kindeId: user.id, label: 'Kitap', value: 'Kitap' }
+        ]).then(() => console.log(`${user.username ?? user.first_name}Default Tags created`));
+
+
         break;
       case "user.deleted":
         const { user: deletedUser } = event.data;
+        console.log(deletedUser);
         await connectDB();
-        await User.findOneAndDelete({ kindeId: deletedUser.id }).then(() => console.log('User deleted'));
-        await Pomodoro.deleteMany({ kindeId: deletedUser.id }).then(() => console.log('Pomodoros deleted'));
-        await Todo.deleteMany({ kindeId: deletedUser.id }).then(() => console.log('Todos deleted'));
-        await Exam.deleteMany({ kindeId: deletedUser.id }).then(() => console.log('Exams deleted'));
-        await Goal.deleteMany({ kindeId: deletedUser.id }).then(() => console.log('Goals deleted'));
-        await Tag.deleteMany({ kindeId: deletedUser.id }).then(() => console.log('Tags deleted'));
+        await User.findOneAndDelete({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'User deleted'));
+        await Pomodoro.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Pomodoros deleted'));
+        await Email.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Emails deleted'));
+        await Todo.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Todos deleted'));
+        await Exam.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Exams deleted'));
+        await Goal.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Goals deleted'));
+        await Tag.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Tags deleted'));
 
         break;
       default:
