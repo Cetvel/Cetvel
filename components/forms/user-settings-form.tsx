@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -17,14 +17,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { axiosInstance } from '@/lib/utils';
+import { toast } from 'sonner';
+import Spinner from '../ui/spinner';
+import ImageUploader from '../global/image-uploader';
 
 const profileSchema = z.object({
-  name: z.string().min(2, 'İsim en az 2 karakter olmalıdır'),
+  username: z.string().min(2, 'Kullanıcı adı en az 2 karakter olmalıdır'),
   picture: z.string().optional(),
 });
 
 const emailSchema = z.object({
-  email: z.string().email('Geçerli bir e-posta adresi giriniz'),
+  email: z
+    .string()
+    .min(1, 'Email adresi gereklidir')
+    .email('Geçerli bir e-posta adresi giriniz'),
 });
 
 const passwordSchema = z
@@ -45,12 +52,11 @@ type PasswordFormData = z.infer<typeof passwordSchema>;
 export default function UserSettingsForm() {
   const { getUser } = useKindeBrowserClient();
   const user = getUser();
-  const [emails, setEmails] = useState(user?.email ? [user.email] : []);
 
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: user?.given_name || '',
+      username: user?.username || '',
       picture: user?.picture || '',
     },
   });
@@ -62,34 +68,42 @@ export default function UserSettingsForm() {
     },
   });
 
-  const passwordForm = useForm<PasswordFormData>({
+  /* const passwordForm = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema),
-  });
+  }); */
 
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
-      console.log('Profil güncelleniyor:', data);
+      await axiosInstance.put('/settings/user', data);
     } catch (error) {
       console.error('Profil güncellenirken hata:', error);
     }
   };
 
-  const onAddEmail = async (data: EmailFormData) => {
+  const onEmailSubmit = async (data: EmailFormData) => {
     try {
-      setEmails([...emails, data.email]);
-      emailForm.reset();
-    } catch (error) {
-      console.error('E-posta eklenirken hata:', error);
+      await axiosInstance.put('/settings/user/email', data);
+      console.log('Email güncellendi:', data);
+      toast.success('İşlem başarıyla gerçekleşti', {
+        description: 'E-posta adresiniz başarıyla güncellendi',
+      });
+    } catch (error: any) {
+      toast.error('İşlem sırasında bir hata oluştu', {
+        description:
+          error.response?.data?.message ||
+          'E-posta güncellenirken bir hata oluştu',
+      });
+      console.error('Email güncellenirken hata:', error);
     }
   };
 
-  const onPasswordSubmit = async (data: PasswordFormData) => {
+  /* const onPasswordSubmit = async (data: PasswordFormData) => {
     try {
       console.log('Şifre güncelleniyor');
     } catch (error) {
       console.error('Şifre güncellenirken hata:', error);
     }
-  };
+  }; */
 
   return (
     <Card>
@@ -101,10 +115,10 @@ export default function UserSettingsForm() {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue='profile'>
-          <TabsList className='grid w-full grid-cols-3 mb-8'>
+          <TabsList className='grid w-full grid-cols-2 mb-8'>
             <TabsTrigger value='profile'>Profil</TabsTrigger>
             <TabsTrigger value='account'>Hesap</TabsTrigger>
-            <TabsTrigger value='security'>Güvenlik</TabsTrigger>
+            {/* <TabsTrigger value='security'>Güvenlik</TabsTrigger> */}
           </TabsList>
 
           <TabsContent value='profile'>
@@ -123,25 +137,23 @@ export default function UserSettingsForm() {
                   </AvatarFallback>
                 </Avatar>
                 <Label>
-                  Profil fotoğrafını değiştir
-                  <Input
-                    type='file'
-                    className='mt-2 border-dashed cursor-pointer'
-                    {...profileForm.register('picture')}
+                  <ImageUploader
+                    label='Profil fotoğrafını değiştir'
+                    apiEndpoint='/api/'
                   />
                 </Label>
               </div>
               <div className='grid w-full items-center gap-1.5'>
-                <Label htmlFor='name'>İsim</Label>
+                <Label htmlFor='username'>Kullanıcı adı</Label>
                 <Input
                   className='w-[300px]'
-                  id='name'
-                  placeholder='İsminizi girin'
-                  {...profileForm.register('name')}
+                  id='username'
+                  placeholder='Kullanıcı adınızı girin'
+                  {...profileForm.register('username')}
                 />
-                {profileForm.formState.errors.name && (
+                {profileForm.formState.errors.username && (
                   <p className='text-red-500 text-sm'>
-                    {profileForm.formState.errors.name.message}
+                    {profileForm.formState.errors.username.message}
                   </p>
                 )}
               </div>
@@ -149,43 +161,29 @@ export default function UserSettingsForm() {
                 type='submit'
                 disabled={profileForm.formState.isSubmitting}
               >
-                {profileForm.formState.isSubmitting
-                  ? 'Kaydediliyor...'
-                  : 'Kaydet'}
+                {profileForm.formState.isSubmitting && <Spinner />}
+                Güncelle
               </Button>
             </form>
           </TabsContent>
 
           <TabsContent value='account'>
             <form
-              onSubmit={emailForm.handleSubmit(onAddEmail)}
+              onSubmit={emailForm.handleSubmit(onEmailSubmit)}
               className='space-y-4'
             >
               <div>
-                <h3 className='text-lg font-medium'>E-posta Adresleri</h3>
-                {emails.map((email, index) => (
-                  <div key={index} className='flex items-center space-x-2 mt-2'>
-                    <Input
-                      className='w-[300px]'
-                      type='email'
-                      value={email}
-                      readOnly
-                    />
-                    <Button
-                      type='button'
-                      variant='destructive'
-                      onClick={() =>
-                        setEmails(emails.filter((e) => e !== email))
-                      }
-                    >
-                      Sil
-                    </Button>
-                  </div>
-                ))}
-                <div className='flex items-center space-x-2 mt-2'>
+                <h3 className='text-lg font-medium'>E-posta Adresi</h3>
+                <p className='text-muted-foreground text-sm mb-6'>
+                  {user?.email} adresiyle giriş yapıyorsunuz. E-posta adresinizi
+                  güncellemek için aşağıdaki alana yeni e-posta adresinizi
+                  girin.
+                </p>
+                <div className='mt-2'>
                   <div className='w-[300px]'>
                     <Input
-                      placeholder='Yeni e-posta ekle'
+                      type='email'
+                      placeholder='E-posta adresinizi girin'
                       {...emailForm.register('email')}
                     />
                     {emailForm.formState.errors.email && (
@@ -197,8 +195,10 @@ export default function UserSettingsForm() {
                   <Button
                     type='submit'
                     disabled={emailForm.formState.isSubmitting}
+                    className='mt-2'
                   >
-                    {emailForm.formState.isSubmitting ? 'Ekleniyor...' : 'Ekle'}
+                    {emailForm.formState.isSubmitting && <Spinner />}
+                    Güncelle
                   </Button>
                 </div>
               </div>

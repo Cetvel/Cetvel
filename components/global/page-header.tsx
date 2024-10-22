@@ -18,7 +18,6 @@ type Props = {
 };
 
 const PageHeader = ({ title }: Props) => {
-  const { resolvedTheme } = useTheme();
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const pathname = usePathname();
@@ -58,7 +57,7 @@ const PageHeader = ({ title }: Props) => {
       <h1 className='text-2xl lg:text-3xl font-bold'>{title}</h1>
       <div
         id='header-user-actions'
-        className='items-center border rounded-xl flex p-1 shadow-sm'
+        className='items-center border rounded-xl flex p-1 shadow-sm bg-card'
       >
         <Button variant={'ghost'} size={'icon'} onClick={toggleFullscreen}>
           {isFullscreen ? <Minimize size={18} /> : <Maximize size={18} />}
@@ -71,7 +70,7 @@ const PageHeader = ({ title }: Props) => {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant='ghost' size='icon'>
-                <Menu size={24} />
+                <Menu size={18} />
               </Button>
             </SheetTrigger>
             <SheetContent>

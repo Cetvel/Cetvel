@@ -15,8 +15,6 @@ export default async function RootLayout({
 }>) {
   const { isAuthenticated } = getKindeServerSession();
 
-  console.log('İsAuth?', await isAuthenticated());
-
   return (await isAuthenticated()) ? (
     <main className='min-h-screen'>
       <Sidebar />

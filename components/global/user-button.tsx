@@ -19,13 +19,15 @@ const UserButton = () => {
   const { getUser } = useKindeBrowserClient();
   const user = getUser();
 
+  console.log(user);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
           <Avatar className='h-8 w-8'>
             <AvatarImage
-              src={user?.picture || '/avatar.svg'}
+              src={user?.picture || '/image/avatar.svg'}
               alt={user?.username || user?.given_name || 'Avatar'}
             />
             <AvatarFallback>

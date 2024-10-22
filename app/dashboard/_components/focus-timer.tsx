@@ -6,7 +6,11 @@ import { Button } from '@/components/ui/button';
 import Modal from '@/components/global/modal';
 import FocusForge from '@/components/forms/focus-timer-form';
 
-const FocusTimer = () => {
+type FocusTimerProps = {
+  user: any;
+};
+
+const FocusTimer = ({ user }: FocusTimerProps) => {
   const { setOpen } = useModal();
 
   return (
@@ -15,7 +19,8 @@ const FocusTimer = () => {
         className='relative rounded-xl lg:col-span-2 shadow-sm p-6 h-[300px] flex flex-col md:h-full justify-between items-stretch'
         style={{
           backgroundImage:
-            'url(https://images.wallpaperscraft.com/image/single/house_art_dark_136825_3840x3072.jpg)',
+            user?.timer_image ||
+            'url(https://media.stockimg.ai/template/image/lmqBF4GblmFF.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundBlendMode: 'multiply',
