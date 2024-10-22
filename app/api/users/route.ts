@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ user }, { status: 200 });
+    return NextResponse.json( user , { status: 200 });
   } catch (error: any) {
     console.error('GET Request Error:', error.message || error);
     return NextResponse.json({ error: "Beklenmedik Sunucu Hatası" }, { status: 500 });
