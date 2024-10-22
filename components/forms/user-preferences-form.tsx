@@ -26,6 +26,7 @@ import { toast } from 'sonner';
 import { fadeIn } from '@/lib/motion';
 import ChangesCTA from './ui/changes-cta';
 import { ImageUploader } from '../global/image-uploader';
+import { useEdgeStore } from '@/lib/edgestore';
 
 const PreferencesForm = () => {
   const [user, setUser] = useState<any>(null);
@@ -71,6 +72,50 @@ const PreferencesForm = () => {
       console.error(error);
       toast.error('Bir hata oluştu', {
         description: 'Değişiklikleriniz kaydedilemedi.',
+      });
+    }
+  };
+
+  const { edgestore } = useEdgeStore();
+
+  const onCoverPictureChange = async (url: string) => {
+    try {
+      if (user?.cover_picture) {
+        await edgestore.publicFiles.delete({
+          url: user?.cover_picture,
+        });
+      }
+      await axiosInstance.put('/picture/cover', { url });
+      toast.success('İşlem başarılı', {
+        description: 'Arkaplan resmi başarıyla güncellendi',
+      });
+    } catch (error: any) {
+      console.error('Arkaplan resmi güncellenirken hata:', error);
+      toast.error('İşlem sırasında bir hata oluştu', {
+        description:
+          error.response?.data?.message ||
+          'Arkaplan resmi güncellenirken bir hata oluştu',
+      });
+    }
+  };
+
+  const onTimerPictureChange = async (url: string) => {
+    try {
+      if (user?.timer_picture) {
+        await edgestore.publicFiles.delete({
+          url: user?.timer_picture,
+        });
+      }
+      await axiosInstance.put('/picture/timer', { url });
+      toast.success('İşlem başarılı', {
+        description: 'Zamanlayıcı arkaplanı başarıyla güncellendi',
+      });
+    } catch (error: any) {
+      console.error('Zamanlayıcı arkaplanı güncellenirken hata:', error);
+      toast.error('İşlem sırasında bir hata oluştu', {
+        description:
+          error.response?.data?.message ||
+          'Zamanlayıcı arkaplanı güncellenirken bir hata oluştu',
       });
     }
   };
@@ -199,7 +244,7 @@ const PreferencesForm = () => {
           <CardContent className='space-y-6'>
             <div className='grid grid-cols-2 gap-4'>
               <ImageUploader
-                onChange={(url) => console.log(url)}
+                onChange={(url) => onCoverPictureChange(url)}
                 value={user?.cover_picture || ''}
                 cropConfig={{
                   aspect: 16 / 9,
@@ -210,7 +255,7 @@ const PreferencesForm = () => {
                 placeholder='Karşılayıcı arkaplan fotoğrafı yükle'
               />
               <ImageUploader
-                onChange={(url) => console.log(url)}
+                onChange={(url) => onTimerPictureChange(url)}
                 value={user?.timer_picture || ''}
                 cropConfig={{
                   aspect: 16 / 9,

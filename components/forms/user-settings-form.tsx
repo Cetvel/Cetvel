@@ -79,7 +79,7 @@ export default function UserSettingsForm() {
       toast.success('İşlem başarılı', {
         description: 'Profil bilgileriniz başarıyla güncellendi',
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Profil güncellenirken hata:', error);
       toast.error('İşlem sırasında bir hata oluştu', {
         description:
