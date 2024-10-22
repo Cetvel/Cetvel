@@ -139,7 +139,7 @@ export default function UserSettingsForm() {
                 <Label>
                   <ImageUploader
                     label='Profil fotoğrafını değiştir'
-                    apiEndpoint='/api/'
+                    apiEndpoint='/picture/profile'
                   />
                 </Label>
               </div>

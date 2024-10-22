@@ -1,26 +1,30 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useModal } from '@/providers/modal-provider';
 import { Button } from '@/components/ui/button';
 import Modal from '@/components/global/modal';
 import FocusForge from '@/components/forms/focus-timer-form';
+import { getUser } from '@/lib/utils';
 
-type FocusTimerProps = {
-  user: any;
-};
-
-const FocusTimer = ({ user }: FocusTimerProps) => {
+const FocusTimer = () => {
   const { setOpen } = useModal();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const user = await getUser();
+      setUser(user);
+    }
+    fetchUser();
+  }, []);
 
   return (
     <>
       <div
         className='relative rounded-xl lg:col-span-2 shadow-sm p-6 h-[300px] flex flex-col md:h-full justify-between items-stretch'
         style={{
-          backgroundImage:
-            user?.timer_image ||
-            'url(https://media.stockimg.ai/template/image/lmqBF4GblmFF.png)',
+          backgroundImage: `url(${user?.timer_picture || 'https://media.stockimg.ai/template/image/lmqBF4GblmFF.png'})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundBlendMode: 'multiply',

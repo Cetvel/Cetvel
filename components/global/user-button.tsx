@@ -19,8 +19,6 @@ const UserButton = () => {
   const { getUser } = useKindeBrowserClient();
   const user = getUser();
 
-  console.log(user);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

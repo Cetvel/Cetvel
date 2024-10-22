@@ -180,11 +180,11 @@ const PreferencesForm = () => {
             <div className='grid grid-cols-2 gap-4'>
               <ImageUploader
                 label='Karşılayıcı arkaplanı'
-                apiEndpoint='picture/cover/url'
+                apiEndpoint='picture/cover'
               />
               <ImageUploader
                 label='Zamanlayıcı arkaplanı'
-                apiEndpoint='picture/timer/url'
+                apiEndpoint='picture/timer'
               />
             </div>
           </CardContent>
