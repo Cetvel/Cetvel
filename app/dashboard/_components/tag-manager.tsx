@@ -171,12 +171,12 @@ const TagManager: React.FC = () => {
               className='flex-grow text-sm'
             />
           </div>
-          <div className='max-h-60 overflow-y-auto'>
+          <div className='max-h-60 overflow-y-auto flex flex-col gap-2'>
             {optimisticTags.length > 0 ? (
               optimisticTags.map((tag) => (
                 <div
                   key={tag._id}
-                  className='flex items-center justify-between gap-2 border rounded-md p-1 pl-3 mb-2 group'
+                  className='flex items-center justify-between gap-2 border rounded-md p-1 pl-3 group'
                 >
                   {editingTag?._id === tag._id ? (
                     <>

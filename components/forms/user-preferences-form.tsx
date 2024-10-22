@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -19,12 +20,16 @@ import { z } from 'zod';
 import CustomFormField, {
   FormFieldType,
 } from '@/components/ui/custom-form-field';
-import ImageUploader from '@/components/global/image-uploader';
 import SubmitButton from '@/components/forms/ui/submit-button';
-import { axiosInstance } from '@/lib/utils';
+import { axiosInstance, getUser } from '@/lib/utils';
 import { toast } from 'sonner';
+import { fadeIn } from '@/lib/motion';
+import ChangesCTA from './ui/changes-cta';
+import { ImageUploader } from '../global/image-uploader';
 
 const PreferencesForm = () => {
+  const [user, setUser] = useState<any>(null);
+
   const form = useForm<z.infer<typeof PreferencesSchema>>({
     resolver: zodResolver(PreferencesSchema),
     defaultValues: {
@@ -32,21 +37,36 @@ const PreferencesForm = () => {
       grade: 12,
       field: 'SAY',
       courseSubject: undefined,
-      notifications: true,
-      taskReminders: false,
-      reminderFrequencyHours: 1,
+      /* notifications: true, */
+      /* taskReminders: false, */
+      /* reminderFrequencyHours: 1, */
     },
   });
+
+  useEffect(() => {
+    async function fetchUser() {
+      const user = await getUser();
+      setUser(user);
+    }
+    fetchUser();
+  }, []);
 
   const watchEducationLevel = form.watch('educationLevel');
 
   const onSubmit = async (values: z.infer<typeof PreferencesSchema>) => {
+    const data = {
+      grade: values.grade,
+      field: values.field,
+      studyField: values.courseSubject,
+    };
+
     try {
-      await axiosInstance.put('/settings/userPreference', values);
+      await axiosInstance.put('/settings/preference', data);
 
       toast.success('Değişiklikler kaydedildi', {
         description: 'Değişiklikleriniz başarıyla kaydedildi.',
       });
+      form.reset();
     } catch (error) {
       console.error(error);
       toast.error('Bir hata oluştu', {
@@ -179,21 +199,32 @@ const PreferencesForm = () => {
           <CardContent className='space-y-6'>
             <div className='grid grid-cols-2 gap-4'>
               <ImageUploader
-                label='Karşılayıcı arkaplanı'
-                apiEndpoint='picture/cover'
+                onChange={(url) => console.log(url)}
+                value={user?.cover_picture || ''}
+                cropConfig={{
+                  aspect: 16 / 9,
+                  minWidth: 400,
+                  minHeight: 225,
+                }}
+                maxSize={5}
+                placeholder='Karşılayıcı arkaplan fotoğrafı yükle'
               />
               <ImageUploader
-                label='Zamanlayıcı arkaplanı'
-                apiEndpoint='picture/timer'
+                onChange={(url) => console.log(url)}
+                value={user?.timer_picture || ''}
+                cropConfig={{
+                  aspect: 16 / 9,
+                  minWidth: 400,
+                  minHeight: 225,
+                }}
+                maxSize={5}
+                placeholder='Zamanlayıcı arkaplan fotoğrafı yükle'
               />
             </div>
           </CardContent>
         </Card>
 
-        <SubmitButton
-          text='Değişiklikleri Kaydet'
-          loading={form.formState.isSubmitting}
-        />
+        <ChangesCTA form={form} />
       </form>
     </FormProvider>
   );

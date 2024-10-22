@@ -8,9 +8,9 @@ export const PreferencesSchema = z
     grade: z.coerce.number().optional(),
     field: z.enum(['SAY', 'SOZ', 'EA', 'DIL']).optional(),
     courseSubject: z.enum(['YKS', 'KPSS', 'DGS', 'ALES', 'YDS']).optional(),
-    notifications: z.boolean().default(true),
-    taskReminders: z.boolean().default(false),
-    reminderFrequencyHours: z.coerce.number().default(1),
+    /* notifications: z.boolean().default(true), */
+    /* taskReminders: z.boolean().default(false), */
+    /* reminderFrequencyHours: z.coerce.number().default(1), */
   })
   .refine(
     (data) => {
