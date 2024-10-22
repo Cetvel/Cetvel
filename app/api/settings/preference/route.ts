@@ -23,7 +23,7 @@ export async function PUT(req: NextRequest) {
             userId: user.id,
             requestBody: {
                 properties: {
-                    grade,
+                    grade: grade.toString(),
                     field,
                     studyField
                 }
@@ -32,7 +32,7 @@ export async function PUT(req: NextRequest) {
             console.error('Kinde API Hatası:', error);
             return NextResponse.json({ message: "Kinde API Hatası" }, { status: 500 });
         })
-        
+
 
 
         return NextResponse.json({ status: 200 });
