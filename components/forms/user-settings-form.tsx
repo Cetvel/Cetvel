@@ -14,13 +14,14 @@ import {
   CardContent,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { axiosInstance } from '@/lib/utils';
 import { toast } from 'sonner';
-import Spinner from '../ui/spinner';
-import ImageUploader from '../global/image-uploader';
+import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
+import ChangesCTA from './ui/changes-cta';
+import { Form } from '../ui/form';
+import { ImageUploader } from '../global/image-uploader';
 
 const profileSchema = z.object({
   username: z.string().min(2, 'Kullanıcı adı en az 2 karakter olmalıdır'),
@@ -51,20 +52,20 @@ type PasswordFormData = z.infer<typeof passwordSchema>;
 
 export default function UserSettingsForm() {
   const { getUser } = useKindeBrowserClient();
-  const user = getUser();
+  const kindeUser = getUser();
 
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      username: user?.username || '',
-      picture: user?.picture || '',
+      username: kindeUser?.username || '',
+      picture: kindeUser?.picture || '',
     },
   });
 
   const emailForm = useForm<EmailFormData>({
     resolver: zodResolver(emailSchema),
     defaultValues: {
-      email: user?.email || '',
+      email: kindeUser?.email || '',
     },
   });
 
@@ -75,8 +76,32 @@ export default function UserSettingsForm() {
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
       await axiosInstance.put('/settings/user', data);
-    } catch (error) {
+      toast.success('İşlem başarılı', {
+        description: 'Profil bilgileriniz başarıyla güncellendi',
+      });
+    } catch (error: any) {
       console.error('Profil güncellenirken hata:', error);
+      toast.error('İşlem sırasında bir hata oluştu', {
+        description:
+          error.response?.data?.message ||
+          'Profil bilgileri güncellenirken bir hata oluştu',
+      });
+    }
+  };
+
+  const onProfilePictureChange = async (url: string) => {
+    try {
+      await axiosInstance.put('/picture/profile', { url });
+      toast.success('İşlem başarılı', {
+        description: 'Profil resminiz başarıyla güncellendi',
+      });
+    } catch (error: any) {
+      console.error('Profil resmi güncellenirken hata:', error);
+      toast.error('İşlem sırasında bir hata oluştu', {
+        description:
+          error.response?.data?.message ||
+          'Profil resmi güncellenirken bir hata oluştu',
+      });
     }
   };
 
@@ -122,87 +147,66 @@ export default function UserSettingsForm() {
           </TabsList>
 
           <TabsContent value='profile'>
-            <form
-              onSubmit={profileForm.handleSubmit(onProfileSubmit)}
-              className='space-y-4 mt-8'
-            >
-              <div className='flex items-center space-x-4'>
-                <Avatar className='h-24 w-24'>
-                  <AvatarImage
-                    src={user?.picture || '/image/avatar.svg'}
-                    alt='Profil fotoğrafı'
-                  />
-                  <AvatarFallback>
-                    {user?.given_name?.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <Label>
-                  <ImageUploader
-                    label='Profil fotoğrafını değiştir'
-                    apiEndpoint='/picture/profile'
-                  />
-                </Label>
-              </div>
-              <div className='grid w-full items-center gap-1.5'>
-                <Label htmlFor='username'>Kullanıcı adı</Label>
-                <Input
-                  className='w-[300px]'
-                  id='username'
-                  placeholder='Kullanıcı adınızı girin'
-                  {...profileForm.register('username')}
-                />
-                {profileForm.formState.errors.username && (
-                  <p className='text-red-500 text-sm'>
-                    {profileForm.formState.errors.username.message}
-                  </p>
-                )}
-              </div>
-              <Button
-                type='submit'
-                disabled={profileForm.formState.isSubmitting}
+            <Form {...profileForm}>
+              <form
+                onSubmit={profileForm.handleSubmit(onProfileSubmit)}
+                className='space-y-4 mt-8'
               >
-                {profileForm.formState.isSubmitting && <Spinner />}
-                Güncelle
-              </Button>
-            </form>
+                <div className='flex items-center space-x-4'>
+                  <ImageUploader
+                    onChange={(url: string) => onProfilePictureChange(url)}
+                    value={kindeUser?.picture || ''}
+                    cropConfig={{
+                      aspect: 1,
+                      cropShape: 'round',
+                      minWidth: 200,
+                      minHeight: 200,
+                    }}
+                    maxSize={2}
+                    placeholder='Düzenle'
+                  />
+                </div>
+                <div className='max-w-[300px]'>
+                  <CustomFormField
+                    fieldType={FormFieldType.INPUT}
+                    label='Kullanıcı Adı'
+                    control={profileForm.control}
+                    name='username'
+                    placeholder='Kullanıcı adınızı girin'
+                  />
+                </div>
+                <ChangesCTA form={profileForm} />
+              </form>
+            </Form>
           </TabsContent>
 
           <TabsContent value='account'>
-            <form
-              onSubmit={emailForm.handleSubmit(onEmailSubmit)}
-              className='space-y-4'
-            >
-              <div>
-                <h3 className='text-lg font-medium'>E-posta Adresi</h3>
-                <p className='text-muted-foreground text-sm mb-6'>
-                  {user?.email} adresiyle giriş yapıyorsunuz. E-posta adresinizi
-                  güncellemek için aşağıdaki alana yeni e-posta adresinizi
-                  girin.
-                </p>
-                <div className='mt-2'>
-                  <div className='w-[300px]'>
-                    <Input
-                      type='email'
-                      placeholder='E-posta adresinizi girin'
-                      {...emailForm.register('email')}
-                    />
-                    {emailForm.formState.errors.email && (
-                      <p className='text-red-500 text-sm'>
-                        {emailForm.formState.errors.email.message}
-                      </p>
-                    )}
+            <Form {...emailForm}>
+              <form
+                onSubmit={emailForm.handleSubmit(onEmailSubmit)}
+                className='space-y-4'
+              >
+                <div>
+                  <h3 className='text-lg font-medium'>E-posta Adresi</h3>
+                  <p className='text-muted-foreground text-sm mb-6'>
+                    {kindeUser?.email} adresiyle giriş yapıyorsunuz. E-posta
+                    adresinizi güncellemek için aşağıdaki alana yeni e-posta
+                    adresinizi girin.
+                  </p>
+                  <div className='mt-2'>
+                    <div className='max-w-[300px]'>
+                      <CustomFormField
+                        fieldType={FormFieldType.INPUT}
+                        control={emailForm.control}
+                        name='email'
+                        placeholder='E-posta adresinizi girin'
+                      />
+                    </div>
+                    <ChangesCTA form={emailForm} />
                   </div>
-                  <Button
-                    type='submit'
-                    disabled={emailForm.formState.isSubmitting}
-                    className='mt-2'
-                  >
-                    {emailForm.formState.isSubmitting && <Spinner />}
-                    Güncelle
-                  </Button>
                 </div>
-              </div>
-            </form>
+              </form>
+            </Form>
           </TabsContent>
 
           {/* <TabsContent value='security'>
