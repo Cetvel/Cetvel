@@ -21,16 +21,17 @@ import CustomFormField, {
   FormFieldType,
 } from '@/components/ui/custom-form-field';
 import SubmitButton from '@/components/forms/ui/submit-button';
-import { axiosInstance, getUser } from '@/lib/utils';
+import { axiosInstance, fetcher } from '@/lib/utils';
 import { toast } from 'sonner';
 import { fadeIn } from '@/lib/motion';
 import ChangesCTA from './ui/changes-cta';
 import { ImageUploader } from '../global/image-uploader';
 import { useEdgeStore } from '@/lib/edgestore';
+import useSWR from 'swr';
+import Spinner from '../ui/spinner';
+import Error from '../global/error';
 
 const PreferencesForm = () => {
-  const [user, setUser] = useState<any>(null);
-
   const form = useForm<z.infer<typeof PreferencesSchema>>({
     resolver: zodResolver(PreferencesSchema),
     defaultValues: {
@@ -44,13 +45,7 @@ const PreferencesForm = () => {
     },
   });
 
-  useEffect(() => {
-    async function fetchUser() {
-      const user = await getUser();
-      setUser(user);
-    }
-    fetchUser();
-  }, []);
+  const { data: user, isLoading, error } = useSWR('/users', fetcher);
 
   const watchEducationLevel = form.watch('educationLevel');
 
@@ -243,28 +238,39 @@ const PreferencesForm = () => {
           </CardHeader>
           <CardContent className='space-y-6'>
             <div className='grid grid-cols-2 gap-4'>
-              <ImageUploader
-                onChange={(url) => onCoverPictureChange(url)}
-                value={user?.cover_picture || ''}
-                cropConfig={{
-                  aspect: 16 / 9,
-                  minWidth: 400,
-                  minHeight: 225,
-                }}
-                maxSize={5}
-                placeholder='Karşılayıcı arkaplan fotoğrafı yükle'
-              />
-              <ImageUploader
-                onChange={(url) => onTimerPictureChange(url)}
-                value={user?.timer_picture || ''}
-                cropConfig={{
-                  aspect: 16 / 9,
-                  minWidth: 400,
-                  minHeight: 225,
-                }}
-                maxSize={5}
-                placeholder='Zamanlayıcı arkaplan fotoğrafı yükle'
-              />
+              {isLoading ? (
+                <Spinner size={24} />
+              ) : error ? (
+                <Error
+                  title='Bir hata oluştu'
+                  message={error.message || 'Beklenmedik sunucu hatası'}
+                />
+              ) : (
+                <>
+                  <ImageUploader
+                    onChange={(url) => onCoverPictureChange(url)}
+                    value={user?.cover_picture || null}
+                    cropConfig={{
+                      aspect: 16 / 9,
+                      minWidth: 400,
+                      minHeight: 225,
+                    }}
+                    maxSize={5}
+                    placeholder='Karşılayıcı arkaplan fotoğrafı yükle'
+                  />
+                  <ImageUploader
+                    onChange={(url) => onTimerPictureChange(url)}
+                    value={user?.timer_picture || null}
+                    cropConfig={{
+                      aspect: 16 / 9,
+                      minWidth: 400,
+                      minHeight: 225,
+                    }}
+                    maxSize={5}
+                    placeholder='Zamanlayıcı arkaplan fotoğrafı yükle'
+                  />
+                </>
+              )}
             </div>
           </CardContent>
         </Card>

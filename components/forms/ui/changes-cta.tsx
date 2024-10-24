@@ -44,7 +44,7 @@ const ChangesCTA = ({ form }: Props) => {
             Kaydedilmemiş değişiklikler var! Kaydetmek ister misin?{' '}
           </p>
 
-          <div className='flex gap-4'>
+          <div className='flex gap-2'>
             <Button
               type='reset'
               variant='outline'

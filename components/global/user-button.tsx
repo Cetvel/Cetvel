@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,11 +13,27 @@ import {
   LogoutLink,
   useKindeBrowserClient,
 } from '@kinde-oss/kinde-auth-nextjs';
-import { LogOut } from 'lucide-react';
+import { AlertCircle, LogOut } from 'lucide-react';
+import { fetcher } from '@/lib/utils';
+import Spinner from '../ui/spinner';
+import useSWR from 'swr';
+import { CustomTooltip } from './custom-tooltip';
 
 const UserButton = () => {
-  const { getUser } = useKindeBrowserClient();
-  const user = getUser();
+  const { getUser: getKindeUser } = useKindeBrowserClient();
+  const kindeUser = getKindeUser();
+
+  const { data: user, isLoading, error } = useSWR('/users', fetcher);
+
+  if (isLoading) return <Spinner size={24} />;
+
+  if (error) {
+    return (
+      <CustomTooltip content={error.message || 'Beklenmedik sunucu hatası'}>
+        <AlertCircle size={18} className='text-destructive' />
+      </CustomTooltip>
+    );
+  }
 
   return (
     <DropdownMenu>
@@ -25,11 +41,11 @@ const UserButton = () => {
         <Button variant='ghost' className='relative h-8 w-8 rounded-full'>
           <Avatar className='h-8 w-8'>
             <AvatarImage
-              src={user?.picture || '/image/avatar.svg'}
-              alt={user?.username || user?.given_name || 'Avatar'}
+              src={user?.profile_picture || '/image/avatar.svg'}
+              alt={kindeUser?.username || kindeUser?.given_name || 'Avatar'}
             />
             <AvatarFallback>
-              {user?.username || user?.given_name || 'Kullanıcı'}
+              {kindeUser?.username || kindeUser?.given_name || 'Kullanıcı'}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -38,10 +54,10 @@ const UserButton = () => {
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
             <p className='text-sm font-medium leading-none'>
-              {user?.username || user?.given_name}
+              {kindeUser?.username || kindeUser?.given_name}
             </p>
             <p className='text-xs leading-none text-muted-foreground'>
-              {user?.email}
+              {kindeUser?.email}
             </p>
           </div>
         </DropdownMenuLabel>

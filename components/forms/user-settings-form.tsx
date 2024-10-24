@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -16,16 +16,18 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { axiosInstance } from '@/lib/utils';
+import { axiosInstance, fetcher } from '@/lib/utils';
 import { toast } from 'sonner';
 import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
 import ChangesCTA from './ui/changes-cta';
 import { Form } from '../ui/form';
 import { ImageUploader } from '../global/image-uploader';
+import Spinner from '../ui/spinner';
+import Error from '../global/error';
+import useSWR from 'swr';
 
 const profileSchema = z.object({
   username: z.string().min(2, 'Kullanıcı adı en az 2 karakter olmalıdır'),
-  picture: z.string().optional(),
 });
 
 const emailSchema = z.object({
@@ -51,14 +53,15 @@ type EmailFormData = z.infer<typeof emailSchema>;
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
 export default function UserSettingsForm() {
-  const { getUser } = useKindeBrowserClient();
-  const kindeUser = getUser();
+  const { getUser: getKindeUser } = useKindeBrowserClient();
+  const kindeUser = getKindeUser();
+
+  const { data: user, isLoading, error } = useSWR('/users', fetcher);
 
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       username: kindeUser?.username || '',
-      picture: kindeUser?.picture || '',
     },
   });
 
@@ -69,9 +72,9 @@ export default function UserSettingsForm() {
     },
   });
 
-  /* const passwordForm = useForm<PasswordFormData>({
+  const passwordForm = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema),
-  }); */
+  });
 
   const onProfileSubmit = async (data: ProfileFormData) => {
     try {
@@ -122,13 +125,13 @@ export default function UserSettingsForm() {
     }
   };
 
-  /* const onPasswordSubmit = async (data: PasswordFormData) => {
+  const onPasswordSubmit = async (data: PasswordFormData) => {
     try {
       console.log('Şifre güncelleniyor');
     } catch (error) {
       console.error('Şifre güncellenirken hata:', error);
     }
-  }; */
+  };
 
   return (
     <Card>
@@ -140,10 +143,10 @@ export default function UserSettingsForm() {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue='profile'>
-          <TabsList className='grid w-full grid-cols-2 mb-8'>
+          <TabsList className='grid w-full grid-cols-3 mb-8'>
             <TabsTrigger value='profile'>Profil</TabsTrigger>
-            <TabsTrigger value='account'>Hesap</TabsTrigger>
-            {/* <TabsTrigger value='security'>Güvenlik</TabsTrigger> */}
+            <TabsTrigger value='email'>Hesap</TabsTrigger>
+            <TabsTrigger value='security'>Güvenlik</TabsTrigger>
           </TabsList>
 
           <TabsContent value='profile'>
@@ -153,34 +156,49 @@ export default function UserSettingsForm() {
                 className='space-y-4 mt-8'
               >
                 <div className='flex items-center space-x-4'>
-                  <ImageUploader
-                    onChange={(url: string) => onProfilePictureChange(url)}
-                    value={kindeUser?.picture || ''}
-                    cropConfig={{
-                      aspect: 1,
-                      cropShape: 'round',
-                      minWidth: 200,
-                      minHeight: 200,
-                    }}
-                    maxSize={2}
-                    placeholder='Düzenle'
-                  />
-                </div>
-                <div className='max-w-[300px]'>
+                  {isLoading ? (
+                    <Spinner size={24} />
+                  ) : error ? (
+                    <Error
+                      title='Bir hata oluştu'
+                      message={
+                        error.response.data.message ||
+                        'Beklenmedik sunucu hatası'
+                      }
+                    />
+                  ) : (
+                    <ImageUploader
+                      onChange={(url: string) => onProfilePictureChange(url)}
+                      value={user?.profile_picture || '/image/avatar.svg'}
+                      imageWidth={200}
+                      imageHeight={200}
+                      cropConfig={{
+                        aspect: 1,
+                        cropShape: 'round',
+                        minWidth: 200,
+                        minHeight: 200,
+                      }}
+                      maxSize={2}
+                      placeholder='Düzenle'
+                    />
+                  )}
+
                   <CustomFormField
                     fieldType={FormFieldType.INPUT}
                     label='Kullanıcı Adı'
                     control={profileForm.control}
                     name='username'
                     placeholder='Kullanıcı adınızı girin'
+                    className='w-[250px]'
                   />
                 </div>
+
                 <ChangesCTA form={profileForm} />
               </form>
             </Form>
           </TabsContent>
 
-          <TabsContent value='account'>
+          <TabsContent value='email'>
             <Form {...emailForm}>
               <form
                 onSubmit={emailForm.handleSubmit(onEmailSubmit)}
@@ -209,7 +227,7 @@ export default function UserSettingsForm() {
             </Form>
           </TabsContent>
 
-          {/* <TabsContent value='security'>
+          <TabsContent value='security'>
             <form
               onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
               className='space-y-4'
@@ -268,7 +286,7 @@ export default function UserSettingsForm() {
                   : 'Şifreyi Değiştir'}
               </Button>
             </form>
-          </TabsContent> */}
+          </TabsContent>
         </Tabs>
       </CardContent>
     </Card>

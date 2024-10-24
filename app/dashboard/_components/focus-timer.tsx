@@ -5,19 +5,24 @@ import { useModal } from '@/providers/modal-provider';
 import { Button } from '@/components/ui/button';
 import Modal from '@/components/global/modal';
 import FocusForge from '@/components/forms/focus-timer-form';
-import { getUser } from '@/lib/utils';
+import { fetcher } from '@/lib/utils';
+import useSWR from 'swr';
+import Spinner from '@/components/ui/spinner';
+import Error from '@/components/global/error';
 
 const FocusTimer = () => {
   const { setOpen } = useModal();
-  const [user, setUser] = useState<any>(null);
+  const { data: user, isLoading, error } = useSWR('/users', fetcher);
 
-  useEffect(() => {
-    async function fetchUser() {
-      const user = await getUser();
-      setUser(user);
-    }
-    fetchUser();
-  }, []);
+  if (isLoading) return <Spinner size={24} />;
+
+  if (error)
+    return (
+      <Error
+        title='Bir hata oluştu'
+        message={error.message || 'Beklenmedik sunucu hatası'}
+      />
+    );
 
   return (
     <>

@@ -10,11 +10,6 @@ export const padTo2Digits = (num: number) => {
   return String(num).padStart(2, '0');
 };
 
-export const getUser = async () => {
-  const user = await axiosInstance.get('/users');
-  return user.data;
-};
-
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
   timeout: 10000,

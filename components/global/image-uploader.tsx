@@ -6,6 +6,8 @@ export type ImageUploaderProps = {
   maxSize?: number;
   accept?: string;
   placeholder?: string;
+  imageWidth?: number;
+  imageHeight?: number;
 };
 
 import React from 'react';
@@ -26,6 +28,8 @@ export const ImageUploader = ({
   maxSize = 5,
   accept = 'image/*',
   placeholder = 'Fotoğraf yükle veya sürükle bırak',
+  imageHeight,
+  imageWidth,
 }: ImageUploaderProps) => {
   const [tempImage, setTempImage] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -109,17 +113,26 @@ export const ImageUploader = ({
             <Image
               src={value}
               alt='Uploaded'
+              width={imageWidth}
+              height={imageHeight}
               className={cn(
-                'w-full h-full object-cover',
+                'object-cover',
                 cropConfig.cropShape === 'round' && 'rounded-full'
               )}
             />
-            <div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2'>
+            <div
+              className={cn(
+                'absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2',
+                {
+                  'rounded-full': cropConfig.cropShape === 'round',
+                }
+              )}
+            >
               <div {...getRootProps()}>
                 <Button
+                  type='button'
                   size='sm'
                   variant='secondary'
-                  className='pointer-events-none'
                   disabled={isLoading}
                 >
                   <UploadIcon className='w-4 h-4' />
@@ -128,6 +141,7 @@ export const ImageUploader = ({
               </div>
               <Button
                 size='sm'
+                type='button'
                 variant='destructive'
                 onClick={handleDelete}
                 disabled={isLoading}

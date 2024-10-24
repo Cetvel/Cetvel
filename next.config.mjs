@@ -13,7 +13,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ['utfs.io'],
+    domains: ['utfs.io', 'files.edgestore.dev'],
   },
   async headers() {
     return [
