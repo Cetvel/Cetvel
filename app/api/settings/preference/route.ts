@@ -25,7 +25,7 @@ export async function PUT(req: NextRequest) {
                 properties: {
                     grade: grade.toString(),
                     field,
-                    studyField
+                    studyfield : studyField
                 }
             }
         }).catch((error) => {
