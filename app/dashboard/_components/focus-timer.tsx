@@ -1,28 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useModal } from '@/providers/modal-provider';
 import { Button } from '@/components/ui/button';
 import Modal from '@/components/global/modal';
 import FocusForge from '@/components/forms/focus-timer-form';
-import { fetcher } from '@/lib/utils';
-import useSWR from 'swr';
-import Spinner from '@/components/ui/spinner';
-import Error from '@/components/global/error';
+import { useUser } from '@/context/user-context';
 
 const FocusTimer = () => {
   const { setOpen } = useModal();
-  const { data: user, isLoading, error } = useSWR('/users', fetcher);
-
-  if (isLoading) return <Spinner size={24} />;
-
-  if (error)
-    return (
-      <Error
-        title='Bir hata oluştu'
-        message={error.message || 'Beklenmedik sunucu hatası'}
-      />
-    );
+  const { user, kindeUser } = useUser();
 
   return (
     <>

@@ -1,28 +1,9 @@
 'use client';
 
-import Error from '@/components/global/error';
-import Spinner from '@/components/ui/spinner';
-import { fetcher } from '@/lib/utils';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-
-import React, { useEffect, useState } from 'react';
-import useSWR from 'swr';
+import { useUser } from '@/context/user-context';
 
 const Banner = () => {
-  const { getUser: getKindeUser } = useKindeBrowserClient();
-  const kindeUser = getKindeUser();
-
-  const { data: user, isLoading, error } = useSWR('/users', fetcher);
-
-  if (isLoading) return <Spinner size={24} />;
-
-  if (error)
-    return (
-      <Error
-        title='Bir hata oluştu'
-        message={error.message || 'Beklenmedik sunucu hatası'}
-      />
-    );
+  const { user, kindeUser } = useUser();
 
   return (
     <div

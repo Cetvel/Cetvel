@@ -3,6 +3,18 @@ declare type SearchParamProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
+declare type User = {
+  _id: string;
+  kindeId: string;
+  name: string;
+  profile_picture: string | undefined;
+  cover_picture: string | undefined;
+  timer_picture: string | undefined;
+  field?: AYTField;
+  grade?: number;
+  studyField?: ExamType;
+};
+
 declare type Task = {
   _id: string;
   title: string;
@@ -60,9 +72,9 @@ declare enum TaskStatus {
 }
 
 declare type UserClass = '9' | '10' | '11' | '12' | 'Mezun';
-declare type ExamType = 'TYT' | 'AYT' | 'LGS' | 'DGS' | 'YDS' | 'ALES' | 'KPSS';
+declare type ExamType = 'YKS' | 'KPSS' | 'DGS' | 'ALES' | 'YDS';
 declare type AYTField = 'SAY' | 'EA' | 'SOZ';
-declare type StudyField = 'Sayısal' | 'Eşit Ağırlık' | 'Sözel' | 'Dil';
+declare type StudyField = 'SAY' | 'EA' | 'SOZ' | 'DIL';
 
 declare interface FieldBase {
   name: string;

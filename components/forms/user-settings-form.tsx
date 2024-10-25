@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Card,
@@ -13,81 +12,97 @@ import {
   CardDescription,
   CardContent,
 } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { axiosInstance, fetcher } from '@/lib/utils';
 import { toast } from 'sonner';
 import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
-import ChangesCTA from './ui/changes-cta';
+import UnsavedChangesNotification from './ui/unsaved-changes-notification';
 import { Form } from '../ui/form';
 import { ImageUploader } from '../global/image-uploader';
-import Spinner from '../ui/spinner';
-import Error from '../global/error';
-import useSWR from 'swr';
+import { X, Plus, Check, Edit2 } from 'lucide-react';
+import { useUser } from '@/context/user-context';
+import { mutate } from 'swr';
 
-const profileSchema = z.object({
-  username: z.string().min(2, 'Kullanıcı adı en az 2 karakter olmalıdır'),
-});
-
-const emailSchema = z.object({
-  email: z
-    .string()
-    .min(1, 'Email adresi gereklidir')
-    .email('Geçerli bir e-posta adresi giriniz'),
-});
-
-const passwordSchema = z
+const settingsSchema = z
   .object({
-    currentPassword: z.string().min(6, 'Şifre en az 6 karakter olmalıdır'),
-    newPassword: z.string().min(6, 'Şifre en az 6 karakter olmalıdır'),
-    confirmPassword: z.string(),
+    username: z.string().min(2, 'Kullanıcı adı en az 2 karakter olmalıdır'),
+    emails: z
+      .array(
+        z.object({
+          email: z.string().email('Geçerli bir e-posta adresi giriniz'),
+          isPrimary: z.boolean().default(false),
+        })
+      )
+      .min(1, 'En az bir email adresi gereklidir'),
+    currentPassword: z.string().optional(),
+    newPassword: z
+      .string()
+      .min(6, 'Şifre en az 6 karakter olmalıdır')
+      .optional(),
+    confirmPassword: z.string().optional(),
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Şifreler eşleşmiyor',
-    path: ['confirmPassword'],
-  });
+  .refine(
+    (data) => {
+      if (data.newPassword && !data.currentPassword) {
+        return false;
+      }
+      if (data.newPassword !== data.confirmPassword) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'Şifreler eşleşmiyor veya mevcut şifre gerekli',
+      path: ['confirmPassword'],
+    }
+  );
 
-type ProfileFormData = z.infer<typeof profileSchema>;
-type EmailFormData = z.infer<typeof emailSchema>;
-type PasswordFormData = z.infer<typeof passwordSchema>;
+type SettingsFormData = z.infer<typeof settingsSchema>;
 
 export default function UserSettingsForm() {
-  const { getUser: getKindeUser } = useKindeBrowserClient();
-  const kindeUser = getKindeUser();
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const { user, kindeUser } = useUser();
 
-  const { data: user, isLoading, error } = useSWR('/users', fetcher);
-
-  const profileForm = useForm<ProfileFormData>({
-    resolver: zodResolver(profileSchema),
+  const form = useForm<SettingsFormData>({
+    resolver: zodResolver(settingsSchema),
     defaultValues: {
       username: kindeUser?.username || '',
+      emails: [{ email: kindeUser?.email || '', isPrimary: true }],
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
     },
   });
 
-  const emailForm = useForm<EmailFormData>({
-    resolver: zodResolver(emailSchema),
-    defaultValues: {
-      email: kindeUser?.email || '',
-    },
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'emails',
   });
 
-  const passwordForm = useForm<PasswordFormData>({
-    resolver: zodResolver(passwordSchema),
-  });
-
-  const onProfileSubmit = async (data: ProfileFormData) => {
+  const onSubmit = async (data: SettingsFormData) => {
     try {
-      await axiosInstance.put('/settings/user', data);
-      toast.success('İşlem başarılı', {
-        description: 'Profil bilgileriniz başarıyla güncellendi',
+      await axiosInstance.put('/settings/user', {
+        username: data.username,
+        emails: data.emails,
       });
+
+      if (data.newPassword && data.currentPassword) {
+        await axiosInstance.put('/settings/user/password', {
+          currentPassword: data.currentPassword,
+          newPassword: data.newPassword,
+        });
+      }
+
+      toast.success('İşlem başarılı', {
+        description: 'Ayarlarınız başarıyla güncellendi',
+      });
+
+      setIsEditingUsername(false);
+      mutate('/users');
     } catch (error: any) {
-      console.error('Profil güncellenirken hata:', error);
       toast.error('İşlem sırasında bir hata oluştu', {
         description:
-          error.response?.data?.message ||
-          'Profil bilgileri güncellenirken bir hata oluştu',
+          error.response?.data?.message || 'Beklenmedik bir hata oluştu',
       });
     }
   };
@@ -98,8 +113,8 @@ export default function UserSettingsForm() {
       toast.success('İşlem başarılı', {
         description: 'Profil resminiz başarıyla güncellendi',
       });
+      mutate('/users');
     } catch (error: any) {
-      console.error('Profil resmi güncellenirken hata:', error);
       toast.error('İşlem sırasında bir hata oluştu', {
         description:
           error.response?.data?.message ||
@@ -108,29 +123,13 @@ export default function UserSettingsForm() {
     }
   };
 
-  const onEmailSubmit = async (data: EmailFormData) => {
-    try {
-      await axiosInstance.put('/settings/user/email', data);
-      console.log('Email güncellendi:', data);
-      toast.success('İşlem başarıyla gerçekleşti', {
-        description: 'E-posta adresiniz başarıyla güncellendi',
-      });
-    } catch (error: any) {
-      toast.error('İşlem sırasında bir hata oluştu', {
-        description:
-          error.response?.data?.message ||
-          'E-posta güncellenirken bir hata oluştu',
-      });
-      console.error('Email güncellenirken hata:', error);
-    }
-  };
-
-  const onPasswordSubmit = async (data: PasswordFormData) => {
-    try {
-      console.log('Şifre güncelleniyor');
-    } catch (error) {
-      console.error('Şifre güncellenirken hata:', error);
-    }
+  const setPrimaryEmail = (index: number) => {
+    const currentEmails = form.getValues('emails');
+    const updatedEmails = currentEmails.map((email, idx) => ({
+      ...email,
+      isPrimary: idx === index,
+    }));
+    form.setValue('emails', updatedEmails);
   };
 
   return (
@@ -142,152 +141,140 @@ export default function UserSettingsForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue='profile'>
-          <TabsList className='grid w-full grid-cols-3 mb-8'>
-            <TabsTrigger value='profile'>Profil</TabsTrigger>
-            <TabsTrigger value='email'>Hesap</TabsTrigger>
-            <TabsTrigger value='security'>Güvenlik</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value='profile'>
-            <Form {...profileForm}>
-              <form
-                onSubmit={profileForm.handleSubmit(onProfileSubmit)}
-                className='space-y-4 mt-8'
-              >
-                <div className='flex items-center space-x-4'>
-                  {isLoading ? (
-                    <Spinner size={24} />
-                  ) : error ? (
-                    <Error
-                      title='Bir hata oluştu'
-                      message={
-                        error.response.data.message ||
-                        'Beklenmedik sunucu hatası'
-                      }
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='gap-8 grid grid-cols-1 lg:grid-cols-3'
+          >
+            <div className='space-y-4'>
+              <h3 className='text-lg font-medium'>Profil Bilgileri</h3>
+              <div className='flex flex-col md:flex-row items-start md:items-center gap-4'>
+                <ImageUploader
+                  onChange={onProfilePictureChange}
+                  value={user?.profile_picture || '/image/avatar.svg'}
+                  width={100}
+                  height={100}
+                  cropConfig={{
+                    aspect: 1,
+                    cropShape: 'round',
+                    minWidth: 100,
+                    minHeight: 100,
+                  }}
+                  maxSize={2}
+                  placeholder='Düzenle'
+                />
+                <div className='w-full md:w-[250px]'>
+                  {isEditingUsername ? (
+                    <CustomFormField
+                      fieldType={FormFieldType.INPUT}
+                      label='Kullanıcı Adı'
+                      control={form.control}
+                      name='username'
+                      placeholder='Kullanıcı adınızı girin'
                     />
                   ) : (
-                    <ImageUploader
-                      onChange={(url: string) => onProfilePictureChange(url)}
-                      value={user?.profile_picture || '/image/avatar.svg'}
-                      imageWidth={200}
-                      imageHeight={200}
-                      cropConfig={{
-                        aspect: 1,
-                        cropShape: 'round',
-                        minWidth: 200,
-                        minHeight: 200,
-                      }}
-                      maxSize={2}
-                      placeholder='Düzenle'
-                    />
+                    <div className='flex items-center justify-between'>
+                      <div>
+                        <Label>Kullanıcı Adı</Label>
+                        <p className='mt-1 text-sm'>
+                          {form.getValues('username')}
+                        </p>
+                      </div>
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        size='icon'
+                        onClick={() => setIsEditingUsername(true)}
+                      >
+                        <Edit2 className='h-4 w-4' />
+                      </Button>
+                    </div>
                   )}
-
-                  <CustomFormField
-                    fieldType={FormFieldType.INPUT}
-                    label='Kullanıcı Adı'
-                    control={profileForm.control}
-                    name='username'
-                    placeholder='Kullanıcı adınızı girin'
-                    className='w-[250px]'
-                  />
                 </div>
+              </div>
+            </div>
 
-                <ChangesCTA form={profileForm} />
-              </form>
-            </Form>
-          </TabsContent>
-
-          <TabsContent value='email'>
-            <Form {...emailForm}>
-              <form
-                onSubmit={emailForm.handleSubmit(onEmailSubmit)}
-                className='space-y-4'
-              >
-                <div>
-                  <h3 className='text-lg font-medium'>E-posta Adresi</h3>
-                  <p className='text-muted-foreground text-sm mb-6'>
-                    {kindeUser?.email} adresiyle giriş yapıyorsunuz. E-posta
-                    adresinizi güncellemek için aşağıdaki alana yeni e-posta
-                    adresinizi girin.
-                  </p>
-                  <div className='mt-2'>
-                    <div className='max-w-[300px]'>
+            <div className='space-y-4'>
+              <h3 className='text-lg font-medium'>E-posta Adresleri</h3>
+              <div className='space-y-4'>
+                {fields.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className='flex flex-col sm:flex-row items-start sm:items-center gap-2'
+                  >
+                    <div className='w-full sm:w-[300px]'>
                       <CustomFormField
                         fieldType={FormFieldType.INPUT}
-                        control={emailForm.control}
-                        name='email'
+                        control={form.control}
+                        name={`emails.${index}.email`}
                         placeholder='E-posta adresinizi girin'
                       />
                     </div>
-                    <ChangesCTA form={emailForm} />
+                    <div className='flex gap-2'>
+                      <Button
+                        type='button'
+                        variant='outline'
+                        size='icon'
+                        onClick={() => setPrimaryEmail(index)}
+                        className={field.isPrimary ? 'bg-green-100' : ''}
+                      >
+                        <Check
+                          className={`h-4 w-4 ${field.isPrimary ? 'text-green-500' : 'text-gray-400'}`}
+                        />
+                      </Button>
+                      {fields.length > 1 && (
+                        <Button
+                          type='button'
+                          variant='outline'
+                          size='icon'
+                          onClick={() => remove(index)}
+                        >
+                          <X className='h-4 w-4' />
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </form>
-            </Form>
-          </TabsContent>
+                ))}
+                <Button
+                  type='button'
+                  variant='outline'
+                  size='sm'
+                  onClick={() => append({ email: '', isPrimary: false })}
+                  className='flex items-center gap-2'
+                >
+                  <Plus className='h-4 w-4' />
+                  <span>Yeni E-posta Ekle</span>
+                </Button>
+              </div>
+            </div>
 
-          <TabsContent value='security'>
-            <form
-              onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
-              className='space-y-4'
-            >
-              <div className='grid w-full items-center gap-1.5'>
-                <Label htmlFor='current-password'>Mevcut Şifre</Label>
-                <Input
-                  className='w-[300px]'
-                  id='current-password'
-                  type='password'
+            <div className='space-y-4'>
+              <h3 className='text-lg font-medium'>Şifre Değiştir</h3>
+              <div className='space-y-4 max-w-md'>
+                <CustomFormField
+                  fieldType={FormFieldType.PASSWORD}
+                  control={form.control}
+                  name='currentPassword'
                   placeholder='Mevcut şifrenizi girin'
-                  {...passwordForm.register('currentPassword')}
                 />
-                {passwordForm.formState.errors.currentPassword && (
-                  <p className='text-red-500 text-sm'>
-                    {passwordForm.formState.errors.currentPassword.message}
-                  </p>
-                )}
-              </div>
-              <div className='grid w-full items-center gap-1.5'>
-                <Label htmlFor='new-password'>Yeni Şifre</Label>
-                <Input
-                  className='w-[300px]'
-                  id='new-password'
-                  type='password'
+                <CustomFormField
+                  fieldType={FormFieldType.PASSWORD}
+                  control={form.control}
+                  name='newPassword'
                   placeholder='Yeni şifrenizi girin'
-                  {...passwordForm.register('newPassword')}
                 />
-                {passwordForm.formState.errors.newPassword && (
-                  <p className='text-red-500 text-sm'>
-                    {passwordForm.formState.errors.newPassword.message}
-                  </p>
-                )}
-              </div>
-              <div className='grid w-full items-center gap-1.5'>
-                <Label htmlFor='confirm-password'>Yeni Şifreyi Onayla</Label>
-                <Input
-                  className='w-[300px]'
-                  id='confirm-password'
-                  type='password'
+                <CustomFormField
+                  fieldType={FormFieldType.PASSWORD}
+                  control={form.control}
+                  name='confirmPassword'
                   placeholder='Yeni şifrenizi onaylayın'
-                  {...passwordForm.register('confirmPassword')}
                 />
-                {passwordForm.formState.errors.confirmPassword && (
-                  <p className='text-red-500 text-sm'>
-                    {passwordForm.formState.errors.confirmPassword.message}
-                  </p>
-                )}
               </div>
-              <Button
-                type='submit'
-                disabled={passwordForm.formState.isSubmitting}
-              >
-                {passwordForm.formState.isSubmitting
-                  ? 'Değiştiriliyor...'
-                  : 'Şifreyi Değiştir'}
-              </Button>
-            </form>
-          </TabsContent>
-        </Tabs>
+            </div>
+
+            <UnsavedChangesNotification form={form} />
+          </form>
+        </Form>
       </CardContent>
     </Card>
   );

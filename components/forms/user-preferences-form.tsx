@@ -1,7 +1,5 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -11,8 +9,6 @@ import {
   CardContent,
   CardDescription,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import { SelectItem } from '@/components/ui/select';
 import { educationLevels, exams, fields, gradeOptions } from '@/constants';
 import { PreferencesSchema } from '@/lib/schemas';
@@ -20,32 +16,31 @@ import { z } from 'zod';
 import CustomFormField, {
   FormFieldType,
 } from '@/components/ui/custom-form-field';
-import SubmitButton from '@/components/forms/ui/submit-button';
 import { axiosInstance, fetcher } from '@/lib/utils';
 import { toast } from 'sonner';
-import { fadeIn } from '@/lib/motion';
-import ChangesCTA from './ui/changes-cta';
+import UnsavedChangesNotification from './ui/unsaved-changes-notification';
 import { ImageUploader } from '../global/image-uploader';
 import { useEdgeStore } from '@/lib/edgestore';
 import useSWR from 'swr';
 import Spinner from '../ui/spinner';
 import Error from '../global/error';
+import { useUser } from '@/context/user-context';
 
 const PreferencesForm = () => {
+  const { user, isUserLoading, isUserError } = useUser();
+
   const form = useForm<z.infer<typeof PreferencesSchema>>({
     resolver: zodResolver(PreferencesSchema),
     defaultValues: {
       educationLevel: 'Lise',
-      grade: 12,
-      field: 'SAY',
-      courseSubject: undefined,
+      grade: user?.grade || 12,
+      field: user?.field || 'SAY',
+      courseSubject: user?.studyField || undefined,
       /* notifications: true, */
       /* taskReminders: false, */
       /* reminderFrequencyHours: 1, */
     },
   });
-
-  const { data: user, isLoading, error } = useSWR('/users', fetcher);
 
   const watchEducationLevel = form.watch('educationLevel');
 
@@ -238,18 +233,20 @@ const PreferencesForm = () => {
           </CardHeader>
           <CardContent className='space-y-6'>
             <div className='grid grid-cols-2 gap-4'>
-              {isLoading ? (
+              {isUserLoading ? (
                 <Spinner size={24} />
-              ) : error ? (
+              ) : isUserError ? (
                 <Error
                   title='Bir hata oluştu'
-                  message={error.message || 'Beklenmedik sunucu hatası'}
+                  message={isUserError.message || 'Beklenmedik sunucu hatası'}
                 />
               ) : (
                 <>
                   <ImageUploader
                     onChange={(url) => onCoverPictureChange(url)}
-                    value={user?.cover_picture || null}
+                    value={user?.cover_picture || undefined}
+                    width={400}
+                    height={225}
                     cropConfig={{
                       aspect: 16 / 9,
                       minWidth: 400,
@@ -260,7 +257,9 @@ const PreferencesForm = () => {
                   />
                   <ImageUploader
                     onChange={(url) => onTimerPictureChange(url)}
-                    value={user?.timer_picture || null}
+                    value={user?.timer_picture || undefined}
+                    width={400}
+                    height={225}
                     cropConfig={{
                       aspect: 16 / 9,
                       minWidth: 400,
@@ -275,7 +274,7 @@ const PreferencesForm = () => {
           </CardContent>
         </Card>
 
-        <ChangesCTA form={form} />
+        <UnsavedChangesNotification form={form} />
       </form>
     </FormProvider>
   );

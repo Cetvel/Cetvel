@@ -6,8 +6,8 @@ export type ImageUploaderProps = {
   maxSize?: number;
   accept?: string;
   placeholder?: string;
-  imageWidth?: number;
-  imageHeight?: number;
+  width?: number;
+  height?: number;
 };
 
 import React from 'react';
@@ -28,8 +28,8 @@ export const ImageUploader = ({
   maxSize = 5,
   accept = 'image/*',
   placeholder = 'Fotoğraf yükle veya sürükle bırak',
-  imageHeight,
-  imageWidth,
+  height: imageHeight,
+  width: imageWidth,
 }: ImageUploaderProps) => {
   const [tempImage, setTempImage] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -97,7 +97,7 @@ export const ImageUploader = ({
         });
         onChange('');
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error('Fotoğraf silinirken bir hata oluştu');
       console.error(error);
     } finally {
@@ -115,9 +115,10 @@ export const ImageUploader = ({
               alt='Uploaded'
               width={imageWidth}
               height={imageHeight}
+              layout='responsive'
               className={cn(
                 'object-cover',
-                cropConfig.cropShape === 'round' && 'rounded-full'
+                cropConfig.cropShape === 'round' ? 'rounded-full' : 'rounded-xl'
               )}
             />
             <div
@@ -125,6 +126,7 @@ export const ImageUploader = ({
                 'absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2',
                 {
                   'rounded-full': cropConfig.cropShape === 'round',
+                  'rounded-xl': cropConfig.cropShape !== 'round',
                 }
               )}
             >

@@ -16,11 +16,10 @@ import {
   StudyField,
 } from '@/app/dashboard/calculation/utils/exam-filter';
 import { deleteManyExams } from '@/lib/services/exam-service';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { useUser } from '@/context/user-context';
 
 const ExamsTable = () => {
-  const { getUser } = useKindeBrowserClient();
-  const user = getUser();
+  const { user } = useUser();
   const { data, isLoading, error } = useSWR('/exams', fetcher);
 
   const studyField: StudyField = useMemo(() => {
@@ -28,7 +27,7 @@ const ExamsTable = () => {
     return userStudyField
       ? (StudyField as any)[userStudyField]
       : StudyField.YKS;
-  }, [user?.publicMetadata?.studyField]);
+  }, [user?.studyField]);
 
   const availableExams = useMemo(
     () => getAvailableExams(studyField),

@@ -6,7 +6,7 @@ type Props = {
   form: any;
 };
 
-const ChangesCTA = ({ form }: Props) => {
+const UnsavedChangesNotification = ({ form }: Props) => {
   const variants = {
     initial: {
       opacity: 0,
@@ -66,4 +66,4 @@ const ChangesCTA = ({ form }: Props) => {
   );
 };
 
-export default ChangesCTA;
+export default UnsavedChangesNotification;

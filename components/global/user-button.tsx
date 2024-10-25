@@ -9,31 +9,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  LogoutLink,
-  useKindeBrowserClient,
-} from '@kinde-oss/kinde-auth-nextjs';
-import { AlertCircle, LogOut } from 'lucide-react';
-import { fetcher } from '@/lib/utils';
+import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs';
+import { LogOut } from 'lucide-react';
+import { useUser } from '@/context/user-context';
 import Spinner from '../ui/spinner';
-import useSWR from 'swr';
-import { CustomTooltip } from './custom-tooltip';
 
 const UserButton = () => {
-  const { getUser: getKindeUser } = useKindeBrowserClient();
-  const kindeUser = getKindeUser();
+  const { user, kindeUser, isUserLoading, isUserError } = useUser();
 
-  const { data: user, isLoading, error } = useSWR('/users', fetcher);
-
-  if (isLoading) return <Spinner size={24} />;
-
-  if (error) {
-    return (
-      <CustomTooltip content={error.message || 'Beklenmedik sunucu hatası'}>
-        <AlertCircle size={18} className='text-destructive' />
-      </CustomTooltip>
-    );
-  }
+  if (isUserLoading) return <Spinner />;
 
   return (
     <DropdownMenu>
