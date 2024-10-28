@@ -17,6 +17,11 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ message: 'Yetkilendirme Hatası' }, { status: 401 });
         }
         const { username } = await req.json();
+
+        if (!username) {
+            return NextResponse.json({ message: 'Kullanıcı adı boş gelemez.' }, { status: 400 });
+        }
+
         await Users.createUserIdentity({
             userId: user.id,
             requestBody: {
