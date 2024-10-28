@@ -16,7 +16,7 @@ const FocusTimer = () => {
       <div
         className='relative rounded-xl lg:col-span-2 shadow-sm p-6 h-[300px] flex flex-col md:h-full justify-between items-stretch'
         style={{
-          backgroundImage: `url(${user?.timer_picture || 'https://media.stockimg.ai/template/image/lmqBF4GblmFF.png'})`,
+          backgroundImage: `url(${user?.timer_picture || '/image/timer_default.jpg'})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundBlendMode: 'multiply',

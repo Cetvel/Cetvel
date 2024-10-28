@@ -233,7 +233,7 @@ const PreferencesForm = () => {
                 <>
                   <ImageUploader
                     onChange={(url) => onCoverPictureChange(url)}
-                    value={user?.cover_picture || undefined}
+                    value={user?.cover_picture || '/image/cover_default.jpg'}
                     width={400}
                     height={225}
                     cropConfig={{
@@ -246,7 +246,7 @@ const PreferencesForm = () => {
                   />
                   <ImageUploader
                     onChange={(url) => onTimerPictureChange(url)}
-                    value={user?.timer_picture || undefined}
+                    value={user?.timer_picture || '/image/timer_default.jpg'}
                     width={400}
                     height={225}
                     cropConfig={{

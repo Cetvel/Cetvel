@@ -25,20 +25,20 @@ import { mutate } from 'swr';
 
 const settingsSchema = z
   .object({
-    username: z.string().min(2, 'Kullanıcı adı en az 2 karakter olmalıdır'),
+    username: z.string().optional(),
     emails: z
       .array(
         z.object({
-          email: z.string().email('Geçerli bir e-posta adresi giriniz'),
+          email: z
+            .string()
+            .email('Geçerli bir e-posta adresi giriniz')
+            .optional(),
           isPrimary: z.boolean().default(false),
         })
       )
-      .min(1, 'En az bir email adresi gereklidir'),
-    currentPassword: z.string().optional(),
-    newPassword: z
-      .string()
-      .min(6, 'Şifre en az 6 karakter olmalıdır')
       .optional(),
+    currentPassword: z.string().optional(),
+    newPassword: z.string().optional(),
     confirmPassword: z.string().optional(),
   })
   .refine(
@@ -125,7 +125,7 @@ export default function UserSettingsForm() {
 
   const setPrimaryEmail = (index: number) => {
     const currentEmails = form.getValues('emails');
-    const updatedEmails = currentEmails.map((email, idx) => ({
+    const updatedEmails = currentEmails?.map((email, idx) => ({
       ...email,
       isPrimary: idx === index,
     }));
