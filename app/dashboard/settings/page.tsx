@@ -1,8 +1,12 @@
 import React from 'react';
-import UserSettingsForm from '@/components/forms/user-settings-form';
+import ProfileForm from '@/components/forms/profile-form';
 
 const AccountSettings = async () => {
-  return <UserSettingsForm />;
+  return (
+    <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+      <ProfileForm />
+    </div>
+  );
 };
 
 export default AccountSettings;

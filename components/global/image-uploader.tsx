@@ -109,7 +109,10 @@ export const ImageUploader = ({
     <>
       <div className={cn('relative group', className)}>
         {value ? (
-          <div className='relative w-full h-full'>
+          <div
+            style={{ width: imageWidth, height: imageHeight }}
+            className='relative'
+          >
             <Image
               src={value}
               alt='Uploaded'
