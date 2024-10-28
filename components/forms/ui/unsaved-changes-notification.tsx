@@ -1,12 +1,17 @@
 import { Button } from '@/components/ui/button';
 import { AnimatePresence, motion } from 'framer-motion';
 import SubmitButton from './submit-button';
+import { UseFormReturn } from 'react-hook-form';
 
 type Props = {
-  form: any;
+  form: UseFormReturn<any>;
+  hasUnsavedChanges?: boolean;
 };
 
-const UnsavedChangesNotification = ({ form }: Props) => {
+const UnsavedChangesNotification = ({
+  form,
+  hasUnsavedChanges = false,
+}: Props) => {
   const variants = {
     initial: {
       opacity: 0,
@@ -30,7 +35,7 @@ const UnsavedChangesNotification = ({ form }: Props) => {
     },
   };
 
-  return (
+  return hasUnsavedChanges ? (
     <AnimatePresence>
       {form.formState.isDirty && (
         <motion.div
@@ -63,7 +68,7 @@ const UnsavedChangesNotification = ({ form }: Props) => {
         </motion.div>
       )}
     </AnimatePresence>
-  );
+  ) : null;
 };
 
 export default UnsavedChangesNotification;

@@ -263,7 +263,10 @@ const PreferencesForm = () => {
           </CardContent>
         </Card>
 
-        <UnsavedChangesNotification form={form} />
+        <UnsavedChangesNotification
+          form={form}
+          hasUnsavedChanges={form.formState.isDirty}
+        />
       </form>
     </FormProvider>
   );
