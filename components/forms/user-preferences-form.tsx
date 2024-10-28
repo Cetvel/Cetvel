@@ -16,12 +16,11 @@ import { z } from 'zod';
 import CustomFormField, {
   FormFieldType,
 } from '@/components/ui/custom-form-field';
-import { axiosInstance, fetcher } from '@/lib/utils';
+import { axiosInstance } from '@/lib/utils';
 import { toast } from 'sonner';
 import UnsavedChangesNotification from './ui/unsaved-changes-notification';
 import { ImageUploader } from '../global/image-uploader';
-import { useEdgeStore } from '@/lib/edgestore';
-import useSWR from 'swr';
+import { mutate } from 'swr';
 import Spinner from '../ui/spinner';
 import Error from '../global/error';
 import { useUser } from '@/context/user-context';
@@ -66,19 +65,13 @@ const PreferencesForm = () => {
     }
   };
 
-  const { edgestore } = useEdgeStore();
-
   const onCoverPictureChange = async (url: string) => {
     try {
-      if (user?.cover_picture) {
-        await edgestore.publicFiles.delete({
-          url: user?.cover_picture,
-        });
-      }
       await axiosInstance.put('/picture/cover', { url });
       toast.success('İşlem başarılı', {
         description: 'Arkaplan resmi başarıyla güncellendi',
       });
+      mutate('/users');
     } catch (error: any) {
       console.error('Arkaplan resmi güncellenirken hata:', error);
       toast.error('İşlem sırasında bir hata oluştu', {
@@ -91,15 +84,11 @@ const PreferencesForm = () => {
 
   const onTimerPictureChange = async (url: string) => {
     try {
-      if (user?.timer_picture) {
-        await edgestore.publicFiles.delete({
-          url: user?.timer_picture,
-        });
-      }
       await axiosInstance.put('/picture/timer', { url });
       toast.success('İşlem başarılı', {
         description: 'Zamanlayıcı arkaplanı başarıyla güncellendi',
       });
+      mutate('/users');
     } catch (error: any) {
       console.error('Zamanlayıcı arkaplanı güncellenirken hata:', error);
       toast.error('İşlem sırasında bir hata oluştu', {

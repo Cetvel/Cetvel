@@ -19,6 +19,7 @@ import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import { useEdgeStore } from '@/lib/edgestore';
+import Spinner from '../ui/spinner';
 
 export const ImageUploader = ({
   onChange,
@@ -33,8 +34,9 @@ export const ImageUploader = ({
 }: ImageUploaderProps) => {
   const [tempImage, setTempImage] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
   const { edgestore } = useEdgeStore();
-
+  1;
   const onDrop = React.useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length === 0) return;
@@ -63,19 +65,16 @@ export const ImageUploader = ({
   });
 
   const handleCrop = async (croppedImageBlob: Blob) => {
+    setIsLoading(true);
+
     try {
-      setIsLoading(true);
-
-      if (value) {
-        await edgestore.publicFiles.delete({
-          url: value,
-        });
-      }
-
       const res = await edgestore.publicFiles.upload({
         file: new File([croppedImageBlob], 'cropped-image.jpg', {
           type: 'image/jpeg',
         }),
+        options: {
+          replaceTargetUrl: value,
+        },
       });
 
       onChange(res.url);
@@ -89,8 +88,9 @@ export const ImageUploader = ({
   };
 
   const handleDelete = async () => {
+    setIsDeleting(true);
+
     try {
-      setIsLoading(true);
       if (value) {
         await edgestore.publicFiles.delete({
           url: value,
@@ -101,7 +101,7 @@ export const ImageUploader = ({
       toast.error('Fotoğraf silinirken bir hata oluştu');
       console.error(error);
     } finally {
-      setIsLoading(false);
+      setIsDeleting(false);
     }
   };
 
@@ -115,7 +115,6 @@ export const ImageUploader = ({
               alt='Uploaded'
               width={imageWidth}
               height={imageHeight}
-              layout='responsive'
               className={cn(
                 'object-cover',
                 cropConfig.cropShape === 'round' ? 'rounded-full' : 'rounded-xl'
@@ -135,9 +134,9 @@ export const ImageUploader = ({
                   type='button'
                   size='sm'
                   variant='secondary'
-                  disabled={isLoading}
+                  disabled={isLoading || isDeleting}
                 >
-                  <UploadIcon className='w-4 h-4' />
+                  {isLoading ? <Spinner size={14} /> : <UploadIcon size={14} />}
                 </Button>
                 <input {...getInputProps()} />
               </div>
@@ -146,9 +145,9 @@ export const ImageUploader = ({
                 type='button'
                 variant='destructive'
                 onClick={handleDelete}
-                disabled={isLoading}
+                disabled={isDeleting || isLoading}
               >
-                <Trash2Icon className='w-4 h-4' />
+                {isDeleting ? <Spinner size={14} /> : <Trash2Icon size={14} />}
               </Button>
             </div>
           </div>
