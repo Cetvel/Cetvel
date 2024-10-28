@@ -16,16 +16,7 @@ export async function PUT(req: NextRequest) {
             console.warn('PUT request: User not authenticated');
             return NextResponse.json({ message: 'Yetkilendirme Hatası' }, { status: 401 });
         }
-
-        const { username, given_name, family_name } = await req.json();
-        await Users.updateUser({
-            id: user.id,
-            requestBody: {
-                given_name,
-                family_name
-            }
-        })
-        
+        const { username } = await req.json();
         await Users.createUserIdentity({
             userId: user.id,
             requestBody: {
@@ -33,7 +24,6 @@ export async function PUT(req: NextRequest) {
                 type: "username"
             }
         })
-
         return NextResponse.json({ status: 200 });
     } catch (error) {
         console.error('İşlem hatası:', error);
