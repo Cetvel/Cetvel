@@ -18,6 +18,10 @@ export async function PUT(req: NextRequest) {
         }
         const { username } = await req.json();
 
+        if (username.includes(" ")) {
+            return NextResponse.json({ message: 'Lütfen boşluk bırakmayınız' }, { status: 400 });
+        }
+
         if (!username) {
             return NextResponse.json({ message: 'Kullanıcı adı boş gelemez.' }, { status: 400 });
         }
