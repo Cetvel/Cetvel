@@ -34,8 +34,11 @@ export async function PUT(req: NextRequest) {
             }
         })
         return NextResponse.json({ status: 200 });
-    } catch (error) {
+    } catch (error: any) {
         console.error('İşlem hatası:', error);
+        if (error.request.errors["429"] == 'Request was throttled.') {
+            return NextResponse.json({ message: "Bu kullanıcı ismi önceden alınmış." }, { status: 429 });
+        }
         return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
     }
 }
