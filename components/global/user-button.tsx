@@ -16,7 +16,6 @@ import Spinner from '../ui/spinner';
 
 const UserButton = () => {
   const { user, kindeUser, isUserLoading, isUserError } = useUser();
-
   if (isUserLoading) return <Spinner />;
 
   return (
@@ -26,10 +25,10 @@ const UserButton = () => {
           <Avatar className='h-8 w-8'>
             <AvatarImage
               src={user?.profile_picture || '/image/avatar.svg'}
-              alt={kindeUser?.username || kindeUser?.given_name || 'Avatar'}
+              alt={user?.name || kindeUser?.given_name || 'Avatar'}
             />
             <AvatarFallback>
-              {kindeUser?.username || kindeUser?.given_name || 'Kullanıcı'}
+              {user?.name || kindeUser?.given_name || 'Kullanıcı'}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -38,7 +37,7 @@ const UserButton = () => {
         <DropdownMenuLabel className='font-normal'>
           <div className='flex flex-col space-y-1'>
             <p className='text-sm font-medium leading-none'>
-              {kindeUser?.username || kindeUser?.given_name}
+              {user?.name || kindeUser?.given_name}
             </p>
             <p className='text-xs leading-none text-muted-foreground'>
               {kindeUser?.email}
