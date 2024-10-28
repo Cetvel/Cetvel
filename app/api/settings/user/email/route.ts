@@ -52,8 +52,9 @@ export async function DELETE(req: NextRequest) {
     const data = await Users.getUserIdentities({
       userId: user?.id
     }) as any
+    console.log(data)
     const emails = data.identities.filter((item: any) => item.type === "email")
-
+    console.log(emails)
     if (emails.length == 1) {
       return NextResponse.json({ message: "En az bir mail adresi olmalıdır." }, { status: 400 });
     }
@@ -145,7 +146,7 @@ export async function GET() {
     }
     await connectDB()
     const emails = await Email.find({ kindeId: user.id })
-    return NextResponse.json({ emails }, { status: 200 });
+    return NextResponse.json(emails, { status: 200 });
   } catch (error) {
     console.error('İşlem hatası:', error);
     return NextResponse.json({ message: "Beklenmedik Sunucu Hatası" }, { status: 500 });
