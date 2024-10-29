@@ -8,8 +8,6 @@ import Exam from "@/lib/models/exam.model";
 import Goal from "@/lib/models/goal.model";
 import Tag from "@/lib/models/tag.model";
 import connectDB from "@/lib/config/connectDB";
-import Email from "@/lib/models/email.model";
-
 // The Kinde issuer URL should already be in your `.env` file
 // from when you initially set up Kinde. This will fetch your
 // public JSON web keys file
@@ -56,15 +54,12 @@ export async function POST(req: Request) {
           {
             name: user.username ?? user.first_name,
             kindeId: user.id,
+            email: user.email,
             password: user.password
           }
         ).then(() => console.log(`${user.username ?? user.first_name} User created`));
 
-        await Email.create({
-          kindeId: user.id,
-          value: user.email,
-          isPrimary: true
-        }).then(() => console.log(`${user.username ?? user.first_name} Email created`));
+
 
         await Tag.insertMany([
           { kindeId: user.id, label: 'Matematik', value: 'Matematik' },
@@ -80,7 +75,6 @@ export async function POST(req: Request) {
         await connectDB();
         await User.findOneAndDelete({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'User deleted'));
         await Pomodoro.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Pomodoros deleted'));
-        await Email.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Emails deleted'));
         await Todo.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Todos deleted'));
         await Exam.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Exams deleted'));
         await Goal.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Goals deleted'));
