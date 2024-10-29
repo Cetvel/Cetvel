@@ -17,6 +17,7 @@ enum aytField {
 interface IUser {
   kindeId: string; // Kinde ID
   name: string; // Username
+  email: string;
   password?: string; // Password
   field?: aytField; // Ayt Field if user is a high school student
   grade?: number; // Grade
@@ -30,7 +31,7 @@ export interface IUserDocument extends IUser, Document {
   _id: Schema.Types.ObjectId;
 }
 
-export interface UserModel extends Model<IUserDocument> {}
+export interface UserModel extends Model<IUserDocument> { }
 
 // Model is defined only if it hasn't been already
 const userSchema = new Schema<IUserDocument, UserModel>(
@@ -44,6 +45,11 @@ const userSchema = new Schema<IUserDocument, UserModel>(
       type: String,
       required: false,
       trim: true,
+    },
+    email: {
+      type: String,
+      required: false,
+      trim: true
     },
     grade: {
       type: Number,
