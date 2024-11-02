@@ -3,7 +3,7 @@
 import { ActionCell } from '@/components/global/action-cell';
 import { Button } from '@/components/ui/button';
 import { GetFocusActions } from '@/hooks/use-focus-actions';
-import { formatMinutesToHours } from '@/lib/utils';
+import { convertSecondsToTime } from '@/lib/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
@@ -16,9 +16,9 @@ export const columns: ColumnDef<Focus>[] = [
     accessorKey: 'duration',
     header: 'Süre',
     cell: ({ row }) => {
-      const minutes = row.original.duration;
+      const seconds = row.original.duration;
 
-      return formatMinutesToHours(minutes);
+      return convertSecondsToTime(seconds);
     },
   },
   {

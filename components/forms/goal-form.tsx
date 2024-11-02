@@ -32,7 +32,7 @@ const GoalForm: React.FC<GoalFormProps> = ({ initialData, onSuccess }) => {
       title: '',
       startsAt: new Date(),
       endsAt: new Date(),
-      target: 0,
+      totalUnits: 0,
     },
   });
 
@@ -42,12 +42,7 @@ const GoalForm: React.FC<GoalFormProps> = ({ initialData, onSuccess }) => {
     }
   }, [initialData, form]);
 
-  async function onSubmit(values: z.infer<typeof GoalSchema>) {
-    const data = {
-      ...values,
-      target: Number(values.target),
-    };
-
+  async function onSubmit(data: z.infer<typeof GoalSchema>) {
     try {
       let res;
       if (initialData) {
@@ -74,7 +69,7 @@ const GoalForm: React.FC<GoalFormProps> = ({ initialData, onSuccess }) => {
       setClose();
       if (onSuccess) onSuccess();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setDeleting(false);
     }
@@ -93,7 +88,7 @@ const GoalForm: React.FC<GoalFormProps> = ({ initialData, onSuccess }) => {
         <CustomFormField
           fieldType={FormFieldType.NUMBER}
           control={form.control}
-          name='target'
+          name='totalUnits'
           label='Hedef miktarı'
         />
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>

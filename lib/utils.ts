@@ -29,14 +29,16 @@ export const fetcher = async (url: string) => {
   }
 };
 
-export const formatMinutesToHours = (minutes: number) => {
-  const hours = Math.floor(minutes / 60);
-  const remainingMinutes = minutes % 60;
-  if (hours < 1) {
-    return `${remainingMinutes} Dakika`;
-  } else {
-    return `${hours} Saat ${remainingMinutes} Dakika`;
-  }
+export const convertSecondsToTime = (totalSeconds: number) => {
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const hoursStr = hours > 0 ? `${hours} Saat ` : '';
+  const minutesStr = minutes > 0 ? `${minutes} Dakika ` : '';
+  const secondsStr = seconds > 0 ? `${seconds} Saniye` : '';
+
+  return `${hoursStr}${minutesStr}${secondsStr}`.trim();
 };
 
 export const determineFormFields = (

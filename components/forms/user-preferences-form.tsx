@@ -235,7 +235,9 @@ const PreferencesForm = () => {
                     onChange={(url) => onCoverPictureChange(url)}
                     value={user?.cover_picture || '/image/cover_default.jpg'}
                     width={400}
+                    className='w-full'
                     height={225}
+                    layout='responsive'
                     cropConfig={{
                       aspect: 16 / 9,
                       minWidth: 400,
@@ -248,7 +250,9 @@ const PreferencesForm = () => {
                     onChange={(url) => onTimerPictureChange(url)}
                     value={user?.timer_picture || '/image/timer_default.jpg'}
                     width={400}
+                    className='w-full'
                     height={225}
+                    layout='responsive'
                     cropConfig={{
                       aspect: 16 / 9,
                       minWidth: 400,

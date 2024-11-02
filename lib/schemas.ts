@@ -62,7 +62,7 @@ export const GoalSchema = z.object({
   title: z.string({
     required_error: 'Hedef girmek zorunludur',
   }),
-  target: z.coerce.number({
+  totalUnits: z.coerce.number({
     required_error: 'Hedef sayı girmek zorunludur',
   }),
   startsAt: z.date({
@@ -87,16 +87,12 @@ export const FocusTimeSchema = z.object({
 });
 
 export const FocusSessionSchema = z.object({
-  title: z
-    .string({
-      required_error: 'Başlık girmek zorunludur',
-    })
-    .min(2, { message: 'Başlık en az 2 karakter uzunluğunda olmalı' }),
-  tag: z
-    .string({
-      required_error: 'Etiket seçmek zorunludur',
-    })
-    .min(2, { message: 'Etiket en az 2 karakter uzunluğunda olmalı' }),
+  title: z.string({
+    required_error: 'Başlık girmek zorunludur',
+  }),
+  tag: z.string({
+    required_error: 'Etiket seçmek zorunludur',
+  }),
   duration: z.coerce.number({
     required_error: 'Süre girmek zorunludur',
     invalid_type_error: 'Bir sayı girişi yapmalısın',

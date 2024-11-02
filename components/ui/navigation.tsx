@@ -16,6 +16,7 @@ import {
 import SignedInClient from '../global/signed-in-client';
 import SignedOutClient from '../global/signed-out-client';
 import UserButton from '../global/user-button';
+import Logo from '../global/logo';
 
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -59,12 +60,7 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <div className='flex-shrink-0'>
             <Link href='#' className='text-2xl font-bold text-primary'>
-              <Image
-                src={'/image/logo.svg'}
-                alt='Logo'
-                width={32}
-                height={32}
-              />
+              <Logo size={100} />
             </Link>
           </div>
 

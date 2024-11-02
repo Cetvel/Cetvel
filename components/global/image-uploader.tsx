@@ -8,6 +8,7 @@ export type ImageUploaderProps = {
   placeholder?: string;
   width?: number;
   height?: number;
+  layout?: 'responsive' | 'fixed';
 };
 
 import React from 'react';
@@ -31,6 +32,7 @@ export const ImageUploader = ({
   placeholder = 'Fotoğraf yükle veya sürükle bırak',
   height: imageHeight,
   width: imageWidth,
+  layout,
 }: ImageUploaderProps) => {
   const [tempImage, setTempImage] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -109,15 +111,13 @@ export const ImageUploader = ({
     <>
       <div className={cn('relative group', className)}>
         {value ? (
-          <div
-            style={{ width: imageWidth, height: imageHeight }}
-            className='relative'
-          >
+          <div className='relative'>
             <Image
               src={value}
               alt='Uploaded'
               width={imageWidth}
               height={imageHeight}
+              layout={layout}
               className={cn(
                 'object-cover',
                 cropConfig.cropShape === 'round' ? 'rounded-full' : 'rounded-xl'

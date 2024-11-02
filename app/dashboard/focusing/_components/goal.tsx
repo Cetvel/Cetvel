@@ -9,9 +9,9 @@ import Modal from '@/components/global/modal';
 import { cn } from '@/lib/utils';
 
 const Goal = ({ goal }: { goal: Goal }) => {
-  const { _id, title, target, totalUnits, startsAt, endsAt } = goal;
+  const { _id, title, totalUnits, completedUnits, startsAt, endsAt } = goal;
   const { setOpen } = useModal();
-  const [currentProgress, setCurrentProgress] = useState(totalUnits);
+  const [currentProgress, setCurrentProgress] = useState(completedUnits);
 
   const timeoutRef = useRef<NodeJS.Timeout>();
 
@@ -21,7 +21,7 @@ const Goal = ({ goal }: { goal: Goal }) => {
         clearTimeout(timeoutRef.current);
       }
       timeoutRef.current = setTimeout(() => {
-        updateGoal(_id, { totalUnits: newProgress });
+        updateGoal(_id, { completedUnits: newProgress });
       }, 500);
     },
     [_id]
@@ -36,7 +36,7 @@ const Goal = ({ goal }: { goal: Goal }) => {
   }, []);
 
   const handleIncrement = () => {
-    const newProgress = Math.min(currentProgress + 1, target);
+    const newProgress = Math.min(currentProgress + 1, totalUnits);
     setCurrentProgress(newProgress);
     debouncedUpdate(newProgress);
   };
@@ -51,7 +51,7 @@ const Goal = ({ goal }: { goal: Goal }) => {
     <div
       className={cn(
         'p-4 bg-card rounded-lg border group',
-        currentProgress === Number(target) ? 'border-primary' : 'border-border'
+        currentProgress === totalUnits ? 'border-primary' : 'border-border'
       )}
     >
       <div className='flex items-center justify-between mb-2'>
@@ -65,7 +65,7 @@ const Goal = ({ goal }: { goal: Goal }) => {
             <Minus className='h-4 w-4' />
           </Button>
           <Button
-            disabled={currentProgress === Number(target)}
+            disabled={currentProgress === totalUnits}
             size='icon-sm'
             onClick={handleIncrement}
           >
@@ -86,10 +86,10 @@ const Goal = ({ goal }: { goal: Goal }) => {
           </Button>
         </div>
       </div>
-      <Progress value={(currentProgress / target) * 100} className='mb-2' />
+      <Progress value={(currentProgress / totalUnits) * 100} className='mb-2' />
       <div className='flex justify-between text-sm text-muted-foreground'>
         <span>
-          {currentProgress} / {target}
+          {currentProgress} / {totalUnits}
         </span>
         <span>
           {new Date(startsAt).toLocaleDateString()} -{' '}

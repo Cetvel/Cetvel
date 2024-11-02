@@ -14,7 +14,7 @@ const AddFocusItem = () => {
     <Button
       onClick={() =>
         setOpen(
-          <Modal title='Pomodoro ekle'>
+          <Modal title='Odaklanma oturumu ekle'>
             <FocusSessionForm />
           </Modal>
         )

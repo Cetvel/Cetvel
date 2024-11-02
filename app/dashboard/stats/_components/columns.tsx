@@ -13,7 +13,7 @@ import {
 import { Ellipsis, Trash } from 'lucide-react';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
-import { formatMinutesToHours } from '@/lib/utils';
+import { convertSecondsToTime } from '@/lib/utils';
 import { deleteExam } from '@/lib/services/exam-service';
 import {
   examConfigs,
@@ -105,7 +105,7 @@ const baseColumns: ColumnDef<ExamResult>[] = [
       <ColumnHeader column={column} title='Çözüm Süresi' hideable />
     ),
     cell: ({ row }) =>
-      formatMinutesToHours(row.getValue('solvingTime') as number),
+      convertSecondsToTime(row.getValue('solvingTime') as number),
   },
 ];
 

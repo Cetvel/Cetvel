@@ -5,7 +5,7 @@ import React from 'react';
 import { FocusingStatsChart } from './stats-chart';
 import { AlertCircle, TrendingUp } from 'lucide-react';
 import useSWR from 'swr';
-import { fetcher, formatMinutesToHours } from '@/lib/utils';
+import { fetcher, convertSecondsToTime } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -58,12 +58,12 @@ const Statistics = () => {
         <CardContent className='flex flex-col gap-2'>
           <div className='flex items-center justify-between'>
             <p>Bugünkü toplam:</p>
-            <p>{formatMinutesToHours(data.todayStatistics.totalDuration)}</p>
+            <p>{convertSecondsToTime(data.todayStatistics.totalDuration)}</p>
           </div>
           <div className='flex items-center justify-between'>
             <p>Haftalık ortalama:</p>
             <p>
-              {formatMinutesToHours(data.lastWeekStatistics.averageDuration)}
+              {convertSecondsToTime(data.lastWeekStatistics.averageDuration)}
             </p>
           </div>
           <div className='flex items-center justify-between'>

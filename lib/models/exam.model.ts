@@ -1,45 +1,55 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Document, Model } from 'mongoose';
 
 interface Exam {
-    userId: mongoose.Types.ObjectId,
-    kindeId: string,
-    examName: string,
-    examDate: Date,
-    solvingDate: Date
+  userId: mongoose.Types.ObjectId;
+  kindeId: string;
+  examName: string;
+  examDate: Date;
+  solvingDate: Date;
 }
 
 export interface ExamDocument extends Exam, Document {
-    _id: Schema.Types.ObjectId;
+  _id: Schema.Types.ObjectId;
 }
 
 interface ExamModel extends Model<ExamDocument> {}
 
-const examSchema = new mongoose.Schema<ExamDocument, ExamModel>({
+const examSchema = new mongoose.Schema<ExamDocument, ExamModel>(
+  {
     kindeId: {
-        type: String,
-        required: true,
-        index: true
+      type: String,
+      required: true,
+      index: true,
     },
     userId: {
-        type: Schema.Types.ObjectId, ref: 'user',
-        required: false
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: false,
     },
     examName: { type: String, required: true },
-    solvingDate: { type: Date, required: true }
-}, {
+    solvingDate: { type: Date, required: true },
+  },
+  {
     discriminatorKey: 'examType',
-    timestamps: true
-});
+    timestamps: true,
+  }
+);
 
 // Static metod
-examSchema.statics.findByUserAndDateRange = function (userId: string, startDate: Date, endDate: Date): Promise<ExamDocument[]> {
-    return this.find({
-        userId: userId,
-        examDate: { $gte: startDate, $lte: endDate }
-    }).exec();
-}
+examSchema.statics.findByUserAndDateRange = function (
+  userId: string,
+  startDate: Date,
+  endDate: Date
+): Promise<ExamDocument[]> {
+  return this.find({
+    userId: userId,
+    examDate: { $gte: startDate, $lte: endDate },
+  }).exec();
+};
 
-const Exam = mongoose.models.Exam || mongoose.model<ExamDocument, ExamModel>('Exam', examSchema);
+const Exam =
+  mongoose.models.Exam ||
+  mongoose.model<ExamDocument, ExamModel>('Exam', examSchema);
 
 export default Exam;
 

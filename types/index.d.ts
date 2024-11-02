@@ -7,6 +7,7 @@ declare type User = {
   _id: string;
   kindeId: string;
   name: string;
+  email: string;
   profile_picture: string | undefined;
   cover_picture: string | undefined;
   timer_picture: string | undefined;
@@ -43,9 +44,11 @@ declare type Goal = {
   _id: string;
   title: string;
   totalUnits: number;
-  target: number;
+  completedUnits: number;
   startsAt: Date;
   endsAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 declare type notification = {
@@ -72,7 +75,15 @@ declare enum TaskStatus {
 }
 
 declare type UserClass = '9' | '10' | '11' | '12' | 'Mezun';
-declare type ExamType = 'YKS' | 'KPSS' | 'DGS' | 'ALES' | 'YDS';
+declare type ExamType =
+  | 'YKS'
+  | 'KPSS'
+  | 'DGS'
+  | 'ALES'
+  | 'YDS'
+  | 'TYT'
+  | 'AYT'
+  | 'LGS';
 declare type AYTField = 'SAY' | 'EA' | 'SOZ';
 declare type StudyField = 'SAY' | 'EA' | 'SOZ' | 'DIL';
 

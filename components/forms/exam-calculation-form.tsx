@@ -26,6 +26,7 @@ import {
   StudyField,
 } from '@/app/dashboard/calculation/utils/exam-filter';
 import Spinner from '../ui/spinner';
+import { useUser } from '@/context/user-context';
 
 export type SubjectConfig = {
   name: string;
@@ -58,7 +59,7 @@ export const examConfigs: ExamConfig[] = [
       { name: 'social', label: 'Sosyal Bilimler', maxQuestions: 20 },
       { name: 'science', label: 'Fen Bilimleri', maxQuestions: 20 },
     ],
-    totalTime: 135,
+    totalTime: 165,
   },
   {
     type: 'AYT',
@@ -401,6 +402,8 @@ const NetCalculationModal: React.FC<{
 };
 
 const ModularExamForm: React.FC = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [selectedExamType, setSelectedExamType] = useState<ExamType>(
     examConfigs[0].type as ExamType
   );
@@ -411,13 +414,14 @@ const ModularExamForm: React.FC = () => {
   const [selectedField, setSelectedField] = useState<string | null>(null);
 
   const { setOpen } = useModal();
+  const { user } = useUser();
 
   const studyField: StudyField = useMemo(() => {
-    const userStudyField = user?.publicMetadata?.studyField as string;
+    const userStudyField = user?.studyField as string;
     return userStudyField
       ? (StudyField as any)[userStudyField]
       : StudyField.YKS;
-  }, [user?.publicMetadata?.studyField]);
+  }, [user?.studyField]);
 
   const availableExams = useMemo(
     () => getAvailableExams(studyField),
@@ -493,6 +497,7 @@ const ModularExamForm: React.FC = () => {
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
     const { examType, ...examData } = data;
+    setIsSubmitting(true);
 
     try {
       const success = await createExam(selectedExamType, examData);
@@ -523,6 +528,8 @@ const ModularExamForm: React.FC = () => {
       }
     } catch (error) {
       console.error('Sınav oluşturma hatası:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -531,12 +538,13 @@ const ModularExamForm: React.FC = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
         <Card>
           <CardHeader>
-            <div className='grid grid-cols-1 xl:grid-cols-3 gap-4'>
+            <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4'>
               <CustomFormField
                 fieldType={FormFieldType.INPUT}
                 control={form.control}
                 name='examName'
                 label='Sınav Adı'
+                placeholder='Örn: TYT Deneme Sınavı'
               />
 
               <CustomFormField
@@ -609,9 +617,9 @@ const ModularExamForm: React.FC = () => {
           <Button
             type='button'
             onClick={handleCalculateClick}
-            disabled={form.formState.isSubmitting}
+            disabled={isSubmitting}
           >
-            {form.formState.isSubmitting && <Spinner />}
+            {isSubmitting && <Spinner />}
             Hesapla
           </Button>
         </div>

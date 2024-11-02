@@ -27,11 +27,7 @@ interface TimerDisplayProps {
   totalSeconds: number;
 }
 
-const TimerDisplay: React.FC<TimerDisplayProps> = ({
-  secondsLeft,
-  totalSeconds,
-}) => {
-  const percentage = (secondsLeft / totalSeconds) * 100;
+const TimerDisplay: React.FC<TimerDisplayProps> = ({ secondsLeft }) => {
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -53,6 +49,7 @@ const FocusForge: React.FC = () => {
   const [secondsLeft, setSecondsLeft] = useState(focusDuration * 60);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const secondsLeftRef = useRef(secondsLeft);
   const isPausedRef = useRef(isPaused);
@@ -73,6 +70,50 @@ const FocusForge: React.FC = () => {
     },
   });
 
+  const handleSubmit = form.handleSubmit(async (data: FocusSessionValues) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    handlePause(true);
+    if (!startDate) {
+      toast.error('Hata', {
+        description: 'Lütfen önce zamanlayıcıyı başlatın.',
+      });
+      return;
+    }
+
+    const endDate = new Date();
+    const duration = focusDuration * 60 - secondsLeftRef.current;
+
+    const focusSessionData = {
+      ...data,
+      duration: duration,
+      date: startDate,
+      startsAt: startDate.toISOString(),
+      endsAt: endDate.toISOString(),
+    };
+
+    try {
+      await createFocusSession(focusSessionData);
+      form.reset();
+      initTimer();
+      playSound('session-complete.mp3');
+      toast.success('Başarılı', {
+        description: 'Oturum başarıyla kaydedildi.',
+      });
+    } catch (error) {
+      toast.error('Hata', {
+        description: 'Oturum kaydedilirken bir hata oluştu.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  });
+
+  useEffect(() => {
+    secondsLeftRef.current = focusDuration * 60;
+    setSecondsLeft(secondsLeftRef.current);
+  }, [focusDuration]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (isPausedRef.current) return;
@@ -84,7 +125,7 @@ const FocusForge: React.FC = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [focusDuration]);
+  }, [focusDuration, handleSubmit]);
 
   const playSound = (soundFile: string) => {
     if (soundEnabled) {
@@ -110,37 +151,6 @@ const FocusForge: React.FC = () => {
     playSound(pause ? 'pause.wav' : 'resume.wav');
   };
 
-  const handleSubmit = form.handleSubmit(async (data: FocusSessionValues) => {
-    handlePause(true);
-    if (!startDate) {
-      toast.error('Hata', {
-        description: 'Lütfen önce zamanlayıcıyı başlatın.',
-      });
-      return;
-    }
-
-    const endDate = new Date();
-    const duration = Math.abs(startDate.getTime() - endDate.getTime()) / 1000;
-
-    const focusSessionData = {
-      ...data,
-      duration: duration,
-      date: startDate,
-      startsAt: startDate.toISOString(),
-      endsAt: endDate.toISOString(),
-    };
-
-    const success = await createFocusSession(focusSessionData);
-    if (success) {
-      form.reset();
-      initTimer();
-      playSound('session-complete.mp3');
-      toast.success('Başarılı', {
-        description: 'Oturum başarıyla kaydedildi.',
-      });
-    }
-  });
-
   const tick = () => {
     secondsLeftRef.current--;
     setSecondsLeft(secondsLeftRef.current);
@@ -153,12 +163,19 @@ const FocusForge: React.FC = () => {
           type='button'
           onClick={() => handlePause(!isPaused)}
           size='icon'
+          disabled={isSubmitting}
         >
           {isPaused ? <Play size={18} /> : <Pause size={18} />}
         </Button>
       </CustomTooltip>
       <CustomTooltip content='Sıfırla'>
-        <Button type='button' onClick={initTimer} variant='outline' size='icon'>
+        <Button
+          type='button'
+          onClick={initTimer}
+          variant='outline'
+          size='icon'
+          disabled={isSubmitting}
+        >
           <RotateCw size={18} />
         </Button>
       </CustomTooltip>
@@ -169,8 +186,9 @@ const FocusForge: React.FC = () => {
             onClick={handleSubmit}
             variant='destructive'
             size='icon'
+            disabled={isSubmitting}
           >
-            <Square size={18} />
+            {isSubmitting ? <Spinner /> : <Square size={18} />}
           </Button>
         </CustomTooltip>
       )}

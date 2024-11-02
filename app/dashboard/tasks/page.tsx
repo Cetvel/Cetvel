@@ -10,10 +10,8 @@ const Page = async () => {
       <PageHeader title='Görevler' />
       <div className='grid grid-cols-1 lg:grid-cols-6 gap-6 mb-6'>
         <div className='lg:col-span-4'>
-          <Card className='lg:h-[560px]'>
-            <CardHeader>
-              <h2 className='text-lg font-semibold'>Görevler</h2>
-            </CardHeader>
+          <Card>
+            <CardHeader></CardHeader>
             <CardContent>
               <TasksTable />
             </CardContent>

@@ -67,49 +67,54 @@ const FocusSessionForm: React.FC<FocusSessionFormProps> = ({ editSession }) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-        <CustomFormField
-          fieldType={FormFieldType.INPUT}
-          control={form.control}
-          name='title'
-          label='Başlık'
-          placeholder='Odak oturumu başlığı'
-        />
-        <CustomFormField
-          fieldType={FormFieldType.SELECT}
-          control={form.control}
-          name='tag'
-          label='Etiket'
-          placeholder='Etiket seçin'
-        >
-          {tags ? (
-            tags.map((tag: Tag) => (
-              <SelectItem key={tag._id} value={tag._id}>
-                {tag.label}
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <CustomFormField
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            name='title'
+            label='Başlık'
+            placeholder='Odaklanma oturumu başlığı'
+          />
+          <CustomFormField
+            fieldType={FormFieldType.SELECT}
+            control={form.control}
+            name='tag'
+            label='Etiket'
+            placeholder='Etiket seçin'
+          >
+            {tags ? (
+              tags.map((tag: Tag) => (
+                <SelectItem key={tag._id} value={tag._id}>
+                  {tag.label}
+                </SelectItem>
+              ))
+            ) : isTagsLoading ? (
+              <SelectItem value='loading' disabled>
+                <Spinner />
               </SelectItem>
-            ))
-          ) : isTagsLoading ? (
-            <SelectItem value='loading' disabled>
-              <Spinner />
-            </SelectItem>
-          ) : tagsError ? (
-            <SelectItem value='error' disabled>
-              Etiketler yüklenemedi
-            </SelectItem>
-          ) : null}
-        </CustomFormField>
-        <CustomFormField
-          fieldType={FormFieldType.NUMBER}
-          control={form.control}
-          name='duration'
-          label='Süre (dakika)'
-          placeholder='Dakika cinsinden süre'
-        />
-        <CustomFormField
-          fieldType={FormFieldType.DATE_PICKER}
-          control={form.control}
-          name='startsAt'
-          label='Başlangıç Tarihi'
-        />
+            ) : tagsError ? (
+              <SelectItem value='error' disabled>
+                Etiketler yüklenemedi
+              </SelectItem>
+            ) : null}
+          </CustomFormField>
+        </div>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <CustomFormField
+            fieldType={FormFieldType.NUMBER}
+            control={form.control}
+            name='duration'
+            label='Süre (dakika)'
+            placeholder='Dakika cinsinden süre'
+          />
+          <CustomFormField
+            fieldType={FormFieldType.DATE_PICKER}
+            control={form.control}
+            name='startsAt'
+            label='Başlangıç Tarihi'
+          />
+        </div>
+
         <SubmitButton
           text={editSession ? 'Güncelle' : 'Oluştur'}
           loading={form.formState.isSubmitting}
