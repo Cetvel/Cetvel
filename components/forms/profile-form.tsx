@@ -1,6 +1,6 @@
 'use client';
 
-import { useUser } from '@/context/user-context';
+import { useUser } from '@/features/users/contexts/user-context';
 import React from 'react';
 import {
   Card,

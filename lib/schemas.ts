@@ -7,7 +7,8 @@ export const PreferencesSchema = z
     }),
     grade: z.coerce.number().optional(),
     field: z.enum(['SAY', 'SOZ', 'EA', 'DIL']).optional(),
-    courseSubject: z.enum(['YKS', 'KPSS', 'DGS', 'ALES', 'YDS']).optional(),
+    examType: z.string().optional(),
+
     /* notifications: z.boolean().default(true), */
     /* taskReminders: z.boolean().default(false), */
     /* reminderFrequencyHours: z.coerce.number().default(1), */

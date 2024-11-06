@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs';
 import { LogOut } from 'lucide-react';
-import { useUser } from '@/context/user-context';
+import { useUser } from '@/features/users/contexts/user-context';
 import Spinner from '../ui/spinner';
 
 const UserButton = () => {

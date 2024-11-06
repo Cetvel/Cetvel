@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import Pomodoro from '@/lib/models/pomodoro.model';
+import Pomodoro from '@/features/focus-sessions/models/pomodoro.model';
 import connectDB from '@/lib/config/connectDB';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-const {getUser }= getKindeServerSession()
+const { getUser } = getKindeServerSession();
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,7 +11,10 @@ export async function GET(request: NextRequest) {
     const userId = kindeUser?.id;
 
     if (!userId) {
-      return NextResponse.json({ message: 'Yetkilendirme Hatası' }, { status: 401 });
+      return NextResponse.json(
+        { message: 'Yetkilendirme Hatası' },
+        { status: 401 }
+      );
     }
 
     // Türkiye saat dilimi için offset (UTC+3)
@@ -28,60 +31,57 @@ export async function GET(request: NextRequest) {
     const sevenDaysAgo = new Date(nowInTurkey);
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
     sevenDaysAgo.setUTCHours(0, 0, 0, 0);
-    await connectDB()
+    await connectDB();
     const result = await Pomodoro.aggregate([
       {
         $match: {
           kindeId: userId,
-          startsAt: { $gte: new Date(sevenDaysAgo.getTime() - turkeyOffset) }
-        }
+          startsAt: { $gte: new Date(sevenDaysAgo.getTime() - turkeyOffset) },
+        },
       },
       {
         $project: {
           dayOfWeek: {
             $dayOfWeek: {
-              $add: ['$startsAt', turkeyOffset]
-            }
+              $add: ['$startsAt', turkeyOffset],
+            },
           },
           isToday: {
-            $gte: [
-              { $add: ['$startsAt', turkeyOffset] },
-              todayStartInTurkey
-            ]
+            $gte: [{ $add: ['$startsAt', turkeyOffset] }, todayStartInTurkey],
           },
-          durationInHours: { $divide: ['$duration', 60] },  // Convert minutes to hours
-          duration: 1
-        }
+          durationInHours: { $divide: ['$duration', 60] }, // Convert minutes to hours
+          duration: 1,
+        },
       },
       {
         $facet: {
           todayStats: [
             {
-              $match: { isToday: true }
+              $match: { isToday: true },
             },
             {
               $group: {
                 _id: null,
                 totalDuration: { $sum: '$duration' },
-                count: { $sum: 1 }
-              }
-            }
+                count: { $sum: 1 },
+              },
+            },
           ],
           weekStats: [
             {
               $group: {
                 _id: null,
                 totalDuration: { $sum: '$duration' },
-                count: { $sum: 1 }
-              }
-            }
+                count: { $sum: 1 },
+              },
+            },
           ],
           dailyStats: [
             {
               $group: {
                 _id: '$dayOfWeek',
-                hours: { $sum: '$durationInHours' }
-              }
+                hours: { $sum: '$durationInHours' },
+              },
             },
             {
               $project: {
@@ -95,17 +95,17 @@ export async function GET(request: NextRequest) {
                       { case: { $eq: ['$_id', 4] }, then: 'Çar' },
                       { case: { $eq: ['$_id', 5] }, then: 'Per' },
                       { case: { $eq: ['$_id', 6] }, then: 'Cum' },
-                      { case: { $eq: ['$_id', 7] }, then: 'Cmt' }
+                      { case: { $eq: ['$_id', 7] }, then: 'Cmt' },
                     ],
-                    default: 'Bilinmeyen'
-                  }
+                    default: 'Bilinmeyen',
+                  },
                 },
-                hours: { $round: ['$hours', 1] }
-              }
-            }
-          ]
-        }
-      }
+                hours: { $round: ['$hours', 1] },
+              },
+            },
+          ],
+        },
+      },
     ]);
 
     const [{ todayStats, weekStats, dailyStats }] = result;
@@ -115,8 +115,10 @@ export async function GET(request: NextRequest) {
 
     // Haftalık istatistikleri doldur ve sırala
     const daysOfWeek = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
-    const filledDailyStats = daysOfWeek.map(day => {
-      const found = dailyStats.find((item: { day: string; }) => item.day === day);
+    const filledDailyStats = daysOfWeek.map((day) => {
+      const found = dailyStats.find(
+        (item: { day: string }) => item.day === day
+      );
       return found || { day, hours: 0 };
     });
 
@@ -124,25 +126,31 @@ export async function GET(request: NextRequest) {
     const today = nowInTurkey.getDay();
     const chartData = [
       ...filledDailyStats.slice(today + 1),
-      ...filledDailyStats.slice(0, today + 1)
+      ...filledDailyStats.slice(0, today + 1),
     ];
 
-    return NextResponse.json({
-      todayStatistics: {
-        totalDuration: todayStatistics.totalDuration,
-        totalPomodoros: todayStatistics.count
+    return NextResponse.json(
+      {
+        todayStatistics: {
+          totalDuration: todayStatistics.totalDuration,
+          totalPomodoros: todayStatistics.count,
+        },
+        lastWeekStatistics: {
+          totalDuration: weekStatistics.totalDuration,
+          totalPomodoros: weekStatistics.count,
+          averageDuration:
+            weekStatistics.count > 0
+              ? Math.round(weekStatistics.totalDuration / weekStatistics.count)
+              : 0,
+        },
+        chartData: chartData,
       },
-      lastWeekStatistics: {
-        totalDuration: weekStatistics.totalDuration,
-        totalPomodoros: weekStatistics.count,
-        averageDuration: weekStatistics.count > 0
-          ? Math.round(weekStatistics.totalDuration / weekStatistics.count)
-          : 0
-      },
-      chartData: chartData
-    }, { status: 200 });
-
+      { status: 200 }
+    );
   } catch (error) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }

@@ -10,7 +10,6 @@ import {
   CardDescription,
 } from '@/components/ui/card';
 import { SelectItem } from '@/components/ui/select';
-import { educationLevels, exams, fields, gradeOptions } from '@/constants';
 import { PreferencesSchema } from '@/lib/schemas';
 import { z } from 'zod';
 import CustomFormField, {
@@ -23,7 +22,13 @@ import { ImageUploader } from '../global/image-uploader';
 import { mutate } from 'swr';
 import Spinner from '../ui/spinner';
 import Error from '../global/error';
-import { useUser } from '@/context/user-context';
+import { useUser } from '@/features/users/contexts/user-context';
+import {
+  educationLevels,
+  exams,
+  fields,
+  gradeOptions,
+} from '@/features/users/constants';
 
 const PreferencesForm = () => {
   const { user, isUserLoading, isUserError } = useUser();
@@ -34,7 +39,7 @@ const PreferencesForm = () => {
       educationLevel: 'Lise',
       grade: user?.grade || 12,
       field: user?.field || 'SAY',
-      courseSubject: user?.studyField || undefined,
+      examType: user?.studyField,
       /* notifications: true, */
       /* taskReminders: false, */
       /* reminderFrequencyHours: 1, */
@@ -47,7 +52,7 @@ const PreferencesForm = () => {
     const data = {
       grade: values.grade,
       field: values.field,
-      studyField: values.courseSubject,
+      studyField: values.examType,
     };
 
     try {
@@ -116,7 +121,7 @@ const PreferencesForm = () => {
               name='educationLevel'
               label='Eğitim Seviyen'
             >
-              {educationLevels.map((level) => (
+              {educationLevels.map((level: any) => (
                 <SelectItem key={level} value={level}>
                   {level}
                 </SelectItem>

@@ -4,7 +4,6 @@ import './globals.css';
 import { ThemeProvider } from '@/providers/theme-provider';
 import ModalProvider from '@/providers/modal-provider';
 import { Toaster } from '@/components/ui/sonner';
-import { GoogleTagManager } from '@next/third-parties/google';
 import { EdgeStoreProvider } from '../lib/edgestore';
 
 const dm_sans = DM_Sans({ subsets: ['latin'] });
@@ -26,19 +25,7 @@ export default function RootLayout({
       className='antialised scroll-smooth'
       suppressHydrationWarning
     >
-      <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM!} />
       <body className={dm_sans.className}>
-        <noscript>
-          <iframe
-            src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM!}`}
-            height='0'
-            width='0'
-            style={{
-              display: 'none',
-              visibility: 'hidden',
-            }}
-          ></iframe>
-        </noscript>
         <EdgeStoreProvider>
           <ThemeProvider
             attribute='class'

@@ -9,7 +9,7 @@ import 'moment/locale/tr';
 import { useModal } from '@/providers/modal-provider';
 import { Button } from '@/components/ui/button';
 import { VIEW_OPTIONS } from '@/constants';
-import TaskForm from '@/components/forms/task-form';
+import TaskForm from '@/features/tasks/forms/task-form';
 import Modal from '@/components/global/modal';
 import { ChevronLeft, ChevronRight, XCircle } from 'lucide-react';
 import useSWR from 'swr';

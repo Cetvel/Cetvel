@@ -1,11 +1,11 @@
-import FocusForge from '@/components/forms/focus-timer-form';
+import FocusForge from '@/features/focus-sessions/forms/focus-timer-form';
 import PageHeader from '@/components/global/page-header';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import React from 'react';
-import Statistics from './_components/stats';
-import FocusingHistory from './_components/focusing-history';
-import Goals from './_components/goals';
+import Statistics from '@/features/focus-sessions/components/stats';
+import FocusingHistory from '@/features/focus-sessions/components/focusing-history';
 import { Disc, Timer, TrendingUp } from 'lucide-react';
+import Goals from '@/features/goals/components/goals';
 
 const Focusing = () => {
   return (

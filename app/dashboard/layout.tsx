@@ -1,5 +1,5 @@
 import Sidebar from '@/components/global/sidebar';
-import UserContextProvider from '@/context/user-context';
+import UserContextProvider from '@/features/users/contexts/user-context';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';

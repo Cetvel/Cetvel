@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import Todo from "@/lib/models/todo.model";
-import connectDB from "@/lib/config/connectDB";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-const {getUser} = getKindeServerSession();
+import { NextRequest, NextResponse } from 'next/server';
+import Todo from '@/features/tasks/models/todo.model';
+import connectDB from '@/lib/config/connectDB';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+const { getUser } = getKindeServerSession();
 // Özel hata sınıfı
 class APIError extends Error {
   constructor(
@@ -17,11 +17,11 @@ class APIError extends Error {
 
 // Hata mesajlarını loglama fonksiyonu
 function logError(error: any) {
-  console.error("API Error:", {
+  console.error('API Error:', {
     name: error.name,
     message: error.message,
     stack: error.stack,
-    originalError: error.originalError
+    originalError: error.originalError,
   });
 }
 
@@ -29,17 +29,17 @@ function logError(error: any) {
 function createErrorResponse(error: APIError | Error) {
   const isAPIError = error instanceof APIError;
   const statusCode = isAPIError ? error.statusCode : 500;
-  const message = isAPIError ? error.message : "Internal Server Error";
+  const message = isAPIError ? error.message : 'Internal Server Error';
 
   return NextResponse.json(
     {
       error: {
         message,
-        ...(process.env.NODE_ENV === "development" && {
+        ...(process.env.NODE_ENV === 'development' && {
           stack: error.stack,
-          originalError: isAPIError ? error.originalError : error
-        })
-      }
+          originalError: isAPIError ? error.originalError : error,
+        }),
+      },
     },
     { status: statusCode }
   );
@@ -48,9 +48,9 @@ function createErrorResponse(error: APIError | Error) {
 export async function GET(request: NextRequest) {
   try {
     const kindeUser = await getUser();
-    const userId= kindeUser?.id;
+    const userId = kindeUser?.id;
     if (!userId) {
-      throw new APIError("Yetkilendirme Hatası", 401);
+      throw new APIError('Yetkilendirme Hatası', 401);
     }
 
     // Türkiye saat dilimi için offset (UTC+3)
@@ -73,28 +73,27 @@ export async function GET(request: NextRequest) {
         {
           startsAt: {
             $gte: new Date(todayStartInTurkey.getTime() - turkeyOffset),
-            $lt: new Date(todayEndInTurkey.getTime() - turkeyOffset)
-          }
+            $lt: new Date(todayEndInTurkey.getTime() - turkeyOffset),
+          },
         },
         // Bitiş zamanı bugün içinde
         {
           endsAt: {
             $gte: new Date(todayStartInTurkey.getTime() - turkeyOffset),
-            $lt: new Date(todayEndInTurkey.getTime() - turkeyOffset)
-          }
+            $lt: new Date(todayEndInTurkey.getTime() - turkeyOffset),
+          },
         },
         // Başlangıç zamanı bugünden önce ve bitiş zamanı bugünden sonra
         {
-          startsAt: { $lt: new Date(todayStartInTurkey.getTime() - turkeyOffset) },
-          endsAt: { $gt: new Date(todayEndInTurkey.getTime() - turkeyOffset) }
-        }
-      ]
+          startsAt: {
+            $lt: new Date(todayStartInTurkey.getTime() - turkeyOffset),
+          },
+          endsAt: { $gt: new Date(todayEndInTurkey.getTime() - turkeyOffset) },
+        },
+      ],
     }).sort({ startsAt: 1 });
 
-  
-
     return NextResponse.json(tasks);
-
   } catch (error) {
     if (error instanceof APIError) {
       logError(error);
@@ -107,7 +106,7 @@ export async function GET(request: NextRequest) {
     if (error instanceof Error) {
       // Genel JavaScript hataları
       apiError = new APIError(
-        "An unexpected error occurred while processing your request",
+        'An unexpected error occurred while processing your request',
         500,
         error
       );
@@ -116,11 +115,7 @@ export async function GET(request: NextRequest) {
       apiError = new APIError(error, 500);
     } else {
       // Diğer tüm durumlar
-      apiError = new APIError(
-        "An unknown error occurred",
-        500,
-        error
-      );
+      apiError = new APIError('An unknown error occurred', 500, error);
     }
 
     logError(apiError);

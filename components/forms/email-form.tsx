@@ -20,7 +20,7 @@ import SubmitButton from './ui/submit-button';
 import Spinner from '../ui/spinner';
 import Error from '../global/error';
 import { axiosInstance, fetcher } from '@/lib/utils';
-import { useUser } from '@/context/user-context';
+import { useUser } from '@/features/users/contexts/user-context';
 import { toast } from 'sonner';
 
 const Schema = z.object({

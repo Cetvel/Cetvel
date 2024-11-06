@@ -1,13 +1,13 @@
-import { NextResponse } from "next/server";
-import jwksClient from "jwks-rsa";
-import jwt from "jsonwebtoken";
-import User from "@/lib/models/user.model";
-import Pomodoro from "@/lib/models/pomodoro.model";
-import Todo from "@/lib/models/todo.model";
-import Exam from "@/lib/models/exam.model";
-import Goal from "@/lib/models/goal.model";
-import Tag from "@/lib/models/tag.model";
-import connectDB from "@/lib/config/connectDB";
+import { NextResponse } from 'next/server';
+import jwksClient from 'jwks-rsa';
+import jwt from 'jsonwebtoken';
+import User from '@/features/users/models/user.model';
+import Pomodoro from '@/features/focus-sessions/models/pomodoro.model';
+import Todo from '@/features/tasks/models/todo.model';
+import Exam from '@/features/exams/models/exam.model';
+import Goal from '@/features/goals/models/goal.model';
+import Tag from '@/features/tags/models/tag.model';
+import connectDB from '@/lib/config/connectDB';
 // The Kinde issuer URL should already be in your `.env` file
 // from when you initially set up Kinde. This will fetch your
 // public JSON web keys file
@@ -35,61 +35,71 @@ export async function POST(req: Request) {
 
     // Handle various events
     switch (event?.type) {
-      case "user.updated":
-
+      case 'user.updated':
         const { user: updatedUser } = event.data;
         console.log(updatedUser);
         await connectDB();
         await User.findOneAndUpdate(
           { kindeId: updatedUser.id },
           {
-            name: updatedUser.username ?? updatedUser.first_name
-          })
+            name: updatedUser.username ?? updatedUser.first_name,
+          }
+        );
         break;
-      case "user.created":
-        const { user } = event.data
+      case 'user.created':
+        const { user } = event.data;
         await connectDB();
         console.log(user);
-        await User.create(
-          {
-            name: user.username ?? user.first_name,
-            kindeId: user.id,
-            email: user.email,
-            password: user.password
-          }
-        ).then(() => console.log(`${user.username ?? user.first_name} User created`));
-
-
+        await User.create({
+          name: user.username ?? user.first_name,
+          kindeId: user.id,
+          email: user.email,
+          password: user.password,
+        }).then(() =>
+          console.log(`${user.username ?? user.first_name} User created`)
+        );
 
         await Tag.insertMany([
           { kindeId: user.id, label: 'Matematik', value: 'Matematik' },
           { kindeId: user.id, label: 'Türkçe', value: 'Türkçe' },
-          { kindeId: user.id, label: 'Kitap', value: 'Kitap' }
-        ]).then(() => console.log(`${user.username ?? user.first_name}Default Tags created`));
-
+          { kindeId: user.id, label: 'Kitap', value: 'Kitap' },
+        ]).then(() =>
+          console.log(`${user.username ?? user.first_name}Default Tags created`)
+        );
 
         break;
-      case "user.deleted":
+      case 'user.deleted':
         const { user: deletedUser } = event.data;
         console.log(deletedUser);
         await connectDB();
-        await User.findOneAndDelete({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'User deleted'));
-        await Pomodoro.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Pomodoros deleted'));
-        await Todo.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Todos deleted'));
-        await Exam.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Exams deleted'));
-        await Goal.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Goals deleted'));
-        await Tag.deleteMany({ kindeId: deletedUser.id }).then(() => console.log(deletedUser.id, 'Tags deleted'));
+        await User.findOneAndDelete({ kindeId: deletedUser.id }).then(() =>
+          console.log(deletedUser.id, 'User deleted')
+        );
+        await Pomodoro.deleteMany({ kindeId: deletedUser.id }).then(() =>
+          console.log(deletedUser.id, 'Pomodoros deleted')
+        );
+        await Todo.deleteMany({ kindeId: deletedUser.id }).then(() =>
+          console.log(deletedUser.id, 'Todos deleted')
+        );
+        await Exam.deleteMany({ kindeId: deletedUser.id }).then(() =>
+          console.log(deletedUser.id, 'Exams deleted')
+        );
+        await Goal.deleteMany({ kindeId: deletedUser.id }).then(() =>
+          console.log(deletedUser.id, 'Goals deleted')
+        );
+        await Tag.deleteMany({ kindeId: deletedUser.id }).then(() =>
+          console.log(deletedUser.id, 'Tags deleted')
+        );
 
         break;
       default:
         break;
     }
-
   } catch (err) {
     if (err instanceof Error) {
       console.error(err.message);
       return NextResponse.json({ message: err.message }, { status: 400 });
     }
   }
-  return NextResponse.json({ status: 200, statusText: "success" });
+  return NextResponse.json({ status: 200, statusText: 'success' });
 }

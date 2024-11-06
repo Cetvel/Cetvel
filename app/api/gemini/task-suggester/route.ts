@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import Todo from '@/lib/models/todo.model';
-import Pomodoro from '@/lib/models/pomodoro.model';
+import Todo from '@/features/tasks/models/todo.model';
+import Pomodoro from '@/features/focus-sessions/models/pomodoro.model';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import connectDB from '@/lib/config/connectDB';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';

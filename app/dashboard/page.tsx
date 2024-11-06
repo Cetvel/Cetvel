@@ -1,9 +1,8 @@
 import React from 'react';
 import Banner from './_components/banner';
-import TaskList from './_components/task-list';
-import FocusTimer from './_components/focus-timer';
+import FocusTimer from '../../features/focus-sessions/components/focus-timer';
 import PageHeader from '@/components/global/page-header';
-import { axiosInstance } from '@/lib/utils';
+import TaskList from '@/features/tasks/components/task-list';
 
 const Main = async () => {
   return (

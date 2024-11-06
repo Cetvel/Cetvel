@@ -1,4 +1,4 @@
-import ExamCalculationForm from '@/components/forms/exam-calculation-form';
+import ExamCalculationForm from '@/features/exams/forms/exam-calculation-form';
 import PageHeader from '@/components/global/page-header';
 import React from 'react';
 

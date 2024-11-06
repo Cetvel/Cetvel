@@ -2,8 +2,8 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
-import PomodoroModel from '@/lib/models/pomodoro.model';
-import { PomodoroDocument } from '@/lib/models/pomodoro.model';
+import PomodoroModel from '@/features/focus-sessions/models/pomodoro.model';
+import { PomodoroDocument } from '@/features/focus-sessions/models/pomodoro.model';
 import connectDB from '@/lib/config/connectDB';
 
 export async function GET(request: NextRequest) {

@@ -35,6 +35,8 @@ import {
   DropdownMenuItem,
 } from '../ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Settings2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface BaseDataTableProps<T> {
   data: T[];
@@ -65,6 +67,8 @@ interface BaseDataTableProps<T> {
   enableMultiSelect?: boolean;
   bulkActions?: {
     label: string;
+    icon?: React.ReactNode;
+    variant?: 'default' | 'success' | 'destructive';
     action: (selectedRows: T[], clearSelection: () => void) => void;
   }[];
   getRowId?: (row: T) => string;
@@ -88,7 +92,6 @@ export function BaseDataTable<T>({
   showGlobalFilter = false,
   createColumnsFunction,
   onSelectChange,
-  customRowActions,
   enableMultiSelect = false,
   bulkActions = [],
   getRowId = (row: any) => row.id,
@@ -259,6 +262,7 @@ export function BaseDataTable<T>({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant='outline' disabled={selectedRows.length === 0}>
+                  <Settings2 size={16} />
                   İşlemler ({selectedRows.length})
                 </Button>
               </DropdownMenuTrigger>
@@ -269,7 +273,12 @@ export function BaseDataTable<T>({
                     onClick={() =>
                       action.action(selectedRows, clearRowSelection)
                     }
+                    className={cn({
+                      'text-green-500': action.variant === 'success',
+                      'text-destructive': action.variant === 'destructive',
+                    })}
                   >
+                    {action.icon}
                     {action.label}
                   </DropdownMenuItem>
                 ))}
