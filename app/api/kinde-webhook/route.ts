@@ -55,6 +55,9 @@ export async function POST(req: Request) {
           kindeId: user.id,
           email: user.email,
           password: user.password,
+          grade: 12,
+          field: "SAY",
+          exam: "YKS"
         }).then(() =>
           console.log(`${user.username ?? user.first_name} User created`)
         );
