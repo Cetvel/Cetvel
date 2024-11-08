@@ -1,7 +1,7 @@
 import React from 'react';
-import ProfileForm from '@/components/forms/profile-form';
-import EmailForm from '@/components/forms/email-form';
-import ChangePasswordForm from '@/components/forms/change-password-form';
+import ProfileForm from '@/features/users/forms/profile-form';
+import EmailForm from '@/features/users/forms/email-form';
+import ChangePasswordForm from '@/features/users/forms/change-password-form';
 
 const AccountSettings = async () => {
   return (

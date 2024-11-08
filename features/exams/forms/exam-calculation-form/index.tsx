@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -45,30 +45,25 @@ const ExamCalculationForm: React.FC = () => {
   });
 
   const filteredExamConfigs = useMemo(() => {
-    if (user?.studyField) {
-      return examConfigs.filter((config) => {
-        if (config.fields) {
-          return config.fields.some((field) =>
-            user.studyField.includes(field.name as StudyField)
-          );
-        }
-
+    return examConfigs.filter((config) => {
+      if (!config.fields) {
         return true;
+      }
+      const selectedField = config.fields.find((field) => {
+        field.options.includes(user?.field!);
       });
-    }
-
-    return examConfigs;
-  }, [user?.studyField]);
+      return selectedField?.options.includes(user?.field!);
+    });
+  }, [user?.field]);
 
   const filteredSubjects = useMemo(() => {
     return currentConfig.subjects.filter((subject) => {
-      if (subject.forFields) {
-        return subject.forFields.some((field) => field === selectedField);
+      if (!subject.forFields) {
+        return true;
       }
-
-      return true;
+      return subject.forFields.includes(user?.field!);
     });
-  }, [selectedField, currentConfig.subjects]);
+  }, [currentConfig.subjects, user?.field]);
 
   const handleCalculateClick = () => {
     form.trigger().then((isValid) => {
@@ -156,6 +151,16 @@ const ExamCalculationForm: React.FC = () => {
                 onValueChange={(value: string) => {
                   form.setValue('examType', value);
                   setSelectedExamType(value as ExamType);
+                  setCurrentConfig(
+                    filteredExamConfigs.find((config) => config.type === value)!
+                  );
+                  setSchema(
+                    createDynamicSchema(
+                      filteredExamConfigs.find(
+                        (config) => config.type === value
+                      )!
+                    )
+                  );
                 }}
               >
                 {filteredExamConfigs.map((config) => (

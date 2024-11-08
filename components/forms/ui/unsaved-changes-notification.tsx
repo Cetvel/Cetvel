@@ -43,7 +43,7 @@ const UnsavedChangesNotification = ({
           initial='initial'
           animate='animate'
           exit='exit'
-          className='flex fixed bottom-10 right-12 left-16 rounded-xl border bg-card px-4 py-2 justify-between items-center max-w-6xl w-full'
+          className='flex fixed bottom-10 right-12 left-16 rounded-xl border bg-card px-4 py-2 justify-between items-center max-w-6xl w-full z-50'
         >
           <p className='text-muted-foreground text-sm'>
             Kaydedilmemiş değişiklikler var! Kaydetmek ister misin?{' '}

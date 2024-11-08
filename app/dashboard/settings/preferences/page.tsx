@@ -1,4 +1,4 @@
-import PreferencesForm from '@/components/forms/user-preferences-form';
+import PreferencesForm from '@/features/users/forms/user-preferences-form';
 import React from 'react';
 
 const Preferences = () => {

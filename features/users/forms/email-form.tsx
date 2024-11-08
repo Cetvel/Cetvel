@@ -7,18 +7,24 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card';
+} from '@/components/ui/card';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
-import { Form } from '../ui/form';
+import { Form } from '@/components/ui/form';
 import useSWR, { mutate } from 'swr';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Button } from '../ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
-import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
-import SubmitButton from './ui/submit-button';
-import Spinner from '../ui/spinner';
-import Error from '../global/error';
+import CustomFormField, {
+  FormFieldType,
+} from '@/components/ui/custom-form-field';
+import SubmitButton from '@/components/forms/ui/submit-button';
+import Spinner from '@/components/ui/spinner';
+import Error from '@/components/global/error';
 import { axiosInstance, fetcher } from '@/lib/utils';
 import { useUser } from '@/features/users/contexts/user-context';
 import { toast } from 'sonner';

@@ -8,19 +8,25 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card';
-import { Form } from '../ui/form';
-import { ImageUploader } from '../global/image-uploader';
+} from '@/components/ui/card';
+import { Form } from '@/components/ui/form';
+import { ImageUploader } from '@/components/global/image-uploader';
 import { axiosInstance } from '@/lib/utils';
 import { toast } from 'sonner';
 import { mutate } from 'swr';
 import { z } from 'zod';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { useForm } from 'react-hook-form';
-import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
-import SubmitButton from './ui/submit-button';
+import CustomFormField, {
+  FormFieldType,
+} from '@/components/ui/custom-form-field';
+import SubmitButton from '@/components/forms/ui/submit-button';
 
 const Schema = z.object({
   username: z.string().min(3).max(255),

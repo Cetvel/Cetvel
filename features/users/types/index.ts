@@ -6,7 +6,7 @@ declare type User = {
   profile_picture: string | undefined;
   cover_picture: string | undefined;
   timer_picture: string | undefined;
-  field?: StudyField;
-  grade?: number;
-  studyField: ExamType;
+  field: StudyField;
+  grade: number;
+  exam: ExamType;
 };

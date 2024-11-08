@@ -9,13 +9,19 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../ui/card';
-import { Form } from '../ui/form';
-import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
-import SubmitButton from './ui/submit-button';
-import { Alert, AlertDescription } from '../ui/alert';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { Button } from '../ui/button';
+} from '@/components/ui/card';
+import { Form } from '@/components/ui/form';
+import CustomFormField, {
+  FormFieldType,
+} from '@/components/ui/custom-form-field';
+import SubmitButton from '@/components/forms/ui/submit-button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
 
 const ChangePasswordSchema = z
   .object({

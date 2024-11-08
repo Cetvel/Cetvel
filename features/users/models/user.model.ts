@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema, Model } from 'mongoose';
 
-enum StudyField {
+enum Exams {
   YKS,
   LGS,
   KPSS,
@@ -8,7 +8,7 @@ enum StudyField {
   DGS,
 }
 
-enum aytField {
+enum field {
   SAY,
   SOZ,
   EA,
@@ -19,9 +19,9 @@ interface IUser {
   name: string; // Username
   email: string;
   password?: string; // Password
-  field?: aytField; // Ayt Field if user is a high school student
-  grade?: number; // Grade
-  studyField?: string; // Study Field highschool, university etc.
+  field?: field; // Ayt Field if user is a high school student
+  grade?: number; // class
+  exam?: Exams; // Exam type
   cover_picture?: string;
   timer_picture?: string;
   profile_picture?: string;
@@ -31,7 +31,7 @@ export interface IUserDocument extends IUser, Document {
   _id: Schema.Types.ObjectId;
 }
 
-export interface UserModel extends Model<IUserDocument> { }
+export interface UserModel extends Model<IUserDocument> {}
 
 // Model is defined only if it hasn't been already
 const userSchema = new Schema<IUserDocument, UserModel>(
@@ -49,23 +49,23 @@ const userSchema = new Schema<IUserDocument, UserModel>(
     email: {
       type: String,
       required: false,
-      trim: true
+      trim: true,
     },
     grade: {
       type: Number,
       required: false,
       trim: false,
     },
-    studyField: {
+    exam: {
       type: String,
       required: false,
-      enum: Object.values(StudyField),
+      enum: Object.values(Exams),
       trim: false,
     },
     field: {
       type: String,
       required: false,
-      enum: Object.values(aytField),
+      enum: Object.values(field),
       trim: false,
     },
     password: {

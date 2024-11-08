@@ -7,7 +7,7 @@ export const PreferencesSchema = z
     }),
     grade: z.coerce.number().optional(),
     field: z.enum(['SAY', 'SOZ', 'EA', 'DIL']).optional(),
-    examType: z.string().optional(),
+    exam: z.string().optional(),
 
     /* notifications: z.boolean().default(true), */
     /* taskReminders: z.boolean().default(false), */

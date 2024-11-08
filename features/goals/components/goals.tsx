@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
+import { CardContent, CardFooter } from '@/components/ui/card';
 import React from 'react';
 import Goal from './goal';
 import { Button } from '@/components/ui/button';

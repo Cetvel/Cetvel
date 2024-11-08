@@ -19,9 +19,6 @@ const Sidebar = () => {
     >
       <div className='flex gap-3 items-center'>
         <Logo size={30} />
-        <h2 className='text-2xl font-semibold text-accent-content select-none'>
-          Cetvel
-        </h2>
       </div>
 
       {/* Menu */}
