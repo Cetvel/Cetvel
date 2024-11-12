@@ -17,7 +17,6 @@ import CustomFormField, {
 } from '@/components/ui/custom-form-field';
 import { axiosInstance } from '@/lib/utils';
 import { toast } from 'sonner';
-import UnsavedChangesNotification from '@/components/forms/ui/unsaved-changes-notification';
 import { ImageUploader } from '@/components/global/image-uploader';
 import { mutate } from 'swr';
 import Spinner from '@/components/ui/spinner';
@@ -29,6 +28,8 @@ import {
   fields,
   gradeOptions,
 } from '@/features/users/configs';
+import { useCallback, useEffect } from 'react';
+import debounce from 'lodash/debounce';
 
 const PreferencesForm = () => {
   const { user, isUserLoading, isUserError } = useUser();
@@ -40,22 +41,17 @@ const PreferencesForm = () => {
       grade: user?.grade || 12,
       field: user?.field || 'SAY',
       exam: user?.exam,
-      /* notifications: true, */
-      /* taskReminders: false, */
-      /* reminderFrequencyHours: 1, */
     },
   });
 
   const watchEducationLevel = form.watch('educationLevel');
 
-  const onSubmit = async (values: z.infer<typeof PreferencesSchema>) => {
+  const submitForm = async (values: z.infer<typeof PreferencesSchema>) => {
     try {
       await axiosInstance.put('/settings/preference', values);
-
       toast.success('Değişiklikler kaydedildi', {
         description: 'Değişiklikleriniz başarıyla kaydedildi.',
       });
-      form.reset();
     } catch (error) {
       console.error(error);
       toast.error('Bir hata oluştu', {
@@ -63,6 +59,26 @@ const PreferencesForm = () => {
       });
     }
   };
+
+  const debouncedSubmit = useCallback(
+    debounce((values: z.infer<typeof PreferencesSchema>) => {
+      submitForm(values);
+    }, 1000),
+    []
+  );
+
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      if (values) {
+        debouncedSubmit(values as z.infer<typeof PreferencesSchema>);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      debouncedSubmit.cancel();
+    };
+  }, [form, debouncedSubmit]);
 
   const onCoverPictureChange = async (url: string) => {
     try {
@@ -101,7 +117,7 @@ const PreferencesForm = () => {
   return (
     <div className='space-y-6'>
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+        <form className='space-y-6'>
           <Card className='w-full'>
             <CardHeader>
               <CardTitle>Eğitim Bilgileri</CardTitle>
@@ -169,52 +185,6 @@ const PreferencesForm = () => {
               )}
             </CardContent>
           </Card>
-
-          {/* <Card className='w-full mb-6'>
-          <CardHeader>
-            <CardTitle>Bildirimler</CardTitle>
-            <CardDescription>
-              Bildirim tercihlerinizi buradan güncelleyebilirsiniz.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-            <div className='form-line'>
-              <Label htmlFor='notifications'>Bildirimleri Etkinleştir</Label>
-              <CustomFormField
-                fieldType={FormFieldType.SWITCH}
-                control={form.control}
-                name='notifications'
-              />
-            </div>
-            <div className='form-line'>
-              <Label htmlFor='taskReminders'>Görev Hatırlatıcıları</Label>
-              <CustomFormField
-                fieldType={FormFieldType.SWITCH}
-                control={form.control}
-                name='taskReminders'
-              />
-            </div>
-            <div className='form-line'>
-              <Label htmlFor='reminderFrequency'>
-                Görev Hatırlatma Sıklığı
-              </Label>
-              <div className='flex items-center gap-x-2'>
-                <CustomFormField
-                  fieldType={FormFieldType.NUMBER}
-                  control={form.control}
-                  name='reminderFrequencyHours'
-                  className='w-16'
-                />
-                <span className='text-xs'>saat aralıklarla hatırlatma yap</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card> */}
-
-          <UnsavedChangesNotification
-            form={form}
-            hasUnsavedChanges={form.formState.isDirty}
-          />
         </form>
       </FormProvider>
       <Card className='w-full'>

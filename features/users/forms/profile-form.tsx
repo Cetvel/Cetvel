@@ -34,7 +34,6 @@ const Schema = z.object({
 
 const ProfileForm = () => {
   const { user } = useUser();
-  console.log('User: ', user);
 
   const form = useForm<z.infer<typeof Schema>>({
     defaultValues: {

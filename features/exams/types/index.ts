@@ -39,7 +39,7 @@ declare type FieldConfig = {
 declare type ExamConfig = {
   type: string;
   label: string;
-  fields?: FieldConfig[];
   subjects: SubjectConfig[];
+  field?: FieldConfig;
   totalTime?: number;
 };

@@ -13,35 +13,34 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { deleteManyExams } from '@/features/exams/actions/exam';
 import { useUser } from '@/features/users/contexts/user-context';
+import { examConfigs } from '../../configs';
 
 const ExamsTable = () => {
   const { user } = useUser();
   const { data, isLoading, error } = useSWR('/exams', fetcher);
   const aytField = user?.field as string;
 
-  const studyField: StudyField = useMemo(() => {
-    const userStudyField = user?.studyField as string;
-    return userStudyField
-      ? (StudyField as any)[userStudyField]
-      : StudyField.YKS;
-  }, [user?.studyField]);
+  const examTypeOptions = useMemo(() => {
+    return examConfigs
+      .filter((config) => {
+        if (!config.type) {
+          return true;
+        }
 
-  const availableExams = useMemo(
-    () => getAvailableExams(studyField),
-    [studyField]
-  );
+        if (user?.exam === 'YKS') {
+          return config.type === 'TYT' || config.type === 'AYT';
+        }
 
-  const examTypeOptions = useMemo(
-    () =>
-      availableExams.map((exam) => ({
-        value: exam.id.toUpperCase(),
-        label: exam.name,
-      })),
-    [availableExams]
-  );
+        return config.type === user?.exam;
+      })
+      .map((config) => ({
+        label: config.type,
+        value: config.type,
+      }));
+  }, [user?.exam]);
 
   const [selectedExamType, setSelectedExamType] = useState<ExamType>(
-    (examTypeOptions[0]?.value as ExamType) || 'TYT'
+    (examTypeOptions[0]?.label as ExamType) || 'TYT'
   );
 
   const columns = useMemo(

@@ -13,13 +13,11 @@ export const examConfigs: ExamConfig[] = [
   {
     type: 'AYT',
     label: 'AYT (Alan Yeterlilik Testi)',
-    fields: [
-      {
-        name: 'field',
-        label: 'Alan',
-        options: ['SAY', 'EA', 'SOZ'],
-      },
-    ],
+    field: {
+      name: 'field',
+      label: 'Alan',
+      options: ['SAY', 'EA', 'SOZ'],
+    },
     subjects: [
       {
         name: 'literature',
@@ -94,13 +92,12 @@ export const examConfigs: ExamConfig[] = [
   {
     type: 'LGS',
     label: 'LGS (Liselere Geçiş Sınavı)',
-    fields: [
-      {
-        name: 'educationStyle',
-        label: 'Eğitim Stili',
-        options: ['Din Kültürü ve Ahlak Bilgisi', 'Yabancı Dil'],
-      },
-    ],
+    field: {
+      name: 'educationStyle',
+      label: 'Eğitim Stili',
+      options: ['Din Kültürü ve Ahlak Bilgisi', 'Yabancı Dil'],
+    },
+
     subjects: [
       { name: 'turkish', label: 'Türkçe', maxQuestions: 20 },
       { name: 'math', label: 'Matematik', maxQuestions: 20 },

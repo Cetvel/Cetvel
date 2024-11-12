@@ -15,6 +15,9 @@ const nextConfig = {
   images: {
     domains: ['utfs.io', 'files.edgestore.dev'],
   },
+  experimental: {
+    serverComponentsExternalPackages: ['sharp', 'onnxruntime-node'],
+  },
   async headers() {
     return [
       {

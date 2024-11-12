@@ -13,11 +13,10 @@ import {
 import { Ellipsis, Trash } from 'lucide-react';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
-import { convertSecondsToTime } from '@/lib/utils';
 import { deleteExam } from '@/features/exams/actions/exam';
 import { ColumnHeader } from '@/components/global/column-header';
-import { SubjectConfig } from '../../types';
 import { examConfigs } from '../../configs';
+import { convertSecondsToTime } from '@/features/focus-sessions/utils';
 
 export interface ExamResult {
   _id: string;

@@ -16,7 +16,7 @@ const Logo = ({ size, type = 'text' }: Props) => {
 
   return (
     <Image
-      src={`/image/logo_${resolvedTheme === undefined || 'light' ? 'light' : 'dark'}${type === 'text' && '_text'}.svg`}
+      src={`/image/logo_${resolvedTheme === 'light' ? 'light' : 'dark'}${type === 'text' && '_text'}.svg`}
       width={type === 'text' ? size * 4 : size}
       height={size}
       alt='Logo'

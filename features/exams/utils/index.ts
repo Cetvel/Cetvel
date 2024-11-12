@@ -48,9 +48,11 @@ export const createDynamicSchema = (config: ExamConfig) => {
     }),
   };
 
-  config.fields?.forEach((field) => {
-    schemaFields[field.name] = z.enum(field.options as [string, ...string[]]);
-  });
+  if (config.field) {
+    schemaFields[config.field.name] = z.enum(
+      config.field.options as [string, ...string[]]
+    );
+  }
 
   config.subjects.forEach((subject) => {
     schemaFields[subject.name] = subjectSchema(subject.maxQuestions);

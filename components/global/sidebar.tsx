@@ -15,10 +15,10 @@ const Sidebar = () => {
   return (
     <aside
       id='sidebar'
-      className='bg-card border-r fixed w-64 p-6 hidden h-[500rem] xl:flex flex-col gap-6'
+      className='bg-card border-r fixed w-64 p-6 hidden h-screen xl:flex flex-col gap-10'
     >
       <div className='flex gap-3 items-center'>
-        <Logo size={30} />
+        <Logo size={34} />
       </div>
 
       {/* Menu */}

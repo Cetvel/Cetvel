@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -22,7 +22,10 @@ import NetCalculationModal from '../../components/net-calculation-modal';
 
 const ExamCalculationForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setOpen } = useModal();
+  const { user } = useUser();
 
+  // Initialize states with user's field if available
   const [selectedExamType, setSelectedExamType] = useState<ExamType>(
     examConfigs[0].type as ExamType
   );
@@ -31,39 +34,42 @@ const ExamCalculationForm: React.FC = () => {
   );
   const [schema, setSchema] = useState(createDynamicSchema(currentConfig));
   const [selectedField, setSelectedField] = useState<string | undefined>(
-    undefined
+    user?.field || undefined
   );
-
-  const { setOpen } = useModal();
-  const { user } = useUser();
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       examType: selectedExamType,
+      solvingTime: currentConfig.totalTime,
+      ...(currentConfig.field && {
+        [currentConfig.field.name]: user?.field,
+      }),
     } as z.infer<typeof schema>,
   });
 
   const filteredExamConfigs = useMemo(() => {
     return examConfigs.filter((config) => {
-      if (!config.fields) {
+      if (!config.type) {
         return true;
       }
-      const selectedField = config.fields.find((field) => {
-        field.options.includes(user?.field!);
-      });
-      return selectedField?.options.includes(user?.field!);
+
+      if (user?.exam === 'YKS') {
+        return config.type === 'TYT' || config.type === 'AYT';
+      }
+
+      return config.type === user?.exam;
     });
-  }, [user?.field]);
+  }, [user?.exam]);
 
   const filteredSubjects = useMemo(() => {
     return currentConfig.subjects.filter((subject) => {
       if (!subject.forFields) {
         return true;
       }
-      return subject.forFields.includes(user?.field!);
+      return subject.forFields.includes(selectedField || user?.field!);
     });
-  }, [currentConfig.subjects, user?.field]);
+  }, [currentConfig.subjects, selectedField, user?.field]);
 
   const handleCalculateClick = () => {
     form.trigger().then((isValid) => {
@@ -88,7 +94,7 @@ const ExamCalculationForm: React.FC = () => {
       const success = await createExam(
         selectedExamType,
         examData,
-        selectedField
+        selectedField || user?.field
       );
       if (success) {
         console.log('Sınav başarıyla oluşturuldu');
@@ -98,11 +104,10 @@ const ExamCalculationForm: React.FC = () => {
           examType: selectedExamType,
           solvingTime: currentConfig.totalTime,
           solvingDate: new Date(),
+          ...(currentConfig.field && {
+            [currentConfig.field.name]: selectedField || user?.field,
+          }),
         };
-
-        currentConfig.fields?.forEach((field) => {
-          resetValues[field.name] = field.options[0];
-        });
 
         currentConfig.subjects.forEach((subject) => {
           resetValues[subject.name] = {
@@ -149,18 +154,13 @@ const ExamCalculationForm: React.FC = () => {
                 name='examType'
                 label='Sınav Türü'
                 onValueChange={(value: string) => {
-                  form.setValue('examType', value);
+                  const newConfig = filteredExamConfigs.find(
+                    (config) => config.type === value
+                  )!;
+
                   setSelectedExamType(value as ExamType);
-                  setCurrentConfig(
-                    filteredExamConfigs.find((config) => config.type === value)!
-                  );
-                  setSchema(
-                    createDynamicSchema(
-                      filteredExamConfigs.find(
-                        (config) => config.type === value
-                      )!
-                    )
-                  );
+                  setCurrentConfig(newConfig);
+                  setSchema(createDynamicSchema(newConfig));
                 }}
               >
                 {filteredExamConfigs.map((config) => (
@@ -170,25 +170,24 @@ const ExamCalculationForm: React.FC = () => {
                 ))}
               </CustomFormField>
 
-              {currentConfig.fields?.map((field) => (
+              {currentConfig.field && (
                 <CustomFormField
-                  key={field.name}
+                  key={currentConfig.field.name}
                   fieldType={FormFieldType.SELECT}
                   control={form.control}
-                  name={field.name}
-                  label={field.label}
+                  name={currentConfig.field.name}
+                  label={currentConfig.field.label}
                   onValueChange={(value: string) => {
-                    form.setValue(field.name, value);
                     setSelectedField(value);
                   }}
                 >
-                  {field.options.map((option) => (
+                  {currentConfig.field.options.map((option) => (
                     <SelectItem key={option} value={option}>
-                      {option.toUpperCase()}
+                      {option}
                     </SelectItem>
                   ))}
                 </CustomFormField>
-              ))}
+              )}
 
               <CustomFormField
                 fieldType={FormFieldType.NUMBER}
@@ -196,7 +195,7 @@ const ExamCalculationForm: React.FC = () => {
                 name='solvingTime'
                 label='Toplam Çözüm Süresi (dk)'
                 min={0}
-                max={currentConfig.totalTime || 180}
+                max={currentConfig.totalTime}
               />
             </div>
           </CardHeader>

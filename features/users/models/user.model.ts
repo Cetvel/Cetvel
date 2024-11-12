@@ -14,17 +14,8 @@ enum field {
   EA,
   DIL,
 }
-interface IUser {
-  kindeId: string; // Kinde ID
-  name: string; // Username
-  email: string;
+interface IUser extends User {
   password?: string; // Password
-  field?: field; // Ayt Field if user is a high school student
-  grade?: number; // class
-  exam?: Exams; // Exam type
-  cover_picture?: string;
-  timer_picture?: string;
-  profile_picture?: string;
 }
 
 export interface IUserDocument extends IUser, Document {
