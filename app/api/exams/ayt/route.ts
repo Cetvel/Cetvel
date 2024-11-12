@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import AytModel, { AytDocument } from '@/features/exams/models/ayt.model';
-   
+
 export async function GET(request: NextRequest) {
   try {
     const kindeUser = await getUser();
@@ -14,13 +14,11 @@ export async function GET(request: NextRequest) {
       );
     }
 
-       ;
-
     const exams = (await AytModel.find({ kindeId: userId })) as AytDocument[];
 
     return NextResponse.json(exams, { status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }

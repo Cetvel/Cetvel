@@ -14,8 +14,6 @@ import { deleteMultipleFocusSessions } from '@/features/focus-sessions/actions';
 const FocusSessionsTable = () => {
   const { data, isLoading, error } = useSWR('/pomodoros', fetcher);
 
-  console.log(data);
-
   if (isLoading) {
     return <Skeleton className='h-20' />;
   }

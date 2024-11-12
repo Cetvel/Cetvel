@@ -25,8 +25,8 @@ export async function PUT(req: NextRequest) {
       userId: user.id,
       requestBody: {
         properties: {
-          grade: grade.toString(),
-          field: field,
+          grade: grade ? grade.toString() : undefined,
+          field: field ? field : undefined,
           exam,
         },
       },

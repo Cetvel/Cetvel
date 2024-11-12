@@ -8,11 +8,9 @@ const edgeStoreRouter = es.router({
   publicFiles: es
     .fileBucket()
     .beforeUpload(({ ctx, input, fileInfo }) => {
-      console.log('beforeUpload', ctx, input, fileInfo);
       return true;
     })
     .beforeDelete(({ ctx, fileInfo }) => {
-      console.log('beforeDelete', ctx, fileInfo);
       return true;
     }),
 });

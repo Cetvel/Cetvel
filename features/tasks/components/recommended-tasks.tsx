@@ -26,7 +26,6 @@ const RecommendedTasks: React.FC = () => {
       const data = await axiosInstance
         .get('/gemini/task-suggester')
         .then((res) => res.data);
-      console.log(data);
 
       setTasks(data);
       setError(null);

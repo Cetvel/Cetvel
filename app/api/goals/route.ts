@@ -4,7 +4,6 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import GoalModel from '@/features/goals/models/goal.model';
 import { IGoalDocument } from '@/features/goals/models/goal.model';
-   
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,10 +15,9 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-       ;
     const goals = await GoalModel.find({ kindeId: userId });
     if (goals == undefined) {
-      console.log('goals could not find');
+      console.error('goals could not find');
       return NextResponse.json(
         { message: 'Beklenmedik Sunucu Hatası' },
         { status: 404 }
@@ -27,7 +25,7 @@ export async function GET(request: NextRequest) {
     }
     return NextResponse.json(goals, { status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }
@@ -48,8 +46,6 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-       ;
-
     const goal = new GoalModel({
       kindeId: userId,
       ...body,
@@ -57,7 +53,7 @@ export async function POST(request: NextRequest) {
     await goal.save();
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }

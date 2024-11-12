@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import GoalModel from '@/features/goals/models/goal.model';
-   
 
 export async function PUT(
   request: NextRequest,
@@ -27,7 +26,6 @@ export async function PUT(
       );
     }
     const body = await request.json();
-       ;
     const goal = await GoalModel.findOneAndUpdate({ _id: id }, body, {
       new: true,
     });
@@ -36,7 +34,7 @@ export async function PUT(
     }
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }
@@ -65,7 +63,6 @@ export async function DELETE(
         { status: 400 }
       );
     }
-       ;
     const goal = await GoalModel.findOneAndDelete({ _id: id });
     if (!goal) {
       return NextResponse.json({ error: 'goal not found' }, { status: 404 });
@@ -73,7 +70,7 @@ export async function DELETE(
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }

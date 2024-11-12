@@ -4,7 +4,6 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import TagModel from '@/features/tags/models/tag.model';
 import { ITagDocument } from '@/features/tags/models/tag.model';
-   
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,11 +15,10 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-       ;
     const tags = await TagModel.find({ kindeId: userId });
     return NextResponse.json(tags, { status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }
@@ -51,7 +49,6 @@ export async function POST(request: NextRequest) {
       );
     }
     // tag oluştur
-       ;
     const tag = new TagModel({
       kindeId: userId,
       ...body,
@@ -60,7 +57,7 @@ export async function POST(request: NextRequest) {
     await tag.save();
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }

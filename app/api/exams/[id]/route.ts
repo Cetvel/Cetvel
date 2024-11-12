@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import ExamModel from '@/features/exams/models/exam.model';
-   
+
 const { getUser } = getKindeServerSession();
 
 export async function PUT(
@@ -28,7 +28,6 @@ export async function PUT(
     }
 
     const body = await request.json();
-       ;
     const exam = await ExamModel.findOneAndUpdate({ _id: id }, body, {
       new: true,
     });
@@ -41,7 +40,7 @@ export async function PUT(
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }
@@ -73,7 +72,6 @@ export async function DELETE(
       );
     }
 
-       ;
     const exam = await ExamModel.findOneAndDelete({ _id: id });
 
     if (!exam) {

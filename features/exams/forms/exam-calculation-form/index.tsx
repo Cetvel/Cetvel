@@ -96,8 +96,6 @@ const ExamCalculationForm: React.FC = () => {
         selectedExamType === 'AYT' ? selectedField : undefined
       );
       if (success) {
-        console.log('Sınav başarıyla oluşturuldu');
-
         const resetValues: any = {
           examName: '',
           examType: selectedExamType,

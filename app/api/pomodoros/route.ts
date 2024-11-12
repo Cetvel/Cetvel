@@ -4,7 +4,6 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import PomodoroModel from '@/features/focus-sessions/models/pomodoro.model';
 import { PomodoroDocument } from '@/features/focus-sessions/models/pomodoro.model';
-   
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,11 +16,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-       ;
     const pomodoros = await PomodoroModel.find({ kindeId: userId });
     return NextResponse.json({ pomodoros, status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }
@@ -42,7 +40,6 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-       ;
     const pomodoro = new PomodoroModel({
       kindeId: userId,
       ...body,
@@ -51,7 +48,7 @@ export async function POST(request: NextRequest) {
     await pomodoro.save();
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }

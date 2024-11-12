@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import TagModel from '@/features/tags/models/tag.model';
-   
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -26,7 +26,6 @@ export async function PUT(
       );
     }
 
-       ;
     const body = await request.json();
     const tag = await TagModel.findOneAndUpdate({ _id: id }, body, {
       new: true,
@@ -39,7 +38,7 @@ export async function PUT(
     }
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }
@@ -68,7 +67,6 @@ export async function DELETE(
         { status: 400 }
       );
     }
-       ;
     const tag = await TagModel.findOneAndDelete({ _id: id });
     if (!tag) {
       return NextResponse.json(
@@ -78,7 +76,7 @@ export async function DELETE(
     }
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }

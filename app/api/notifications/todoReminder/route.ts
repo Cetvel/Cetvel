@@ -1,4 +1,3 @@
-   
 import Todo from '@/features/tasks/models/todo.model';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -24,7 +23,6 @@ export async function GET(request: NextRequest) {
   endOfDay.setHours(23, 59, 59, 999);
 
   try {
-       ;
     const count = await Todo.countDocuments({
       kindeId,
       status: 'incomplete',
@@ -34,7 +32,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ count }, { status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }

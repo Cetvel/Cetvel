@@ -12,8 +12,6 @@ type Props = {
 const Logo = ({ size, type = 'text' }: Props) => {
   const { resolvedTheme } = useTheme();
 
-  console.log(resolvedTheme);
-
   return (
     <Image
       src={`/image/logo_${resolvedTheme === 'light' ? 'light' : 'dark'}${type === 'text' && '_text'}.svg`}

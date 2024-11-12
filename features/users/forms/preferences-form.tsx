@@ -34,28 +34,111 @@ import debounce from 'lodash/debounce';
 const PreferencesForm = () => {
   const { user, isUserLoading, isUserError } = useUser();
 
+  // Sınıf bilgisine göre eğitim seviyesini belirleyen fonksiyon
+  const determineEducationLevel = (grade?: number): string => {
+    if (!grade) return 'Mezun';
+
+    if (grade >= 9 && grade <= 12) return 'Lise';
+    if (grade >= 5 && grade <= 8) return 'Ortaokul';
+    if (grade >= 1 && grade <= 4) return 'İlkokul';
+
+    return 'Lise';
+  };
+
+  const getDefaultClass = (
+    educationLevel: 'İlkokul' | 'Ortaokul' | 'Lise' | 'Mezun',
+    userGrade?: number
+  ) => {
+    if (!educationLevel || educationLevel === 'Mezun') return undefined;
+
+    const availableGrades = gradeOptions[educationLevel];
+    if (!availableGrades?.length) return undefined;
+
+    // Eğer kullanıcının sınıfı varsa ve geçerli bir değerse kullan
+    if (userGrade && availableGrades.includes(userGrade)) {
+      return userGrade;
+    }
+
+    return availableGrades[availableGrades.length - 1];
+  };
+
+  const currentEducationLevel = determineEducationLevel(user?.grade) as
+    | 'İlkokul'
+    | 'Ortaokul'
+    | 'Lise'
+    | 'Mezun';
+
   const form = useForm<z.infer<typeof PreferencesSchema>>({
     resolver: zodResolver(PreferencesSchema),
     defaultValues: {
-      educationLevel: 'Lise',
-      grade: user?.grade || 12,
-      field: user?.field || 'SAY',
-      exam: user?.exam,
+      educationLevel: currentEducationLevel,
+      grade: getDefaultClass(currentEducationLevel, user?.grade),
+      field:
+        currentEducationLevel === 'Lise' ? user?.field || 'SAY' : undefined,
+      exam:
+        currentEducationLevel === 'Lise'
+          ? 'YKS'
+          : currentEducationLevel === 'Ortaokul'
+            ? 'LGS'
+            : user?.exam,
     },
   });
 
   const watchEducationLevel = form.watch('educationLevel');
 
+  // Eğitim seviyesi değiştiğinde sınıf ve alan bilgilerini güncelle
+  useEffect(() => {
+    const defaultClass = getDefaultClass(watchEducationLevel);
+
+    // Sınıf değerini güncelle
+    form.setValue('grade', defaultClass);
+
+    // Alan bilgisini güncelle
+    if (watchEducationLevel !== 'Lise') {
+      form.setValue('field', undefined);
+    } else if (!form.getValues('field')) {
+      form.setValue('field', 'SAY');
+    }
+
+    // Sınav tipini güncelle
+    const examValue =
+      watchEducationLevel === 'Lise'
+        ? 'YKS'
+        : watchEducationLevel === 'Ortaokul'
+          ? 'LGS'
+          : watchEducationLevel === 'Mezun'
+            ? user?.exam
+            : undefined;
+
+    form.setValue('exam', examValue);
+  }, [watchEducationLevel, form, user?.exam]);
+
   const submitForm = async (values: z.infer<typeof PreferencesSchema>) => {
+    const data = {
+      educationLevel: values.educationLevel,
+      field: values.educationLevel === 'Lise' ? values.field : undefined,
+      grade: values.educationLevel === 'Mezun' ? undefined : values.grade,
+      exam:
+        values.educationLevel === 'Lise'
+          ? 'YKS'
+          : values.educationLevel === 'Ortaokul'
+            ? 'LGS'
+            : values.educationLevel === 'İlkokul'
+              ? undefined
+              : values.exam,
+    };
+
     try {
-      await axiosInstance.put('/settings/preference', values);
+      await axiosInstance.put('/settings/preference', data);
       toast.success('Değişiklikler kaydedildi', {
         description: 'Değişiklikleriniz başarıyla kaydedildi.',
       });
-    } catch (error) {
-      console.error(error);
+      mutate('/users');
+    } catch (error: any) {
+      console.error('Form gönderimi sırasında hata:', error);
       toast.error('Bir hata oluştu', {
-        description: 'Değişiklikleriniz kaydedilemedi.',
+        description:
+          error.response?.data?.message || 'Değişiklikleriniz kaydedilemedi.',
       });
     }
   };
@@ -80,39 +163,24 @@ const PreferencesForm = () => {
     };
   }, [form, debouncedSubmit]);
 
-  const onCoverPictureChange = async (url: string) => {
+  const onImageChange = async (url: string, type: 'cover' | 'timer') => {
     try {
-      await axiosInstance.put('/picture/cover', { url });
+      await axiosInstance.put(`/picture/${type}`, { url });
       toast.success('İşlem başarılı', {
-        description: 'Arkaplan resmi başarıyla güncellendi',
+        description: `${type === 'cover' ? 'Arkaplan' : 'Zamanlayıcı arkaplanı'} başarıyla güncellendi`,
       });
       mutate('/users');
     } catch (error: any) {
-      console.error('Arkaplan resmi güncellenirken hata:', error);
+      console.error(`${type} resmi güncellenirken hata:`, error);
       toast.error('İşlem sırasında bir hata oluştu', {
         description:
           error.response?.data?.message ||
-          'Arkaplan resmi güncellenirken bir hata oluştu',
+          `${type === 'cover' ? 'Arkaplan' : 'Zamanlayıcı arkaplanı'} güncellenirken bir hata oluştu`,
       });
     }
   };
 
-  const onTimerPictureChange = async (url: string) => {
-    try {
-      await axiosInstance.put('/picture/timer', { url });
-      toast.success('İşlem başarılı', {
-        description: 'Zamanlayıcı arkaplanı başarıyla güncellendi',
-      });
-      mutate('/users');
-    } catch (error: any) {
-      console.error('Zamanlayıcı arkaplanı güncellenirken hata:', error);
-      toast.error('İşlem sırasında bir hata oluştu', {
-        description:
-          error.response?.data?.message ||
-          'Zamanlayıcı arkaplanı güncellenirken bir hata oluştu',
-      });
-    }
-  };
+  isUserLoading && <Spinner size={24} />;
 
   return (
     <div className='space-y-6'>
@@ -132,7 +200,7 @@ const PreferencesForm = () => {
                 name='educationLevel'
                 label='Eğitim Seviyen'
               >
-                {educationLevels.map((level: any) => (
+                {educationLevels.map((level: string) => (
                   <SelectItem key={level} value={level}>
                     {level}
                   </SelectItem>
@@ -158,10 +226,10 @@ const PreferencesForm = () => {
                 <CustomFormField
                   fieldType={FormFieldType.SELECT}
                   control={form.control}
-                  name='class'
+                  name='grade'
                   label='Sınıfın'
                 >
-                  {gradeOptions[watchEducationLevel].map((grade) => (
+                  {gradeOptions[watchEducationLevel]?.map((grade) => (
                     <SelectItem key={grade} value={grade.toString()}>
                       {grade}
                     </SelectItem>
@@ -173,7 +241,7 @@ const PreferencesForm = () => {
                 <CustomFormField
                   fieldType={FormFieldType.SELECT}
                   control={form.control}
-                  name='courseSubjects'
+                  name='exam'
                   label='Sınav türün'
                 >
                   {exams.map((exam, i) => (
@@ -206,7 +274,7 @@ const PreferencesForm = () => {
             ) : (
               <>
                 <ImageUploader
-                  onChange={(url) => onCoverPictureChange(url)}
+                  onChange={(url) => onImageChange(url, 'cover')}
                   value={user?.cover_picture || '/image/banner_default.jpg'}
                   width={400}
                   className='w-full'
@@ -221,7 +289,7 @@ const PreferencesForm = () => {
                   placeholder='Karşılayıcı arkaplan fotoğrafı yükle'
                 />
                 <ImageUploader
-                  onChange={(url) => onTimerPictureChange(url)}
+                  onChange={(url) => onImageChange(url, 'timer')}
                   value={user?.timer_picture || '/image/timer_default.jpg'}
                   width={400}
                   className='w-full'

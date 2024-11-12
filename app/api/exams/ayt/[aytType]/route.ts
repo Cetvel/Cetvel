@@ -3,7 +3,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import AytModel from '@/features/exams/models/ayt.model';
 import { AytDocument } from '@/features/exams/models/ayt.model';
-   
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { aytType: string } }
@@ -38,7 +38,6 @@ export async function GET(
         break;
     }
 
-       ;
     const exams = (await AytModel.find({
       kindeId: userId,
       aytType: field,
@@ -46,7 +45,7 @@ export async function GET(
 
     return NextResponse.json(exams, { status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }
@@ -89,7 +88,6 @@ export async function POST(
         break;
     }
 
-       ;
     const exam = new AytModel({
       kindeId: userId,
       field,
@@ -99,7 +97,7 @@ export async function POST(
     await exam.save();
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json(
       { message: 'Beklenmedik Sunucu Hatası' },
       { status: 500 }

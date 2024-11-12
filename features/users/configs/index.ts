@@ -6,7 +6,7 @@ export const fields = [
   },
   {
     label: 'Sözel',
-    value: 'SÖZ',
+    value: 'SOZ',
   },
   {
     label: 'Eşit Ağırlık',

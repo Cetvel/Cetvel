@@ -55,7 +55,7 @@ const GoalForm: React.FC<GoalFormProps> = ({ initialData, onSuccess }) => {
         if (onSuccess) onSuccess();
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
