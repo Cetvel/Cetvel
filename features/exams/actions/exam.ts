@@ -41,7 +41,7 @@ export const createExam = async (
   aytField?: string
 ): Promise<boolean> => {
   try {
-    let url = `/exams/${examType.toLowerCase()}${aytField && `/${aytField.toLowerCase()}`}`;
+    let url = `/exams/${examType.toLowerCase()}${aytField !== undefined ? `/${aytField.toLowerCase()}` : ''}`;
 
     if (examType === 'LGS') {
       const { educationStyle, ...restValues } = values;

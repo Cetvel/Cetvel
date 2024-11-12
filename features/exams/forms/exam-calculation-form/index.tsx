@@ -25,7 +25,6 @@ const ExamCalculationForm: React.FC = () => {
   const { setOpen } = useModal();
   const { user } = useUser();
 
-  // Initialize states with user's field if available
   const [selectedExamType, setSelectedExamType] = useState<ExamType>(
     examConfigs[0].type as ExamType
   );
@@ -94,7 +93,7 @@ const ExamCalculationForm: React.FC = () => {
       const success = await createExam(
         selectedExamType,
         examData,
-        selectedField || user?.field
+        selectedExamType === 'AYT' ? selectedField : undefined
       );
       if (success) {
         console.log('Sınav başarıyla oluşturuldu');
