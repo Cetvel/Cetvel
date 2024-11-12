@@ -7,7 +7,7 @@ import Todo from '@/features/tasks/models/todo.model';
 import Exam from '@/features/exams/models/exam.model';
 import Goal from '@/features/goals/models/goal.model';
 import Tag from '@/features/tags/models/tag.model';
-import connectDB from '@/lib/config/connectDB';
+   
 // The Kinde issuer URL should already be in your `.env` file
 // from when you initially set up Kinde. This will fetch your
 // public JSON web keys file
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       case 'user.updated':
         const { user: updatedUser } = event.data;
         console.log(updatedUser);
-        await connectDB();
+           ;
         await User.findOneAndUpdate(
           { kindeId: updatedUser.id },
           {
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
         break;
       case 'user.created':
         const { user } = event.data;
-        await connectDB();
+           ;
         console.log(user);
         await User.create({
           name: user.username ?? user.first_name,
@@ -74,7 +74,7 @@ export async function POST(req: Request) {
       case 'user.deleted':
         const { user: deletedUser } = event.data;
         console.log(deletedUser);
-        await connectDB();
+           ;
         await User.findOneAndDelete({ kindeId: deletedUser.id }).then(() =>
           console.log(deletedUser.id, 'User deleted')
         );

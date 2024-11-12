@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import AytModel, { AytDocument } from '@/features/exams/models/ayt.model';
-import connectDB from '@/lib/config/connectDB';
+   
 export async function GET(request: NextRequest) {
   try {
     const kindeUser = await getUser();
@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    await connectDB();
+       ;
 
     const exams = (await AytModel.find({ kindeId: userId })) as AytDocument[];
 

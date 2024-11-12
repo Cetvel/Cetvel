@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Todo from '@/features/tasks/models/todo.model';
-import connectDB from '@/lib/config/connectDB';
+   
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 const { getUser } = getKindeServerSession();
 // Özel hata sınıfı
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
     const todayEndInTurkey = new Date(todayStartInTurkey);
     todayEndInTurkey.setUTCHours(23, 59, 59, 999);
 
-    await connectDB();
+       ;
 
     const tasks = await Todo.find({
       kindeId: userId,

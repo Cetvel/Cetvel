@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import Todo from '@/features/tasks/models/todo.model';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import connectDB from '@/lib/config/connectDB';
+   
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import TasksLoader from '@/features/tasks/loaders/tasks-loader';
 import { title } from 'process';
@@ -28,15 +28,13 @@ export async function GET() {
         { status: 401 }
       );
     }
-    await connectDB();
+       ;
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     const recentTodos = await Todo.find(
       { kindeId: userId, createdAt: { $gte: oneWeekAgo } },
       {title: 1, tag: 1,status: 1, startsAt: 1}
     )
-
-    console.log("Recent Todos", recentTodos)
-    // const recentGoals = await Goal.find(
+      // const recentGoals = await Goal.find(
     //   { kindeId: userId },
     //   { title: 1, totalUnits: 1, completedUnits: 1 }
     // );

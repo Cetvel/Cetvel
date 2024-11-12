@@ -1,4 +1,4 @@
-import connectDB from '@/lib/config/connectDB';
+   
 import Todo from '@/features/tasks/models/todo.model';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
   endOfDay.setHours(23, 59, 59, 999);
 
   try {
-    await connectDB();
+       ;
     const count = await Todo.countDocuments({
       kindeId,
       status: 'incomplete',

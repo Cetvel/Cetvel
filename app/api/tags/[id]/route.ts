@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import TagModel from '@/features/tags/models/tag.model';
-import connectDB from '@/lib/config/connectDB';
+   
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -26,7 +26,7 @@ export async function PUT(
       );
     }
 
-    await connectDB();
+       ;
     const body = await request.json();
     const tag = await TagModel.findOneAndUpdate({ _id: id }, body, {
       new: true,
@@ -68,7 +68,7 @@ export async function DELETE(
         { status: 400 }
       );
     }
-    await connectDB();
+       ;
     const tag = await TagModel.findOneAndDelete({ _id: id });
     if (!tag) {
       return NextResponse.json(

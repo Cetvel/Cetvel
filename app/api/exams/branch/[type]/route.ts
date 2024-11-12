@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import BranchExam, { BranchType } from '@/features/exams/models/branch.model';
-import connectDB from '@/lib/config/connectDB';
+   
 export async function GET(
   request: NextRequest,
   { params }: { params: { type: string } }
@@ -19,7 +19,7 @@ export async function GET(
     }
     const { type } = params;
 
-    await connectDB();
+       ;
     const exams = await BranchExam.find({ kindeId: userId, type });
     return NextResponse.json(exams, { status: 200 });
   } catch (error) {
@@ -47,7 +47,7 @@ export async function POST(
     const { type } = params;
 
     const body = await request.json();
-    await connectDB();
+       ;
 
     const branchExam = new BranchExam({
       kindeId: userId,

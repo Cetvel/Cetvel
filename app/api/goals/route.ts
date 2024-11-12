@@ -4,7 +4,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import GoalModel from '@/features/goals/models/goal.model';
 import { IGoalDocument } from '@/features/goals/models/goal.model';
-import connectDB from '@/lib/config/connectDB';
+   
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-    await connectDB();
+       ;
     const goals = await GoalModel.find({ kindeId: userId });
     if (goals == undefined) {
       console.log('goals could not find');
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    await connectDB();
+       ;
 
     const goal = new GoalModel({
       kindeId: userId,

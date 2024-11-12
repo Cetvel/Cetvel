@@ -3,7 +3,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Users, init } from '@kinde/management-api-js';
 import MongoUsers from '@/features/users/models/user.model';
 import bcrypt from 'bcrypt';
-import connectDB from '@/lib/config/connectDB';
+   
 
 init();
 
@@ -35,7 +35,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    await connectDB();
+       ;
     const mongoUser = await MongoUsers.findOne({ userId: user.id });
 
     if (!mongoUser) {

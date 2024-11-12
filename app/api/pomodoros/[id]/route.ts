@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import PomodoroModel from '@/features/focus-sessions/models/pomodoro.model';
-import connectDB from '@/lib/config/connectDB';
+   
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -27,7 +27,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    await connectDB();
+       ;
     const pomodoro = await PomodoroModel.findOneAndUpdate({ _id: id }, body, {
       new: true,
     });
@@ -68,7 +68,7 @@ export async function DELETE(
         { status: 400 }
       );
     }
-    await connectDB();
+       ;
     const pomodoro = await PomodoroModel.findOneAndDelete({ _id: id });
     if (!pomodoro) {
       return NextResponse.json(

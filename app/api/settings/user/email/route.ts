@@ -3,7 +3,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import getM2MToken from '@/lib/m2m_token';
 import { Users, init } from '@kinde/management-api-js';
 import User from '@/features/users/models/user.model';
-import connectDB from '@/lib/config/connectDB';
+   
 init();
 export async function PUT(req: NextRequest) {
   try {
@@ -40,7 +40,7 @@ export async function PUT(req: NextRequest) {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    await connectDB();
+       ;
     await User.findOneAndUpdate({ kindeId: user.id }, { email: email });
     return NextResponse.json({ status: 200 });
   } catch (error: any) {

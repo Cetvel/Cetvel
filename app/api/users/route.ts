@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
+import connectDB from '@/lib/config/connectDB';
 import User from '@/features/users/models/user.model';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import connectDB from '@/lib/config/connectDB';
+   
 const { getUser } = getKindeServerSession();
 export async function GET(req: NextRequest) {
   try {
@@ -16,9 +17,10 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    await connectDB();
     // Veritabanı bağlantısı kontrolü
     try {
-      await connectDB();
+         ;
     } catch (dbError) {
       console.error('Database connection error:', dbError);
       return NextResponse.json(
@@ -68,7 +70,7 @@ export async function PUT(request: NextRequest) {
 
     // Veritabanı bağlantısı kontrolü
     try {
-      await connectDB();
+         ;
     } catch (dbError) {
       console.error('Database connection error:', dbError);
       return NextResponse.json(

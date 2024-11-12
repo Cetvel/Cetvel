@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import GoalModel from '@/features/goals/models/goal.model';
-import connectDB from '@/lib/config/connectDB';
+   
 
 export async function PUT(
   request: NextRequest,
@@ -27,7 +27,7 @@ export async function PUT(
       );
     }
     const body = await request.json();
-    await connectDB();
+       ;
     const goal = await GoalModel.findOneAndUpdate({ _id: id }, body, {
       new: true,
     });
@@ -65,7 +65,7 @@ export async function DELETE(
         { status: 400 }
       );
     }
-    await connectDB();
+       ;
     const goal = await GoalModel.findOneAndDelete({ _id: id });
     if (!goal) {
       return NextResponse.json({ error: 'goal not found' }, { status: 404 });

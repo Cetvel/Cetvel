@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import TodoModel from '@/features/tasks/models/todo.model';
-import connectDB from '@/lib/config/connectDB';
+   
 
 export async function PUT(
   request: NextRequest,
@@ -27,7 +27,7 @@ export async function PUT(
       );
     }
     const body = await request.json();
-    await connectDB();
+       ;
     const todo = await TodoModel.findOneAndUpdate({ _id: id }, body, {
       new: true,
     });
@@ -65,7 +65,7 @@ export async function DELETE(
       { status: 400 }
     );
   }
-  await connectDB();
+     ;
   const todo = await TodoModel.findOneAndDelete({ _id: id });
   if (!todo) {
     return NextResponse.json({ error: 'Todo not found' }, { status: 404 });

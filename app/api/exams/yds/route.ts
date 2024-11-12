@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import YdsModel from '@/features/exams/models/yds.model';
-import connectDB from '@/lib/config/connectDB';
+   
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-    await connectDB();
+       ;
     const exams = await YdsModel.find({ kindeId: userId });
     return NextResponse.json(exams, { status: 200 });
   } catch (error) {
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    await connectDB();
+       ;
     const exam = new YdsModel({
       kindeId: userId,
       ...body,

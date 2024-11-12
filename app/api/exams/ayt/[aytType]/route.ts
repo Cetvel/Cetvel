@@ -3,7 +3,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
 import AytModel from '@/features/exams/models/ayt.model';
 import { AytDocument } from '@/features/exams/models/ayt.model';
-import connectDB from '@/lib/config/connectDB';
+   
 export async function GET(
   request: NextRequest,
   { params }: { params: { aytType: string } }
@@ -38,7 +38,7 @@ export async function GET(
         break;
     }
 
-    await connectDB();
+       ;
     const exams = (await AytModel.find({
       kindeId: userId,
       aytType: field,
@@ -89,7 +89,7 @@ export async function POST(
         break;
     }
 
-    await connectDB();
+       ;
     const exam = new AytModel({
       kindeId: userId,
       field,
