@@ -4,43 +4,45 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Sparkles, RotateCcw } from 'lucide-react';
-import useSWR from 'swr';
 import { motion, AnimatePresence } from 'framer-motion';
 import RecommendedTask from './recommended-task';
-import { fetcher } from '@/lib/utils';
 import { CustomTooltip } from '@/components/global/custom-tooltip';
 import Spinner from '@/components/ui/spinner';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { fadeIn } from '@/lib/motion';
+import { axiosInstance } from '@/lib/utils';
 
-type Task = {
-  title: string;
-  tag: string;
-};
-
-const MAX_REFRESH_COUNT = 2;
+const MAX_REFRESH_COUNT = 5;
 
 const RecommendedTasks: React.FC = () => {
+  const [tasks, setTasks] = useState<Task[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isValidating, setIsValidating] = useState(false);
   const [refreshCount, setRefreshCount] = useState(0);
 
-  const {
-    data: tasks,
-    error,
-    isValidating,
-    mutate,
-    isLoading,
-  } = useSWR<Task[]>('/gemini/task-suggester', fetcher);
+  const fetchRecommendedTasks = useCallback(async () => {
+    try {
+      setIsValidating(true);
+      const data = await axiosInstance
+        .get('/gemini/task-suggester')
+        .then((res) => res.data);
+      console.log(data);
 
-  useEffect(() => {
-    mutate();
-  }, [mutate]);
+      setTasks(data);
+      setError(null);
+    } catch (err) {
+      setError('Önerilen görevler alınamadı.');
+    } finally {
+      setIsValidating(false);
+    }
+  }, []);
 
   const handleRefresh = useCallback(() => {
     if (refreshCount < MAX_REFRESH_COUNT) {
       setRefreshCount((prevCount) => prevCount + 1);
-      mutate();
+      fetchRecommendedTasks();
     }
-  }, [refreshCount, mutate]);
+  }, [refreshCount, fetchRecommendedTasks]);
 
   const isRefreshDisabled = refreshCount >= MAX_REFRESH_COUNT || isValidating;
 
@@ -76,7 +78,7 @@ const RecommendedTasks: React.FC = () => {
             exit={{ opacity: 0 }}
             className='text-red-500'
           >
-            Görevler yüklenirken bir hata oluştu.
+            {error}
           </motion.p>
         )}
 

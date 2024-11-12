@@ -15,6 +15,7 @@ import StatusFilter from './status-filter';
 import TagManager from '@/features/tags/components/tag-manager';
 import AddTask from './add-task';
 import TasksLoader from '../loaders/tasks-loader';
+import Error from '@/components/global/error';
 
 const TaskList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -55,14 +56,10 @@ const TaskList = () => {
 
         <Card className='p-2 lg:p-4'>
           {error ? (
-            <Alert variant={'destructive'}>
-              <AlertTitle>
-                <AlertCircle size={24} /> Bir hata oluştu
-              </AlertTitle>
-              <AlertDescription>
-                Görevler yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.
-              </AlertDescription>
-            </Alert>
+            <Error
+              message={error}
+              title='Görevler yüklenirken bir hata oluştu.'
+            />
           ) : isLoading ? (
             <TasksLoader />
           ) : (
@@ -70,12 +67,13 @@ const TaskList = () => {
               <Reorder.Group axis='y' values={tasks} onReorder={setTasks}>
                 <div className='flex flex-col gap-3'>
                   {tasks.length === 0 ? (
-                    <>
-                      <CircleSlash2 size={48} />
-                      <p className='text-sm text-secondary-foreground mt-2'>
-                        Gösterilecek görev yok
-                      </p>
-                    </>
+                    <Alert>
+                      <AlertCircle size={20} className='mr-2' />
+                      <AlertTitle>Görev yok</AlertTitle>
+                      <AlertDescription>
+                        Yeni bir görev eklemek için butona tıklayın.
+                      </AlertDescription>
+                    </Alert>
                   ) : (
                     filterTasks(tasks, selectedTag, selectedStatus).map(
                       (task) => <Task key={task._id} task={task} />

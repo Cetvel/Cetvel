@@ -15,7 +15,7 @@ enum field {
   DIL,
 }
 interface IUser extends User {
-  password?: string; // Password
+  password?: string;
 }
 
 export interface IUserDocument extends IUser, Document {
