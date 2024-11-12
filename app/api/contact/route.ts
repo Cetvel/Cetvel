@@ -1,11 +1,12 @@
    
 import { NextResponse } from 'next/server';
 import Contact from '@/lib/models/contact.model';
+import connectDB from '@/lib/config/connectDB';
 
 /// some change
 export async function POST(res: NextResponse) {
   try {
-       ;
+       ;        await connectDB();
     const { name, email, message } = await res.json();
     Contact.create({ name, email, message });
     return NextResponse.json({ status: 200 });
