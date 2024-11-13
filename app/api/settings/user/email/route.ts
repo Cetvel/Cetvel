@@ -30,7 +30,7 @@ export async function PUT(req: NextRequest) {
     console.log(data);
     const emailId = data.identities
       .filter((item: any) => item.type === 'email')
-      .find((item: any) => item.name == email).id;
+      .find((item: any) => item.name == user.email).id;
     const accessToken = await getM2MToken();
     await fetch(`https://cetvel.kinde.com/api/v1/identities/${emailId}`, {
       method: 'DELETE',
