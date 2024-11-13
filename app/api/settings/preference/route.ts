@@ -38,7 +38,7 @@ export async function PUT(req: NextRequest) {
       );
     });
 
-    await User.updateOne({ kindeId: user.id }, { grade, field, exam });
+    await User.findOneAndUpdate({ kindeId: user.id }, { grade, field, exam });
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
