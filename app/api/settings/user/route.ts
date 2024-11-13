@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import getM2MToken from '@/lib/m2m_token';
 import { Users, init } from '@kinde/management-api-js';
 import UserMongo from '@/features/users/models/user.model';
-init();
+import getM2MToken from '@/lib/m2m_token';
 
 init();
 
@@ -20,6 +19,8 @@ export async function PUT(req: NextRequest) {
       );
     }
     const { username } = await req.json();
+    console.log("username", username)
+    console.log("user.username", user)
 
     if (username.includes(' ')) {
       return NextResponse.json(
@@ -35,15 +36,40 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    await UserMongo.updateOne(
-      { kindeId: user.id },
-      { $set: { name: username } }
-    );
-    await Users.updateUser({
-      id: user.id,
-      /* @ts-ignore */
-      username: username,
+    const data = (await Users.getUserIdentities({
+      userId: user?.id,
+    })) as any;
+    console.log(data);
+    const usernameId = data.identities
+      .filter((item: any) => item.type === 'username')
+      .find((item: any) => item.name == user.username).id;
+    console.log("usernameId", usernameId)
+
+    const accessToken = await getM2MToken();
+    await fetch(`https://cetvel.kinde.com/api/v1/identities/${usernameId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     });
+
+    await fetch(`https://cetvel.kinde.com/api/v1/users/${user.id}/identities`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({
+        value: username,
+        type: 'username',
+      })
+    })
+    await UserMongo.findOneAndUpdate(
+      { kindeId: user.id },
+      { name: username } ,
+    )
+
+
     return NextResponse.json({ status: 200 });
   } catch (error: any) {
     console.error('İşlem hatası:', error);
