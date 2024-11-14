@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Users, init } from '@kinde/management-api-js';
 import UserMongo from '@/features/users/models/user.model';
-import getM2MToken from '@/lib/m2m_token';
 
 init();
 
@@ -19,16 +18,6 @@ export async function PUT(req: NextRequest) {
       );
     }
     const { username } = await req.json();
-    console.log("username", username)
-    console.log("user.username", user)
-
-    if (username.includes(' ')) {
-      return NextResponse.json(
-        { message: 'Lütfen boşluk bırakmayınız' },
-        { status: 400 }
-      );
-    }
-
     if (!username) {
       return NextResponse.json(
         { message: 'Kullanıcı adı boş olamaz.' },
@@ -36,40 +25,17 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const data = (await Users.getUserIdentities({
-      userId: user?.id,
-    })) as any;
-    console.log(data);
-    const usernameId = data.identities
-      .filter((item: any) => item.type === 'username')
-      .find((item: any) => item.name == user.username).id;
-    console.log("usernameId", usernameId)
-
-    const accessToken = await getM2MToken();
-    await fetch(`https://cetvel.kinde.com/api/v1/identities/${usernameId}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    await fetch(`https://cetvel.kinde.com/api/v1/users/${user.id}/identities`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`
-      },
-      body: JSON.stringify({
-        value: username,
-        type: 'username',
-      })
+    await Users.updateUser({
+      id: user.id,
+      requestBody: {
+        given_name: username,
+      }
     })
+
     await UserMongo.findOneAndUpdate(
       { kindeId: user.id },
       { name: username } ,
     )
-
-
     return NextResponse.json({ status: 200 });
   } catch (error: any) {
     console.error('İşlem hatası:', error);
