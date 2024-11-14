@@ -22,7 +22,7 @@ export interface IUserDocument extends IUser, Document {
   _id: Schema.Types.ObjectId;
 }
 
-export interface UserModel extends Model<IUserDocument> {}
+export interface UserModel extends Model<IUserDocument> { }
 
 // Model is defined only if it hasn't been already
 const userSchema = new Schema<IUserDocument, UserModel>(
@@ -80,6 +80,8 @@ const userSchema = new Schema<IUserDocument, UserModel>(
       required: false,
       trim: true,
     },
+    apiTenancy: { type: Number, default: 5 },
+    lastApiTenancyUpdate: { type: Date, default: Date.now }
   },
   {
     timestamps: true,

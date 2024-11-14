@@ -9,4 +9,6 @@ declare interface User {
   field: StudyField;
   grade: number;
   exam: ExamType;
+  apiTenancy: Number,
+  lastApiTenancyUpdate: Date
 }
