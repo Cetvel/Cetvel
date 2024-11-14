@@ -15,7 +15,6 @@ enum field {
   DIL,
 }
 interface IUser extends User {
-  password?: string;
 }
 
 export interface IUserDocument extends IUser, Document {
@@ -58,12 +57,6 @@ const userSchema = new Schema<IUserDocument, UserModel>(
       required: false,
       enum: Object.values(field),
       trim: false,
-    },
-    password: {
-      type: String,
-      required: false,
-      trim: true,
-      minlength: 4,
     },
     cover_picture: {
       type: String,
