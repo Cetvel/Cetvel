@@ -58,7 +58,8 @@ const TytSchema = new Schema<ITytDocument>({
   },
 });
 
-const Tyt =
-  mongoose.models.Tyt || Exam.discriminator<ITytDocument>('TYT', TytSchema);
+console.log(mongoose.models)
+const Tyt = 
+  mongoose.models.TYT || Exam.discriminator<ITytDocument>('TYT', TytSchema);
 
 export default Tyt;
