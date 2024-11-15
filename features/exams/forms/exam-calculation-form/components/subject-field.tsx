@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import CustomFormField, {
+import DynamicFormField, {
   FormFieldType,
-} from '@/components/ui/custom-form-field';
+} from '@/components/ui/dynamic-form-field';
 import { SubjectConfig } from '@/features/exams/types';
 
 const SubjectField: React.FC<SubjectConfig & { control: any }> = ({
@@ -16,7 +16,7 @@ const SubjectField: React.FC<SubjectConfig & { control: any }> = ({
     </CardHeader>
     <CardContent>
       <div className='grid grid-cols-3 gap-4'>
-        <CustomFormField
+        <DynamicFormField
           fieldType={FormFieldType.NUMBER}
           control={control}
           name={`${name}.solvingTime`}
@@ -25,7 +25,7 @@ const SubjectField: React.FC<SubjectConfig & { control: any }> = ({
           max={180}
           placeholder='Dakika'
         />
-        <CustomFormField
+        <DynamicFormField
           fieldType={FormFieldType.NUMBER}
           control={control}
           name={`${name}.correct`}
@@ -34,7 +34,7 @@ const SubjectField: React.FC<SubjectConfig & { control: any }> = ({
           max={maxQuestions}
           placeholder='0'
         />
-        <CustomFormField
+        <DynamicFormField
           fieldType={FormFieldType.NUMBER}
           control={control}
           name={`${name}.wrong`}

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import getM2MToken from '@/lib/m2m_token';
 import { Users, init } from '@kinde/management-api-js';
-import User from '@/features/users/models/user.model';
+import User from '@/lib/models/user.model';
 init();
 
 export async function PUT(req: NextRequest) {

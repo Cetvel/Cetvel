@@ -50,7 +50,6 @@ const TagManager: React.FC = () => {
   const [optimisticTags, updateOptimisticTags, resetOptimisticTags] =
     useOptimisticState<Tag[]>([]);
 
-  // Update optimisticTags when tags data changes
   useEffect(() => {
     if (tags) {
       resetOptimisticTags(tags);

@@ -1,7 +1,7 @@
 // app/api/exam/dgs/route.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import AlesModel from '@/features/exams/models/ales.model';
+import AlesModel from '@/lib/models/ales.model';
 
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 const { getUser } = getKindeServerSession();

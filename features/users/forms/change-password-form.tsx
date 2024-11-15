@@ -10,17 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Form } from '@/components/ui/form';
-import CustomFormField, {
-  FormFieldType,
-} from '@/components/ui/custom-form-field';
-import SubmitButton from '@/components/forms/ui/submit-button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 const ChangePasswordSchema = z
@@ -61,46 +52,9 @@ const ChangePasswordForm = () => {
             oluşturmalısın.
           </AlertDescription>
         </Alert>
-        <Popover>
-          <PopoverTrigger>
-            <Button className='w-full'>Şifremi Değiştir</Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className='space-y-4'
-              >
-                <CustomFormField
-                  fieldType={FormFieldType.PASSWORD}
-                  control={form.control}
-                  name='currentPassword'
-                  placeholder='Mevcut şifre'
-                />
-
-                <CustomFormField
-                  fieldType={FormFieldType.PASSWORD}
-                  control={form.control}
-                  name='newPassword'
-                  placeholder='Yeni şifre'
-                />
-
-                <CustomFormField
-                  fieldType={FormFieldType.PASSWORD}
-                  control={form.control}
-                  name='newPasswordConfirmation'
-                  placeholder='Yeni şifre tekrar'
-                />
-
-                <SubmitButton
-                  text='Şifreyi değiştir'
-                  loading={form.formState.isSubmitting}
-                  className='w-full'
-                />
-              </form>
-            </Form>
-          </PopoverContent>
-        </Popover>
+        <Link href={'/'}>
+          <Button>Şifremi sıfırla</Button>
+        </Link>
       </CardContent>
     </Card>
   );

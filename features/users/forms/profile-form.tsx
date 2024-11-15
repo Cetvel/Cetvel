@@ -23,9 +23,9 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useForm } from 'react-hook-form';
-import CustomFormField, {
+import DynamicFormField, {
   FormFieldType,
-} from '@/components/ui/custom-form-field';
+} from '@/components/ui/dynamic-form-field';
 import SubmitButton from '@/components/forms/ui/submit-button';
 
 const Schema = z.object({
@@ -112,7 +112,7 @@ const ProfileForm = () => {
                   onSubmit={form.handleSubmit(onSubmit)}
                   className='space-y-4'
                 >
-                  <CustomFormField
+                  <DynamicFormField
                     fieldType={FormFieldType.INPUT}
                     control={form.control}
                     name='username'

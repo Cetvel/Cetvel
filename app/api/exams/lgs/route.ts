@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
-import LgsModel from '@/features/exams/models/lgs.model';
+import LgsModel from '@/lib/models/lgs.model';
 
 export async function GET(request: NextRequest) {
   try {

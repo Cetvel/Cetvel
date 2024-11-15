@@ -10,13 +10,20 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs';
-import { LogOut } from 'lucide-react';
+import { AlertCircle, LogOut } from 'lucide-react';
 import { useUser } from '@/features/users/contexts/user-context';
 import Spinner from '../ui/spinner';
+import { CustomTooltip } from './custom-tooltip';
 
 const UserButton = () => {
   const { user, kindeUser, isUserLoading, isUserError } = useUser();
   if (isUserLoading) return <Spinner />;
+  if (isUserError)
+    return (
+      <CustomTooltip content='Kullanıcı verileri çekilemedi'>
+        <AlertCircle className='text-destructive' size={18} />
+      </CustomTooltip>
+    );
 
   return (
     <DropdownMenu>

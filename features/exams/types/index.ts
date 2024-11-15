@@ -41,5 +41,5 @@ declare type ExamConfig = {
   label: string;
   subjects: SubjectConfig[];
   field?: FieldConfig;
-  totalTime?: number;
+  totalTime: number;
 };

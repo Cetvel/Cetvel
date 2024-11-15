@@ -81,7 +81,7 @@ export const updateExam = async (
 
 export const deleteExam = async (id: string): Promise<boolean> => {
   try {
-    let url = `/exams/delete/${id}`;
+    let url = `/exams/${id}`;
     const res = await axiosInstance.delete(url);
     return handleApiResponse(res, 'silme');
   } catch (error: any) {

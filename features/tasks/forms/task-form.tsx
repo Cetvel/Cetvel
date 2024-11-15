@@ -6,9 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { TaskSchema } from '@/lib/schemas';
 import { z } from 'zod';
 import { Form } from '@/components/ui/form';
-import CustomFormField, {
+import DynamicFormField, {
   FormFieldType,
-} from '@/components/ui/custom-form-field';
+} from '@/components/ui/dynamic-form-field';
 import SubmitButton from '@/components/forms/ui/submit-button';
 import { SelectItem } from '@/components/ui/select';
 import isEqual from 'lodash/isEqual';
@@ -111,7 +111,7 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-        <CustomFormField
+        <DynamicFormField
           fieldType={FormFieldType.INPUT}
           control={form.control}
           name='title'
@@ -120,7 +120,7 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
         />
 
         <div className='grid grid-cols-2 gap-2'>
-          <CustomFormField
+          <DynamicFormField
             fieldType={FormFieldType.DATE_PICKER}
             control={form.control}
             name='startsAt'
@@ -128,7 +128,7 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
             placeholder='Tarih seçin'
           />
 
-          <CustomFormField
+          <DynamicFormField
             fieldType={FormFieldType.DATE_PICKER}
             control={form.control}
             name='endsAt'
@@ -137,7 +137,7 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
           />
         </div>
 
-        <CustomFormField
+        <DynamicFormField
           fieldType={FormFieldType.SELECT}
           control={form.control}
           name='tag'
@@ -163,7 +163,7 @@ const TaskForm = ({ type = 'create', task }: TaskFormProps) => {
               Etiketler yüklenemedi
             </SelectItem>
           ) : null}
-        </CustomFormField>
+        </DynamicFormField>
 
         {type === 'edit' && (
           <div className='flex justify-center items-center gap-2'>

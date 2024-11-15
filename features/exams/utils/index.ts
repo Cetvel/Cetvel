@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
-export const createDynamicSchema = (config: ExamConfig) => {
+export const createDynamicSchema = (
+  config: ExamConfig,
+  selectedField?: string
+) => {
   const subjectSchema = (maxQuestions: number) =>
     z
       .object({
@@ -35,30 +38,43 @@ export const createDynamicSchema = (config: ExamConfig) => {
         path: ['correct'],
       });
 
-  const schemaFields: Record<string, z.ZodTypeAny> = {
-    examName: z.string().min(1, 'Sınav adı gereklidir.'),
+  let baseSchema: Record<string, any> = {
+    examName: z.string().min(1, { message: 'Sınav adı zorunludur' }),
+    examType: z.string(),
+    solvingDate: z.date(),
     solvingTime: z.coerce
       .number()
       .min(0)
-      .max(config.totalTime || 180)
-      .optional(),
-    solvingDate: z.date({
-      required_error: 'Lütfen sınav tarihini seçin',
-      invalid_type_error: 'Geçersiz tarih formatı',
-    }),
+      .max(config.totalTime, {
+        message: `Toplam süre ${config.totalTime} dakikayı geçemez`,
+      }),
   };
 
   if (config.field) {
-    schemaFields[config.field.name] = z.enum(
-      config.field.options as [string, ...string[]]
-    );
+    baseSchema = {
+      ...baseSchema,
+      [config.field.name]: z
+        .string()
+        .min(1, { message: 'Alan seçimi zorunludur' }),
+    };
   }
 
+  const subjectFields: Record<string, any> = {};
+
   config.subjects.forEach((subject) => {
-    schemaFields[subject.name] = subjectSchema(subject.maxQuestions);
+    if (subject.forFields) {
+      if (!selectedField || !subject.forFields.includes(selectedField)) {
+        return;
+      }
+    }
+
+    subjectFields[subject.name] = subjectSchema;
   });
 
-  return z.object(schemaFields);
+  return z.object({
+    ...baseSchema,
+    ...subjectFields,
+  });
 };
 
 export const calculateNet = (correct: number, wrong: number) => {

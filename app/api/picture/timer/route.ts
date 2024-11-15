@@ -1,8 +1,8 @@
-import User from '@/features/users/models/user.model';
+import User from '@/lib/models/user.model';
 
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
-   
+
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 const { getUser } = getKindeServerSession();
 export async function PUT(req: NextRequest) {
@@ -18,7 +18,6 @@ export async function PUT(req: NextRequest) {
     }
 
     const { url } = await req.json();
-       ;
     const user = await User.findOneAndUpdate(
       { kindeId: userId },
       { timer_picture: url },

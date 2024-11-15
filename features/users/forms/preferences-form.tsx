@@ -1,186 +1,40 @@
 'use client';
 
-import { useForm, FormProvider } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import Spinner from '@/components/ui/spinner';
+import { useUser } from '../contexts/user-context';
+import { usePreferencesForm } from '../hooks/use-preferences-form';
+import Error from '@/components/global/error';
+import { FormProvider } from 'react-hook-form';
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
-import { SelectItem } from '@/components/ui/select';
-import { PreferencesSchema } from '@/lib/schemas';
-import { z } from 'zod';
-import CustomFormField, {
+import DynamicFormField, {
   FormFieldType,
-} from '@/components/ui/custom-form-field';
-import { axiosInstance } from '@/lib/utils';
-import { toast } from 'sonner';
-import { ImageUploader } from '@/components/global/image-uploader';
-import { mutate } from 'swr';
-import Spinner from '@/components/ui/spinner';
-import Error from '@/components/global/error';
-import { useUser } from '@/features/users/contexts/user-context';
-import {
-  educationLevels,
-  exams,
-  fields,
-  gradeOptions,
-} from '@/features/users/configs';
-import { useCallback, useEffect } from 'react';
-import debounce from 'lodash/debounce';
+} from '@/components/ui/dynamic-form-field';
+import { educationLevels, exams, fields, gradeOptions } from '../configs';
+import { SelectItem } from '@/components/ui/select';
+import { ImagePreferences } from '../components/image-preferences';
+import { FormControl } from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 const PreferencesForm = () => {
   const { user, isUserLoading, isUserError } = useUser();
+  const { form, watchEducationLevel } = usePreferencesForm();
 
-  // Sınıf bilgisine göre eğitim seviyesini belirleyen fonksiyon
-  const determineEducationLevel = (grade?: number): string => {
-    if (!grade) return 'Mezun';
-
-    if (grade >= 9 && grade <= 12) return 'Lise';
-    if (grade >= 5 && grade <= 8) return 'Ortaokul';
-    if (grade >= 1 && grade <= 4) return 'İlkokul';
-
-    return 'Lise';
-  };
-
-  const getDefaultClass = (
-    educationLevel: 'İlkokul' | 'Ortaokul' | 'Lise' | 'Mezun',
-    userGrade?: number
-  ) => {
-    if (!educationLevel || educationLevel === 'Mezun') return undefined;
-
-    const availableGrades = gradeOptions[educationLevel];
-    if (!availableGrades?.length) return undefined;
-
-    // Eğer kullanıcının sınıfı varsa ve geçerli bir değerse kullan
-    if (userGrade && availableGrades.includes(userGrade)) {
-      return userGrade;
-    }
-
-    return availableGrades[availableGrades.length - 1];
-  };
-
-  const currentEducationLevel = determineEducationLevel(user?.grade) as
-    | 'İlkokul'
-    | 'Ortaokul'
-    | 'Lise'
-    | 'Mezun';
-
-  const form = useForm<z.infer<typeof PreferencesSchema>>({
-    resolver: zodResolver(PreferencesSchema),
-    defaultValues: {
-      educationLevel: currentEducationLevel,
-      grade: getDefaultClass(currentEducationLevel, user?.grade),
-      field:
-        currentEducationLevel === 'Lise' ? user?.field || 'SAY' : undefined,
-      exam:
-        currentEducationLevel === 'Lise'
-          ? 'YKS'
-          : currentEducationLevel === 'Ortaokul'
-            ? 'LGS'
-            : user?.exam,
-    },
-  });
-
-  const watchEducationLevel = form.watch('educationLevel');
-
-  // Eğitim seviyesi değiştiğinde sınıf ve alan bilgilerini güncelle
-  useEffect(() => {
-    const defaultClass = getDefaultClass(watchEducationLevel);
-
-    // Sınıf değerini güncelle
-    form.setValue('grade', defaultClass);
-
-    // Alan bilgisini güncelle
-    if (watchEducationLevel !== 'Lise') {
-      form.setValue('field', undefined);
-    } else if (!form.getValues('field')) {
-      form.setValue('field', 'SAY');
-    }
-
-    // Sınav tipini güncelle
-    const examValue =
-      watchEducationLevel === 'Lise'
-        ? 'YKS'
-        : watchEducationLevel === 'Ortaokul'
-          ? 'LGS'
-          : watchEducationLevel === 'Mezun'
-            ? user?.exam
-            : undefined;
-
-    form.setValue('exam', examValue);
-  }, [watchEducationLevel, form, user?.exam]);
-
-  const submitForm = async (values: z.infer<typeof PreferencesSchema>) => {
-    const data = {
-      educationLevel: values.educationLevel,
-      field: values.educationLevel === 'Lise' ? values.field : undefined,
-      grade: values.educationLevel === 'Mezun' ? undefined : values.grade,
-      exam:
-        values.educationLevel === 'Lise'
-          ? 'YKS'
-          : values.educationLevel === 'Ortaokul'
-            ? 'LGS'
-            : values.educationLevel === 'İlkokul'
-              ? undefined
-              : values.exam,
-    };
-
-    try {
-      await axiosInstance.put('/settings/preference', data);
-      toast.success('Değişiklikler kaydedildi', {
-        description: 'Değişiklikleriniz başarıyla kaydedildi.',
-      });
-      mutate('/users');
-    } catch (error: any) {
-      console.error('Form gönderimi sırasında hata:', error);
-      toast.error('Bir hata oluştu', {
-        description:
-          error.response?.data?.message || 'Değişiklikleriniz kaydedilemedi.',
-      });
-    }
-  };
-
-  const debouncedSubmit = useCallback(
-    debounce((values: z.infer<typeof PreferencesSchema>) => {
-      submitForm(values);
-    }, 1000),
-    []
-  );
-
-  useEffect(() => {
-    const subscription = form.watch((values) => {
-      if (values) {
-        debouncedSubmit(values as z.infer<typeof PreferencesSchema>);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-      debouncedSubmit.cancel();
-    };
-  }, [form, debouncedSubmit]);
-
-  const onImageChange = async (url: string, type: 'cover' | 'timer') => {
-    try {
-      await axiosInstance.put(`/picture/${type}`, { url });
-      toast.success('İşlem başarılı', {
-        description: `${type === 'cover' ? 'Arkaplan' : 'Zamanlayıcı arkaplanı'} başarıyla güncellendi`,
-      });
-      mutate('/users');
-    } catch (error: any) {
-      console.error(`${type} resmi güncellenirken hata:`, error);
-      toast.error('İşlem sırasında bir hata oluştu', {
-        description:
-          error.response?.data?.message ||
-          `${type === 'cover' ? 'Arkaplan' : 'Zamanlayıcı arkaplanı'} güncellenirken bir hata oluştu`,
-      });
-    }
-  };
-
-  isUserLoading && <Spinner size={24} />;
+  if (isUserLoading) return <Spinner size={24} />;
+  if (isUserError)
+    return (
+      <Error
+        title='Bir hata oluştu'
+        message={isUserError.message || 'Beklenmedik sunucu hatası'}
+      />
+    );
+  if (!user) return null;
 
   return (
     <div className='space-y-6'>
@@ -190,25 +44,25 @@ const PreferencesForm = () => {
             <CardHeader>
               <CardTitle>Eğitim Bilgileri</CardTitle>
               <CardDescription>
-                Eğitim bilgilerinizi buradan güncelleyebilirsiniz.
+                Eğitim bilgilerini buradan güncelleyebilirsin.
               </CardDescription>
             </CardHeader>
             <CardContent className='gap-6 grid grid-cols-1 lg:grid-cols-3'>
-              <CustomFormField
+              <DynamicFormField
                 fieldType={FormFieldType.SELECT}
                 control={form.control}
                 name='educationLevel'
                 label='Eğitim Seviyen'
               >
-                {educationLevels.map((level: string) => (
+                {educationLevels.map((level) => (
                   <SelectItem key={level} value={level}>
                     {level}
                   </SelectItem>
                 ))}
-              </CustomFormField>
+              </DynamicFormField>
 
               {watchEducationLevel === 'Lise' && (
-                <CustomFormField
+                <DynamicFormField
                   fieldType={FormFieldType.SELECT}
                   control={form.control}
                   name='field'
@@ -219,26 +73,49 @@ const PreferencesForm = () => {
                       {field.label}
                     </SelectItem>
                   ))}
-                </CustomFormField>
+                </DynamicFormField>
               )}
 
               {watchEducationLevel !== 'Mezun' && (
-                <CustomFormField
-                  fieldType={FormFieldType.SELECT}
+                <DynamicFormField
+                  fieldType={FormFieldType.SKELETON}
                   control={form.control}
                   name='grade'
                   label='Sınıfın'
-                >
-                  {gradeOptions[watchEducationLevel]?.map((grade) => (
+                  renderSkeleton={(field) => (
+                    <FormControl>
+                      <RadioGroup
+                        className='flex flex-wrap gap-2'
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        {gradeOptions[watchEducationLevel]?.map((grade) => (
+                          <>
+                            <RadioGroupItem
+                              key={grade}
+                              value={grade.toString()}
+                            />
+                            <Label
+                              htmlFor={grade.toString()}
+                              className='cursor-pointer'
+                            >
+                              {grade}
+                            </Label>
+                          </>
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                  )}
+                />
+                /* {gradeOptions[watchEducationLevel]?.map((grade) => (
                     <SelectItem key={grade} value={grade.toString()}>
                       {grade}
                     </SelectItem>
-                  ))}
-                </CustomFormField>
+                  ))} */
               )}
 
               {watchEducationLevel === 'Mezun' && (
-                <CustomFormField
+                <DynamicFormField
                   fieldType={FormFieldType.SELECT}
                   control={form.control}
                   name='exam'
@@ -249,63 +126,22 @@ const PreferencesForm = () => {
                       {exam}
                     </SelectItem>
                   ))}
-                </CustomFormField>
+                </DynamicFormField>
               )}
             </CardContent>
           </Card>
         </form>
       </FormProvider>
+
       <Card className='w-full'>
         <CardHeader>
           <CardTitle>Arayüz Tercihleri</CardTitle>
           <CardDescription>
-            Arayüz tercihlerinizi buradan güncelleyebilirsiniz.
+            Arayüz tercihlerini buradan güncelleyebilirsin.
           </CardDescription>
         </CardHeader>
-        <CardContent className='space-y-6'>
-          <div className='grid grid-cols-2 gap-4'>
-            {isUserLoading ? (
-              <Spinner size={24} />
-            ) : isUserError ? (
-              <Error
-                title='Bir hata oluştu'
-                message={isUserError.message || 'Beklenmedik sunucu hatası'}
-              />
-            ) : (
-              <>
-                <ImageUploader
-                  onChange={(url) => onImageChange(url, 'cover')}
-                  value={user?.cover_picture || '/image/banner_default.jpg'}
-                  width={400}
-                  className='w-full'
-                  height={225}
-                  layout='responsive'
-                  cropConfig={{
-                    aspect: 16 / 9,
-                    minWidth: 400,
-                    minHeight: 225,
-                  }}
-                  maxSize={5}
-                  placeholder='Karşılayıcı arkaplan fotoğrafı yükle'
-                />
-                <ImageUploader
-                  onChange={(url) => onImageChange(url, 'timer')}
-                  value={user?.timer_picture || '/image/timer_default.jpg'}
-                  width={400}
-                  className='w-full'
-                  height={225}
-                  layout='responsive'
-                  cropConfig={{
-                    aspect: 16 / 9,
-                    minWidth: 400,
-                    minHeight: 225,
-                  }}
-                  maxSize={5}
-                  placeholder='Zamanlayıcı arkaplan fotoğrafı yükle'
-                />
-              </>
-            )}
-          </div>
+        <CardContent>
+          <ImagePreferences user={user} />
         </CardContent>
       </Card>
     </div>

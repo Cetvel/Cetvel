@@ -1,7 +1,7 @@
-import Pomodoro from '@/features/focus-sessions/models/pomodoro.model';
+import Pomodoro from '@/lib/models/pomodoro.model';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-   
+
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 const { getUser } = getKindeServerSession();
 export async function DELETE(req: NextRequest) {
@@ -16,7 +16,6 @@ export async function DELETE(req: NextRequest) {
     }
 
     // developments commit
-       ;
     const { ids } = await req.json();
     if (ids && Array.isArray(ids)) {
       await Pomodoro.deleteMany({ _id: { $in: ids } });
@@ -42,8 +41,6 @@ export async function PUT(req: NextRequest) {
     }
 
     const { ids, updateData } = await req.json();
-
-       ;
 
     if (ids && Array.isArray(ids)) {
       await Pomodoro.updateMany({ _id: { $in: ids } }, { $set: updateData });

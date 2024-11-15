@@ -4,9 +4,9 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import CustomFormField, {
+import DynamicFormField, {
   FormFieldType,
-} from '@/components/ui/custom-form-field';
+} from '@/components/ui/dynamic-form-field';
 import { Form } from '@/components/ui/form';
 import { SelectItem } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -31,9 +31,12 @@ const ExamCalculationForm: React.FC = () => {
   const [currentConfig, setCurrentConfig] = useState<ExamConfig>(
     examConfigs[0]
   );
-  const [schema, setSchema] = useState(createDynamicSchema(currentConfig));
+
   const [selectedField, setSelectedField] = useState<string | undefined>(
     user?.field || undefined
+  );
+  const [schema, setSchema] = useState(
+    createDynamicSchema(currentConfig, selectedField)
   );
 
   const form = useForm<z.infer<typeof schema>>({
@@ -70,19 +73,33 @@ const ExamCalculationForm: React.FC = () => {
     });
   }, [currentConfig.subjects, selectedField, user?.field]);
 
-  const handleCalculateClick = () => {
-    form.trigger().then((isValid) => {
+  useEffect(() => {
+    const subscription = form.watch(() => {
+      form.clearErrors();
+    });
+    return () => subscription.unsubscribe();
+    setSchema(createDynamicSchema(currentConfig, selectedField));
+  }, [form, currentConfig, selectedField]);
+
+  const handleCalculateClick = async () => {
+    try {
+      const isValid = await form.trigger();
       if (isValid) {
+        const formData = form.getValues();
         setOpen(
           <NetCalculationModal
             currentConfig={currentConfig}
             onConfirm={onSubmit}
-            data={form.getValues()}
+            data={formData}
             errors={form.formState.errors}
           />
         );
+      } else {
+        console.log('Form validation errors:', form.formState.errors);
       }
-    });
+    } catch (error) {
+      console.error('Form validation error:', error);
+    }
   };
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
@@ -130,7 +147,7 @@ const ExamCalculationForm: React.FC = () => {
         <Card>
           <CardHeader>
             <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4'>
-              <CustomFormField
+              <DynamicFormField
                 fieldType={FormFieldType.INPUT}
                 control={form.control}
                 name='examName'
@@ -138,14 +155,14 @@ const ExamCalculationForm: React.FC = () => {
                 placeholder='Örn: TYT Deneme Sınavı'
               />
 
-              <CustomFormField
+              <DynamicFormField
                 fieldType={FormFieldType.DATE_PICKER}
                 control={form.control}
                 name='solvingDate'
                 label='Sınav Tarihi'
               />
 
-              <CustomFormField
+              <DynamicFormField
                 fieldType={FormFieldType.SELECT}
                 control={form.control}
                 name='examType'
@@ -158,6 +175,14 @@ const ExamCalculationForm: React.FC = () => {
                   setSelectedExamType(value as ExamType);
                   setCurrentConfig(newConfig);
                   setSchema(createDynamicSchema(newConfig));
+
+                  form.reset({
+                    examType: value,
+                    solvingTime: newConfig.totalTime,
+                    ...(newConfig.field && {
+                      [newConfig.field.name]: selectedField || user?.field,
+                    }),
+                  });
                 }}
               >
                 {filteredExamConfigs.map((config) => (
@@ -165,10 +190,10 @@ const ExamCalculationForm: React.FC = () => {
                     {config.label}
                   </SelectItem>
                 ))}
-              </CustomFormField>
+              </DynamicFormField>
 
               {currentConfig.field && (
-                <CustomFormField
+                <DynamicFormField
                   key={currentConfig.field.name}
                   fieldType={FormFieldType.SELECT}
                   control={form.control}
@@ -183,10 +208,10 @@ const ExamCalculationForm: React.FC = () => {
                       {option}
                     </SelectItem>
                   ))}
-                </CustomFormField>
+                </DynamicFormField>
               )}
 
-              <CustomFormField
+              <DynamicFormField
                 fieldType={FormFieldType.NUMBER}
                 control={form.control}
                 name='solvingTime'

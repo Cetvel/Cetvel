@@ -2,8 +2,8 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
-import GoalModel from '@/features/goals/models/goal.model';
-import { IGoalDocument } from '@/features/goals/models/goal.model';
+import GoalModel from '@/lib/models/goal.model';
+import { IGoalDocument } from '@/lib/models/goal.model';
 
 export async function GET(request: NextRequest) {
   try {

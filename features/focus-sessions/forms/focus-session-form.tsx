@@ -4,9 +4,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FocusSessionSchema } from '@/lib/schemas';
 import { z } from 'zod';
 import { Form } from '@/components/ui/form';
-import CustomFormField, {
+import DynamicFormField, {
   FormFieldType,
-} from '@/components/ui/custom-form-field';
+} from '@/components/ui/dynamic-form-field';
 import SubmitButton from '@/components/forms/ui/submit-button';
 import { SelectItem } from '@/components/ui/select';
 import useSWR from 'swr';
@@ -70,14 +70,14 @@ const FocusSessionForm: React.FC<FocusSessionFormProps> = ({ editSession }) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <CustomFormField
+          <DynamicFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
             name='title'
             label='Başlık'
             placeholder='Odaklanma oturumu başlığı'
           />
-          <CustomFormField
+          <DynamicFormField
             fieldType={FormFieldType.SELECT}
             control={form.control}
             name='tag'
@@ -99,17 +99,17 @@ const FocusSessionForm: React.FC<FocusSessionFormProps> = ({ editSession }) => {
                 Etiketler yüklenemedi
               </SelectItem>
             ) : null}
-          </CustomFormField>
+          </DynamicFormField>
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <CustomFormField
+          <DynamicFormField
             fieldType={FormFieldType.NUMBER}
             control={form.control}
             name='duration'
             label='Süre (dakika)'
             placeholder='Dakika cinsinden süre'
           />
-          <CustomFormField
+          <DynamicFormField
             fieldType={FormFieldType.DATE_PICKER}
             control={form.control}
             name='startsAt'

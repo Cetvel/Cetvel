@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Users, init } from '@kinde/management-api-js';
-import MongoUsers from '@/features/users/models/user.model';
+import MongoUsers from '@/lib/models/user.model';
 import bcrypt from 'bcrypt';
-   
 
 init();
 
@@ -35,7 +34,6 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-       ;
     const mongoUser = await MongoUsers.findOne({ userId: user.id });
 
     if (!mongoUser) {

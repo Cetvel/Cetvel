@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import jwksClient from 'jwks-rsa';
 import jwt from 'jsonwebtoken';
-import User from '@/features/users/models/user.model';
-import Pomodoro from '@/features/focus-sessions/models/pomodoro.model';
-import Todo from '@/features/tasks/models/todo.model';
-import Exam from '@/features/exams/models/exam.model';
-import Goal from '@/features/goals/models/goal.model';
-import Tag from '@/features/tags/models/tag.model';
+import User from '@/lib/models/user.model';
+import Pomodoro from '@/lib/models/pomodoro.model';
+import Todo from '@/lib/models/todo.model';
+import Exam from '@/lib/models/exam.model';
+import Goal from '@/lib/models/goal.model';
+import Tag from '@/lib/models/tag.model';
 import connectDB from '@/lib/config/connectDB';
 
 // The Kinde issuer URL should already be in your `.env` file

@@ -19,15 +19,16 @@ import {
 } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
-import CustomFormField, {
+import DynamicFormField, {
   FormFieldType,
-} from '@/components/ui/custom-form-field';
+} from '@/components/ui/dynamic-form-field';
 import SubmitButton from '@/components/forms/ui/submit-button';
 import Spinner from '@/components/ui/spinner';
 import Error from '@/components/global/error';
 import { axiosInstance, fetcher } from '@/lib/utils';
 import { useUser } from '@/features/users/contexts/user-context';
 import { toast } from 'sonner';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const Schema = z.object({
   email: z.string().email({
@@ -67,35 +68,43 @@ const EmailForm = () => {
         <CardDescription>E-Posta adresinizi yönetin</CardDescription>
       </CardHeader>
 
-      <CardContent className='flex items-center justify-between'>
-        <p>{user?.email}</p>
-        <Popover>
-          <PopoverTrigger>
-            <Button size={'icon-sm'} variant={'outline'}>
-              <Edit size={16} />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className='space-y-4'
-              >
-                <CustomFormField
-                  name='email'
-                  placeholder='E-Posta Adresi'
-                  control={form.control}
-                  fieldType={FormFieldType.INPUT}
-                />
-                <SubmitButton
-                  className='w-full'
-                  loading={form.formState.isSubmitting}
-                  text='Değiştir'
-                />
-              </form>
-            </Form>
-          </PopoverContent>
-        </Popover>
+      <CardContent>
+        <Alert className='mb-4'>
+          <AlertDescription>
+            E-Posta adresinizi değiştirdikten sonra doğrulamak için tekrar giriş
+            yapmanız gerekmektedir.
+          </AlertDescription>
+        </Alert>
+        <div className='flex items-center justify-between'>
+          <p>{user?.email}</p>
+          <Popover>
+            <PopoverTrigger>
+              <Button size={'icon-sm'} variant={'outline'}>
+                <Edit size={16} />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className='space-y-4'
+                >
+                  <DynamicFormField
+                    name='email'
+                    placeholder='E-Posta Adresi'
+                    control={form.control}
+                    fieldType={FormFieldType.INPUT}
+                  />
+                  <SubmitButton
+                    className='w-full'
+                    loading={form.formState.isSubmitting}
+                    text='Değiştir'
+                  />
+                </form>
+              </Form>
+            </PopoverContent>
+          </Popover>
+        </div>
       </CardContent>
     </Card>
   );

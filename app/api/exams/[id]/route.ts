@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import ExamModel from '@/features/exams/models/exam.model';
+import ExamModel from '@/lib/models/exam.model';
 
 const { getUser } = getKindeServerSession();
 

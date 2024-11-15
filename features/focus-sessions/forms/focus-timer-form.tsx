@@ -13,9 +13,9 @@ import { Form, FormProvider, useForm } from 'react-hook-form';
 import { FocusSessionSchema } from '@/lib/schemas';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import CustomFormField, {
+import DynamicFormField, {
   FormFieldType,
-} from '@/components/ui/custom-form-field';
+} from '@/components/ui/dynamic-form-field';
 import { createFocusSession } from '@/features/focus-sessions/actions';
 import { Switch } from '@/components/ui/switch';
 import Spinner from '@/components/ui/spinner';
@@ -216,13 +216,13 @@ const FocusForge: React.FC = () => {
               </p>
 
               <div className='flex items-center gap-2'>
-                <CustomFormField
+                <DynamicFormField
                   fieldType={FormFieldType.INPUT}
                   control={form.control}
                   name='title'
                   placeholder='Başlık'
                 />
-                <CustomFormField
+                <DynamicFormField
                   fieldType={FormFieldType.SELECT}
                   control={form.control}
                   name='tag'
@@ -243,7 +243,7 @@ const FocusForge: React.FC = () => {
                       Etiketler yüklenemedi
                     </SelectItem>
                   ) : null}
-                </CustomFormField>
+                </DynamicFormField>
               </div>
             </div>
             {renderTimerControls()}

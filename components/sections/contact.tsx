@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { ContactSchema } from '@/lib/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form } from '../ui/form';
-import CustomFormField, { FormFieldType } from '../ui/custom-form-field';
+import DynamicFormField, { FormFieldType } from '../ui/dynamic-form-field';
 import SubmitButton from '../forms/ui/submit-button';
 import { axiosInstance } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -77,21 +77,21 @@ const ContactSection = () => {
                 className='space-y-6'
                 onSubmit={form.handleSubmit(onSubmit)}
               >
-                <CustomFormField
+                <DynamicFormField
                   fieldType={FormFieldType.INPUT}
                   control={form.control}
                   name='name'
                   label='İsim'
                   placeholder='İsminizi yazın'
                 />
-                <CustomFormField
+                <DynamicFormField
                   fieldType={FormFieldType.INPUT}
                   control={form.control}
                   name='email'
                   label='E-Posta'
                   placeholder='E-Posta adresinizi yazın'
                 />
-                <CustomFormField
+                <DynamicFormField
                   fieldType={FormFieldType.TEXTAREA}
                   control={form.control}
                   name='message'

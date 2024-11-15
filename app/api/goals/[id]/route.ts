@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
-import GoalModel from '@/features/goals/models/goal.model';
+import GoalModel from '@/lib/models/goal.model';
 
 export async function PUT(
   request: NextRequest,

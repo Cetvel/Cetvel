@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
-import TytModel from '@/features/exams/models/tyt.model';
+import TytModel from '@/lib/models/tyt.model';
 
 export async function GET(request: NextRequest) {
   try {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import DgsModel from '@/features/exams/models/dgs.model';
+import DgsModel from '@/lib/models/dgs.model';
 
 const { getUser } = getKindeServerSession();
 

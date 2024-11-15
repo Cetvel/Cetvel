@@ -1,6 +1,6 @@
-import Exam from '@/features/exams/models/exam.model';
+import Exam from '@/lib/models/exam.model';
 import { NextResponse, NextRequest } from 'next/server';
-   
+
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 const { getUser } = getKindeServerSession();
 
@@ -17,7 +17,6 @@ export async function DELETE(req: NextRequest) {
 
     const { ids } = await req.json();
     if (ids && Array.isArray(ids)) {
-         ;
       await Exam.deleteMany({ _id: { $in: ids } });
       return NextResponse.json({ status: 200 });
     } else {
@@ -41,7 +40,6 @@ export async function PUT(req: NextRequest) {
     const { ids, updateData } = await req.json();
 
     if (ids && Array.isArray(ids)) {
-         ;
       await Exam.updateMany({ _id: { $in: ids } }, { $set: updateData });
       return NextResponse.json({ status: 200 });
     }

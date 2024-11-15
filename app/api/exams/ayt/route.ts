@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
-import AytModel, { AytDocument } from '@/features/exams/models/ayt.model';
+import AytModel, { AytDocument } from '@/lib/models/ayt.model';
 
 export async function GET(request: NextRequest) {
   try {

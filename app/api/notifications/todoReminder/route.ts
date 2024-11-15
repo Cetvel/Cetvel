@@ -1,4 +1,4 @@
-import Todo from '@/features/tasks/models/todo.model';
+import Todo from '@/lib/models/todo.model';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {

@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
-import BranchExam, { BranchType } from '@/features/exams/models/branch.model';
+import BranchExam, { BranchType } from '@/lib/models/branch.model';
 
 export async function GET(
   request: NextRequest,

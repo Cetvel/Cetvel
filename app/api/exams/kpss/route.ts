@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
-import KpssModel from '@/features/exams/models/kpss.model';
+import KpssModel from '@/lib/models/kpss.model';
 
 export async function GET(request: NextRequest) {
   try {

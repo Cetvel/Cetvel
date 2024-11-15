@@ -10,3 +10,5 @@ declare interface User {
   grade: number;
   exam: ExamType;
 }
+
+declare type EducationLevel = 'İlkokul' | 'Ortaokul' | 'Lise' | 'Mezun';

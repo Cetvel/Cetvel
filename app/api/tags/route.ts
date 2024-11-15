@@ -2,8 +2,8 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 var { getUser } = getKindeServerSession();
-import TagModel from '@/features/tags/models/tag.model';
-import { ITagDocument } from '@/features/tags/models/tag.model';
+import TagModel from '@/lib/models/tag.model';
+import { ITagDocument } from '@/lib/models/tag.model';
 
 export async function GET(request: NextRequest) {
   try {

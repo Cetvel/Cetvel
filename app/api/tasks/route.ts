@@ -1,8 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import TodoModel from '@/features/tasks/models/todo.model';
-import { ITodoDocument } from '@/features/tasks/models/todo.model';
-   
+import TodoModel from '@/lib/models/todo.model';
+import { ITodoDocument } from '@/lib/models/todo.model';
 
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 const { getUser } = getKindeServerSession();
@@ -17,7 +16,6 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-       ;
     const todos = await TodoModel.find({ kindeId: userId });
     return NextResponse.json(todos, {
       headers: {

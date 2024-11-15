@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import Todo from '@/features/tasks/models/todo.model';
+import Todo from '@/lib/models/todo.model';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';

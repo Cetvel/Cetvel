@@ -119,7 +119,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
       return (
         <FormControl>
           <Select
-            onValueChange={(value: string) => {
+            onValueChange={(value: any) => {
               field.onChange(value);
               props.onValueChange && props.onValueChange(value);
             }}
@@ -127,7 +127,10 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
           >
             <FormControl>
               <SelectTrigger className='shad-select-trigger'>
-                <SelectValue placeholder={props.placeholder} />
+                <SelectValue
+                  placeholder={props.placeholder}
+                  defaultValue={field.value}
+                />
               </SelectTrigger>
             </FormControl>
             <SelectContent className='shad-select-content'>
@@ -154,7 +157,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
   }
 };
 
-const CustomFormField = (props: CustomProps) => {
+const DynamicFormField = (props: CustomProps) => {
   const { control, name, label } = props;
 
   return (
@@ -175,4 +178,4 @@ const CustomFormField = (props: CustomProps) => {
   );
 };
 
-export default CustomFormField;
+export default DynamicFormField;
