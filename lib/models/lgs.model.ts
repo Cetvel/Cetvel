@@ -69,7 +69,6 @@ const LgsSchema = new Schema<LgsDocument>({
     solvingTime: { type: Number, required: false, max: 75 },
     correct: { type: Number, required: true, max: 10 },
     wrong: { type: Number, required: true, max: 10 },
-    empty: { type: Number, required: true, max: 10 },
   },
   science: {
     solvingTime: { type: Number, required: false, max: 80 },
@@ -88,8 +87,9 @@ const LgsSchema = new Schema<LgsDocument>({
   },
 });
 
+console.log(mongoose.models.LGS)
 const Lgs =
-  (mongoose.models.Lgs as mongoose.Model<LgsDocument>) ||
+  mongoose.models.LGS ||
   Exam.discriminator<LgsDocument>('LGS', LgsSchema);
 
 export default Lgs;

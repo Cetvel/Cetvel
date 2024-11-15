@@ -98,7 +98,7 @@ const AytSchema: Schema<AytDocument> = new Schema({
 });
 
 const Ayt =
-  (mongoose.models.Ayt as mongoose.Model<AytDocument>) ||
+  (mongoose.models.AYT as mongoose.Model<AytDocument>) ||
   Exam.discriminator<AytDocument>('AYT', AytSchema);
 
 export default Ayt;

@@ -42,18 +42,17 @@ export async function POST(req: Request) {
         await User.findOneAndUpdate(
           { kindeId: updatedUser.id },
           {
-            name: updatedUser.username ?? updatedUser.first_name,
+            name: updatedUser.first_name,
           }
         );
         break;
       case 'user.created':
-        const { user } = event.data;
+        const { user } = event.data
         await connectDB();
         await User.create({
-          name: user.username ?? user.first_name,
+          name: user.first_name,
           kindeId: user.id,
           email: user.email,
-          password: user.password,
           grade: 12,
           field: 'SAY',
           exam: 'YKS',

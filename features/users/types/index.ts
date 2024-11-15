@@ -9,6 +9,8 @@ declare interface User {
   field: StudyField;
   grade: number;
   exam: ExamType;
+  apiTenancy: Number,
+  lastApiTenancyUpdate: Date
 }
 
 declare type EducationLevel = 'İlkokul' | 'Ortaokul' | 'Lise' | 'Mezun';

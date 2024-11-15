@@ -15,14 +15,13 @@ enum field {
   DIL,
 }
 interface IUser extends User {
-  password?: string;
 }
 
 export interface IUserDocument extends IUser, Document {
   _id: Schema.Types.ObjectId;
 }
 
-export interface UserModel extends Model<IUserDocument> {}
+export interface UserModel extends Model<IUserDocument> { }
 
 // Model is defined only if it hasn't been already
 const userSchema = new Schema<IUserDocument, UserModel>(
@@ -59,12 +58,6 @@ const userSchema = new Schema<IUserDocument, UserModel>(
       enum: Object.values(field),
       trim: false,
     },
-    password: {
-      type: String,
-      required: false,
-      trim: true,
-      minlength: 4,
-    },
     cover_picture: {
       type: String,
       required: false,
@@ -80,6 +73,8 @@ const userSchema = new Schema<IUserDocument, UserModel>(
       required: false,
       trim: true,
     },
+    apiTenancy: { type: Number, default: 5 },
+    lastApiTenancyUpdate: { type: Date, default: Date.now }
   },
   {
     timestamps: true,

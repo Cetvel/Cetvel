@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import getM2MToken from '@/lib/m2m_token';
 import { Users, init } from '@kinde/management-api-js';
 import UserMongo from '@/lib/models/user.model';
 init();
@@ -20,14 +19,6 @@ export async function PUT(req: NextRequest) {
       );
     }
     const { username } = await req.json();
-
-    if (username.includes(' ')) {
-      return NextResponse.json(
-        { message: 'Lütfen boşluk bırakmayınız' },
-        { status: 400 }
-      );
-    }
-
     if (!username) {
       return NextResponse.json(
         { message: 'Kullanıcı adı boş olamaz.' },
@@ -35,15 +26,14 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    await UserMongo.updateOne(
-      { kindeId: user.id },
-      { $set: { name: username } }
-    );
     await Users.updateUser({
       id: user.id,
-      /* @ts-ignore */
-      username: username,
+      requestBody: {
+        given_name: username,
+      },
     });
+
+    await UserMongo.findOneAndUpdate({ kindeId: user.id }, { name: username });
     return NextResponse.json({ status: 200 });
   } catch (error: any) {
     console.error('İşlem hatası:', error);
