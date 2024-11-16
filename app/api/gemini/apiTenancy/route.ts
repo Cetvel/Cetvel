@@ -15,7 +15,6 @@ export async function POST() {
                 { status: 401 }
             );
         }
-
         const user = await User.findOne({ kindeId: userId });
 
         if (!user) {
@@ -31,6 +30,7 @@ export async function POST() {
 
         return NextResponse.json({ status: 200 });
     } catch (error) {
+        console.log(error)
         return NextResponse.json(
             { error: 'Internal Server Error' },
             { status: 500 })
