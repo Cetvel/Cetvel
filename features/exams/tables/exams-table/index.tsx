@@ -11,7 +11,7 @@ import { BaseDataTable } from '@/components/global/data-table';
 import { createDynamicColumns } from './columns';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { deleteManyExams } from '@/features/exams/actions/exam';
+import { deleteManyExams } from '@/features/exams/actions';
 import { useUser } from '@/features/users/contexts/user-context';
 import { examConfigs } from '../../configs';
 

@@ -11,7 +11,7 @@ import { Form } from '@/components/ui/form';
 import { SelectItem } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader } from '@/components/ui/card';
-import { createExam } from '@/features/exams/actions/exam';
+import { createExam } from '@/features/exams/actions';
 import { useModal } from '@/providers/modal-provider';
 import Spinner from '@/components/ui/spinner';
 import { useUser } from '@/features/users/contexts/user-context';

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { useModal } from '@/providers/modal-provider';
 import { useTheme } from 'next-themes';
@@ -19,10 +19,28 @@ type Props = {
 
 const PageHeader = ({ title }: Props) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const pathname = usePathname();
   const splitPath = pathname!.split('/');
   const path = splitPath.slice(0, 3).join('/');
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const toggleFullscreen = useCallback(() => {
     if (!document.fullscreenElement) {
@@ -53,7 +71,14 @@ const PageHeader = ({ title }: Props) => {
   }, []);
 
   return (
-    <aside className='flex px-2 lg:px-0 w-full items-center justify-between z-50 mb-6'>
+    <aside
+      className={cn(
+        'flex right-0 left-0 items-center justify-between',
+        isScrolled
+          ? 'bg-background/80 backdrop-blur-md border-b'
+          : 'bg-transparent'
+      )}
+    >
       <h1 className='text-2xl lg:text-3xl font-bold'>{title}</h1>
       <div
         id='header-user-actions'

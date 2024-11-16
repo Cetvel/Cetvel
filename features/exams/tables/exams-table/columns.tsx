@@ -13,7 +13,7 @@ import {
 import { Ellipsis, Trash } from 'lucide-react';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
-import { deleteExam } from '@/features/exams/actions/exam';
+import { deleteExam } from '@/features/exams/actions';
 import { ColumnHeader } from '@/components/global/column-header';
 import { examConfigs } from '../../configs';
 import { convertSecondsToTime } from '@/features/focus-sessions/utils';

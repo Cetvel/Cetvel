@@ -1,5 +1,7 @@
 import { axiosInstance } from '@/lib/utils';
 import { ApiResponseHandler } from '@/lib/api-response-handler';
+import { mutate } from 'swr';
+import axios from 'axios';
 
 const taskHandler = new ApiResponseHandler({
   resourceName: 'Görev',
@@ -104,5 +106,31 @@ export const incompleteManyTasks = async (
     return taskHandler.handleResponse(res, 'tamamlamayı geri alma');
   } catch (error: any) {
     return taskHandler.handleError(error, 'tamamlamayı geri alma');
+  }
+};
+
+export const getRecommendedTasks = async (options: any = {}) => {
+  const { signal, axiosInstance = axios } = options;
+
+  try {
+    const response = await axiosInstance.get('/gemini/task-suggester', {
+      signal,
+      headers: {
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+      },
+    });
+
+    if (response.status === 200) {
+      axiosInstance.post('/apiTenancy');
+      mutate('/users');
+    }
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw error;
+    }
+    throw new Error('Önerilen görevler alınamadı.');
   }
 };
