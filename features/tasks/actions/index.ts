@@ -122,7 +122,7 @@ export const getRecommendedTasks = async (options: any = {}) => {
     });
 
     if (response.status === 200) {
-      axiosInstance.post('/apiTenancy');
+      axiosInstance.post('/gemini/apiTenancy');
       mutate('/users');
     }
 
