@@ -1,4 +1,4 @@
-import User from '@/features/users/models/user.model';
+import User from '@/lib/models/user.model';
 import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 const { getUser } = getKindeServerSession();
