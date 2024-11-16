@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 import ExamModel from '@/lib/models/exam.model';
 
 const { getUser } = getKindeServerSession();
@@ -18,7 +19,7 @@ export async function PUT(
         { status: 401 }
       );
     }
-
+    
     const { id } = params;
     if (!id) {
       return NextResponse.json(
@@ -28,6 +29,7 @@ export async function PUT(
     }
 
     const body = await request.json();
+    await connectDB()
     const exam = await ExamModel.findOneAndUpdate({ _id: id }, body, {
       new: true,
     });
@@ -71,7 +73,7 @@ export async function DELETE(
         { status: 400 }
       );
     }
-
+    await connectDB()
     const exam = await ExamModel.findOneAndDelete({ _id: id });
 
     if (!exam) {

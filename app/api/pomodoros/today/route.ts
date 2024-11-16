@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import Pomodoro from '@/lib/models/pomodoro.model';
 
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 const { getUser } = getKindeServerSession();
 
 export async function GET(request: NextRequest) {
@@ -31,6 +32,7 @@ export async function GET(request: NextRequest) {
     const sevenDaysAgo = new Date(nowInTurkey);
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
     sevenDaysAgo.setUTCHours(0, 0, 0, 0);
+    await connectDB()
     const result = await Pomodoro.aggregate([
       {
         $match: {

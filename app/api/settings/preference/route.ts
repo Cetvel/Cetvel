@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 import getM2MToken from '@/lib/m2m_token';
 import { Users, init } from '@kinde/management-api-js';
 import User from '@/lib/models/user.model';
@@ -37,7 +38,7 @@ export async function PUT(req: NextRequest) {
         { status: 500 }
       );
     });
-
+    await connectDB()
     await User.findOneAndUpdate({ kindeId: user.id }, { grade, field, exam });
 
     return NextResponse.json({ status: 200 });

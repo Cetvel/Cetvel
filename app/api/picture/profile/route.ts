@@ -1,5 +1,6 @@
 import getM2MToken from '@/lib/m2m_token';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 import { Users, init } from '@kinde/management-api-js';
 import UserMongo from '@/lib/models/user.model';
 import { NextResponse, NextRequest } from 'next/server';
@@ -42,7 +43,7 @@ export async function PUT(req: NextRequest) {
         { status: response.status }
       );
     }
-
+    await connectDB()
     await UserMongo.findOneAndUpdate(
       { kindeId: user.id },
       {

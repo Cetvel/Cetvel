@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import Todo from '@/lib/models/todo.model';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 import TasksLoader from '@/features/tasks/loaders/tasks-loader';
 import { title } from 'process';
 if (!process.env.GEMINI_API_KEY) {
@@ -27,6 +28,7 @@ export async function GET() {
       );
     }
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    await connectDB()
     const recentTodos = await Todo.find(
       { kindeId: userId, createdAt: { $gte: oneWeekAgo } },
       { title: 1, tag: 1, status: 1, startsAt: 1 }

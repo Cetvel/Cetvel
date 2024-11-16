@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 var { getUser } = getKindeServerSession();
 import PomodoroModel from '@/lib/models/pomodoro.model';
 import { PomodoroDocument } from '@/lib/models/pomodoro.model';
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-
+    await connectDB()
     const pomodoros = await PomodoroModel.find({ kindeId: userId });
     return NextResponse.json({ pomodoros, status: 200 });
   } catch (error) {
@@ -44,7 +45,7 @@ export async function POST(request: NextRequest) {
       kindeId: userId,
       ...body,
     }) as PomodoroDocument;
-
+    await connectDB()
     await pomodoro.save();
     return NextResponse.json({ status: 200 });
   } catch (error) {

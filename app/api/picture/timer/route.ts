@@ -3,7 +3,8 @@ import User from '@/lib/models/user.model';
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 const { getUser } = getKindeServerSession();
 export async function PUT(req: NextRequest) {
   try {
@@ -18,6 +19,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const { url } = await req.json();
+    await connectDB()
     const user = await User.findOneAndUpdate(
       { kindeId: userId },
       { timer_picture: url },
