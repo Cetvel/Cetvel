@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
+import Users from '@/lib/models/user.model';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import connectDB from '@/lib/config/connectDB';
-import User from '@/lib/models/user.model';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
 const { getUser } = getKindeServerSession();
 export async function GET(req: NextRequest) {
@@ -27,8 +27,8 @@ export async function GET(req: NextRequest) {
         { status: 500 }
       );
     }
-
-    const user = await User.findOne({ kindeId: userId });
+    await connectDB()
+    const user = await Users.findOne({ kindeId: userId });
     if (!user) {
       console.warn(`User not found for userId: ${userId}`);
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -69,6 +69,7 @@ export async function PUT(request: NextRequest) {
 
     // Veritabanı bağlantısı kontrolü
     try {
+      await connectDB()
     } catch (dbError) {
       console.error('Database connection error:', dbError);
       return NextResponse.json(
@@ -76,8 +77,8 @@ export async function PUT(request: NextRequest) {
         { status: 500 }
       );
     }
-
-    const updatedUser = await User.findOneAndUpdate({ kindeId: userId }, body, {
+    await connectDB()
+    const updatedUser = await Users.findOneAndUpdate({ kindeId: userId }, body, {
       new: true,
     });
     if (!updatedUser) {

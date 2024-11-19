@@ -3,7 +3,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import AlesModel from '@/lib/models/ales.model';
 
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 const { getUser } = getKindeServerSession();
 
 export async function GET(request: NextRequest) {
@@ -16,6 +17,7 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
+    await connectDB()
     const exams = await AlesModel.find({ kindeId: userId });
 
     return NextResponse.json(exams, { status: 200 });
@@ -40,6 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    await connectDB()
     const exam = new AlesModel({
       kindeId: userId,
       ...body,

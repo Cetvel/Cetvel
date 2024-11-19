@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Todo from '@/lib/models/todo.model';
 
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 const { getUser } = getKindeServerSession();
 // Özel hata sınıfı
 class APIError extends Error {
@@ -63,7 +64,7 @@ export async function GET(request: NextRequest) {
     // Türkiye'de bugünün sonu (23:59:59.999)
     const todayEndInTurkey = new Date(todayStartInTurkey);
     todayEndInTurkey.setUTCHours(23, 59, 59, 999);
-
+    await connectDB()
     const tasks = await Todo.find({
       kindeId: userId,
       $or: [

@@ -3,7 +3,8 @@ import { NextResponse } from 'next/server';
 import TodoModel from '@/lib/models/todo.model';
 import { ITodoDocument } from '@/lib/models/todo.model';
 
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 const { getUser } = getKindeServerSession();
 
 export async function GET(request: NextRequest) {
@@ -16,6 +17,7 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
+    await connectDB()
     const todos = await TodoModel.find({ kindeId: userId });
     return NextResponse.json(todos, {
       headers: {
@@ -44,7 +46,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     if (!body.tag)
       return NextResponse.json({ error: 'Etiket gereklidir' }, { status: 400 });
-
+    await connectDB()
     const todo = new TodoModel({
       kindeId: userId,
       ...body,

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 var { getUser } = getKindeServerSession();
 import AytModel from '@/lib/models/ayt.model';
 import { AytDocument } from '@/lib/models/ayt.model';
@@ -37,7 +38,7 @@ export async function GET(
         field = 'SOZ';
         break;
     }
-
+    await connectDB()
     const exams = (await AytModel.find({
       kindeId: userId,
       aytType: field,
@@ -93,7 +94,7 @@ export async function POST(
       field,
       ...body,
     }) as AytDocument;
-
+    await connectDB()
     await exam.save();
     return NextResponse.json({ status: 200 });
   } catch (error) {

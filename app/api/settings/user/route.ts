@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import connectDB from '@/lib/config/connectDB';
 import { Users, init } from '@kinde/management-api-js';
 import UserMongo from '@/lib/models/user.model';
 init();
@@ -32,7 +33,7 @@ export async function PUT(req: NextRequest) {
         given_name: username,
       },
     });
-
+    await connectDB()
     await UserMongo.findOneAndUpdate({ kindeId: user.id }, { name: username });
     return NextResponse.json({ status: 200 });
   } catch (error: any) {
