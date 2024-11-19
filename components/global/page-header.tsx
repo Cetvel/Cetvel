@@ -73,7 +73,7 @@ const PageHeader = ({ title }: Props) => {
   return (
     <aside
       className={cn(
-        'flex right-0 left-0 items-center justify-between',
+        'flex right-0 left-0 items-center justify-between mb-6',
         isScrolled
           ? 'bg-background/80 backdrop-blur-md border-b'
           : 'bg-transparent'

@@ -45,15 +45,8 @@ const ChangePasswordForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Alert className='mb-4'>
-          <AlertDescription>
-            Eğer Google veya Facebook ile giriş yaptıysan ilk önce
-            ,&apos;Şifremi Unuttum&apos; sayfasına giderek şifreni
-            oluşturmalısın.
-          </AlertDescription>
-        </Alert>
         <Link href={'/'}>
-          <Button>Şifremi sıfırla</Button>
+          <Button variant={'secondary'}>Şifremi sıfırla</Button>
         </Link>
       </CardContent>
     </Card>

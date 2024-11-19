@@ -123,7 +123,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
               field.onChange(value);
               props.onValueChange && props.onValueChange(value);
             }}
-            defaultValue={field.value}
+            defaultValue={field.value.toString()}
           >
             <FormControl>
               <SelectTrigger className='shad-select-trigger'>

@@ -22,10 +22,7 @@ export default async function RootLayout({
       <main className='h-screen'>
         <Sidebar />
         <div className='xl:ml-64 relative h-screen overflow-y-auto bg-base-100/40'>
-          <div className='sticky top-0 z-50 backdrop-blur-2xl px-6 bg-white border-b'>
-            <PageHeader title='Panel' />
-          </div>
-          <div className='p-2 xl:p-6 relative z-10 backdrop-blur-xl'>
+          <div className='p-2 xl:p-6 relative z-10 backdrop-blur-xl h-screen'>
             {children}
           </div>
         </div>
