@@ -5,6 +5,7 @@ const goalHandler = new ApiResponseHandler({
   resourceName: 'Hedef',
   cachePaths: ['/goals'],
   customMessages: {
+    success: 'Hedef işlemi başarılı',
     error: 'Etiket işlemi başarısız',
   },
   toastOptions: {
@@ -14,8 +15,8 @@ const goalHandler = new ApiResponseHandler({
 
 export const createGoal = async (goalData: Partial<Goal>): Promise<boolean> => {
   try {
-    await axiosInstance.post('/goals', goalData);
-    return true;
+    const res = await axiosInstance.post('/goals', goalData);
+    return goalHandler.handleResponse(res, 'oluşturma');
   } catch (error: any) {
     return goalHandler.handleError(error, 'oluşturma');
   }
@@ -26,8 +27,8 @@ export const updateGoal = async (
   goalData: Partial<Goal>
 ): Promise<boolean> => {
   try {
-    await axiosInstance.put(`/goals/${goalId}`, goalData);
-    return true;
+    const res = await axiosInstance.put(`/goals/${goalId}`, goalData);
+    return goalHandler.handleResponse(res, 'güncelleme');
   } catch (error: any) {
     return goalHandler.handleError(error, 'güncelleme');
   }
@@ -35,8 +36,8 @@ export const updateGoal = async (
 
 export const deleteGoal = async (goalId: string): Promise<boolean> => {
   try {
-    await axiosInstance.delete(`/goals/${goalId}`);
-    return true;
+    const res = await axiosInstance.delete(`/goals/${goalId}`);
+    return goalHandler.handleResponse(res, 'silme');
   } catch (error: any) {
     return goalHandler.handleError(error, 'silme');
   }
