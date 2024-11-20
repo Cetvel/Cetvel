@@ -78,40 +78,17 @@ const PreferencesForm = () => {
 
               {watchEducationLevel !== 'Mezun' && (
                 <DynamicFormField
-                  fieldType={FormFieldType.SKELETON}
+                  fieldType={FormFieldType.SELECT}
                   control={form.control}
                   name='grade'
                   label='Sınıfın'
-                  renderSkeleton={(field) => (
-                    <FormControl>
-                      <RadioGroup
-                        className='flex flex-wrap gap-2'
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        {gradeOptions[watchEducationLevel]?.map((grade) => (
-                          <>
-                            <RadioGroupItem
-                              key={grade}
-                              value={grade.toString()}
-                            />
-                            <Label
-                              htmlFor={grade.toString()}
-                              className='cursor-pointer'
-                            >
-                              {grade}
-                            </Label>
-                          </>
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                  )}
-                />
-                /* {gradeOptions[watchEducationLevel]?.map((grade) => (
+                >
+                  {gradeOptions[watchEducationLevel]?.map((grade) => (
                     <SelectItem key={grade} value={grade.toString()}>
                       {grade}
                     </SelectItem>
-                  ))} */
+                  ))}
+                </DynamicFormField>
               )}
 
               {watchEducationLevel === 'Mezun' && (

@@ -69,12 +69,6 @@ const EmailForm = () => {
       </CardHeader>
 
       <CardContent>
-        <Alert className='mb-4'>
-          <AlertDescription>
-            E-Posta adresinizi değiştirdikten sonra doğrulamak için tekrar giriş
-            yapmanız gerekmektedir.
-          </AlertDescription>
-        </Alert>
         <div className='flex items-center justify-between'>
           <p>{user?.email}</p>
           <Popover>

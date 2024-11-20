@@ -40,7 +40,7 @@ const questions = [
   {
     question: "Cetvel'a Nasıl Üye Olabilirim?",
     answer:
-      "Cetvel'a üye olmak için uygulamamızı ziyaret edin ve 'Kayıt Ol' butonuna tıklayın. Gerekli bilgileri doldurarak üyeliğinizi oluşturabilirsiniz. Üyelik ücretsizdir.",
+      "Cetvel'a üye olmak için platformumuzu ziyaret edin ve 'Kayıt Ol' butonuna tıklayın. Gerekli bilgileri doldurarak üyeliğinizi oluşturabilirsiniz. Üyelik ücretsizdir.",
   },
   {
     question: 'Teknik destek nasıl alabilirim?',

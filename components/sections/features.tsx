@@ -49,12 +49,6 @@ const features = [
     description: 'Girdiğiniz sınavları kaydedin ve analiz edin.',
     gradient: 'from-purple-400 to-violet-500',
   },
-  {
-    icon: <Bell size={20} className='text-white' />,
-    title: 'Bildirimler',
-    description: 'Görevleriniz ve sınavlarınız hakkında bildirimler alın.',
-    gradient: 'from-pink-400 to-rose-500',
-  },
 ];
 
 type FeatureCardProps = {
@@ -101,11 +95,12 @@ const Features = () => {
         draggable={false}
       />
 
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+      <div className='flex flex-wrap gap-8 justify-center'>
         {features.map((feature, index) => (
           <motion.div
             key={index}
             variants={slideIn('up', '', index * 0.1, 0.4)}
+            className='basis-96'
           >
             <FeatureCard {...feature} />
           </motion.div>

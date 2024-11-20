@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
           </Link>
         </div>
 
-        <div className='hidden md:flex flex-grow items-center -z-10 justify-center pl-6 absolute inset-0'>
+        <div className='hidden md:flex flex-grow items-center justify-center'>
           <div className='flex items-center space-x-2'>
             {navItems.map((item) => (
               <Link key={item.name} href={item.href} className='nav-link'>
@@ -80,7 +80,6 @@ const Navbar: React.FC = () => {
                 Panele git
               </Button>
             </Link>
-            <UserButton />
           </SignedInClient>
           <SignedOutClient>
             <LoginLink>
@@ -121,14 +120,12 @@ const Navbar: React.FC = () => {
                     </Link>
                   ))}
                 </div>
-                <div className='mt-auto space-y-4 flex-col flex w-full'></div>
                 <SignedInClient>
                   <Link href='/dashboard'>
                     <Button variant='default' size={'sm'}>
                       Panele git
                     </Button>
                   </Link>
-                  <UserButton />
                 </SignedInClient>
                 <SignedOutClient>
                   <LoginLink>

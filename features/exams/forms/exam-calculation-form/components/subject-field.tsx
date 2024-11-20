@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import DynamicFormField, {
   FormFieldType,
 } from '@/components/ui/dynamic-form-field';
-import { SubjectConfig } from '@/features/exams/types';
 
 const SubjectField: React.FC<SubjectConfig & { control: any }> = ({
   control,
