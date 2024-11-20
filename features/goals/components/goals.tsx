@@ -13,6 +13,7 @@ import useSWR from 'swr';
 import { fetcher } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import Error from '@/components/global/error';
 
 const Goals = () => {
   const { setOpen } = useModal();
@@ -32,13 +33,10 @@ const Goals = () => {
   if (error && !isLoading) {
     return (
       <CardContent className='flex flex-col gap-2'>
-        <Alert variant={'destructive'}>
-          <AlertCircle size={18} />
-          <AlertTitle>Bir hata oluştu.</AlertTitle>
-          <AlertDescription>
-            Lütfen sayfayı yenileyin ya da daha sonra tekrar deneyin.
-          </AlertDescription>
-        </Alert>
+        <Error
+          title='Hedefler yüklenirken bir hata oluştu.'
+          message={error.message}
+        />
       </CardContent>
     );
   }

@@ -2,7 +2,6 @@ import { axiosInstance } from '@/lib/utils';
 import { ApiResponseHandler } from '@/lib/api-response-handler';
 import { mutate } from 'swr';
 import axios from 'axios';
-import { revalidatePath } from 'next/cache';
 
 const taskHandler = new ApiResponseHandler({
   resourceName: 'Görev',
@@ -126,8 +125,6 @@ export const getRecommendedTasks = async (options: any = {}) => {
       axiosInstance.post('/gemini/apiTenancy');
       mutate('/users');
     }
-
-    revalidatePath('/goals');
 
     return response.data;
   } catch (error) {

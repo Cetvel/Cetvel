@@ -17,6 +17,7 @@ import {
 } from '@/features/focus-sessions/actions';
 import { useModal } from '@/providers/modal-provider';
 import Spinner from '@/components/ui/spinner';
+import { duration } from 'moment';
 
 type FocusSessionFormValues = z.infer<typeof FocusSessionSchema>;
 
@@ -47,6 +48,7 @@ const FocusSessionForm: React.FC<FocusSessionFormProps> = ({ editSession }) => {
   const onSubmit = async (values: FocusSessionFormValues) => {
     const data = {
       ...values,
+      duration: values.duration * 60,
       startsAt: values.startsAt.toISOString(),
       endsAt: new Date(
         values.startsAt.getTime() + values.duration * 60 * 1000
@@ -86,7 +88,7 @@ const FocusSessionForm: React.FC<FocusSessionFormProps> = ({ editSession }) => {
           >
             {tags ? (
               tags.map((tag: Tag) => (
-                <SelectItem key={tag._id} value={tag._id}>
+                <SelectItem key={tag._id} value={tag.value}>
                   {tag.label}
                 </SelectItem>
               ))
