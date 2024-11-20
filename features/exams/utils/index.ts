@@ -33,12 +33,18 @@ export const createDynamicSchema = (
             message: `Yanlış sayısı ${maxQuestions}'i geçemez.`,
           }),
       })
-      .refine((data) => data.correct + data.wrong <= maxQuestions, {
-        message: `Toplam soru sayısı ${maxQuestions}'i geçemez.`,
-        path: ['correct'],
-      });
+      .refine(
+        (data) => {
+          const total = (data.correct || 0) + (data.wrong || 0);
+          return total <= maxQuestions;
+        },
+        {
+          message: `Toplam soru sayısı ${maxQuestions}'i geçemez.`,
+          path: ['wrong'],
+        }
+      );
 
-  let baseSchema: Record<string, any> = {
+  const baseSchema = {
     examName: z.string().min(1, { message: 'Sınav adı zorunludur' }),
     examType: z.string(),
     solvingDate: z.date(),
@@ -48,28 +54,25 @@ export const createDynamicSchema = (
       .max(config.totalTime, {
         message: `Toplam süre ${config.totalTime} dakikayı geçemez`,
       }),
-  };
-
-  if (config.field) {
-    baseSchema = {
-      ...baseSchema,
+    ...(config.field && {
       [config.field.name]: z
         .string()
         .min(1, { message: 'Alan seçimi zorunludur' }),
-    };
-  }
+    }),
+  };
 
-  const subjectFields: Record<string, any> = {};
-
-  config.subjects.forEach((subject) => {
-    if (subject.forFields) {
-      if (!selectedField || !subject.forFields.includes(selectedField)) {
-        return;
-      }
-    }
-
-    subjectFields[subject.name] = subjectSchema;
+  const filteredSubjects = config.subjects.filter((subject: SubjectConfig) => {
+    if (!subject.forFields) return true;
+    return !selectedField || subject.forFields.includes(selectedField);
   });
+
+  const subjectFields = filteredSubjects.reduce(
+    (acc, subject: SubjectConfig) => ({
+      ...acc,
+      [subject.name]: subjectSchema(subject.maxQuestions),
+    }),
+    {}
+  );
 
   return z.object({
     ...baseSchema,
