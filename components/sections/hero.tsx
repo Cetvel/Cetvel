@@ -44,7 +44,7 @@ const Hero: React.FC = () => {
         </SignedInClient>
       </div>
 
-      <div className='w-[50rem] h-[50rem] rounded-full bg-gradient-radial from-primary/30 to-secondary blur-3xl absolute -bottom-96' />
+      <div className='w-[50rem] h-[50rem] rounded-full bg-gradient-radial from-primary/30 to-secondary/30 blur-3xl absolute -bottom-96' />
     </section>
   );
 };
