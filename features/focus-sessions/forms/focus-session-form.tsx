@@ -88,7 +88,7 @@ const FocusSessionForm: React.FC<FocusSessionFormProps> = ({ editSession }) => {
           >
             {tags ? (
               tags.map((tag: Tag) => (
-                <SelectItem key={tag._id} value={tag._id}>
+                <SelectItem key={tag._id} value={tag.value}>
                   {tag.label}
                 </SelectItem>
               ))
