@@ -32,6 +32,7 @@ export async function PUT(req: NextRequest) {
     });
     const identityId = response.identity?.id;
     const accessToken = await getM2MToken();
+    console.log("accessToken", accessToken)
     await fetch(`https://cetvel.kinde.com/api/v1/identities/${identityId}`, {
       method: 'PATCH',
       headers: {
