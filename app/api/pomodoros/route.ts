@@ -41,6 +41,14 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
+    if (!body.tag) {
+      return NextResponse.json(
+        { message: 'Etiket boş olamaz' },
+        { status: 400 }
+      )
+    }
+    
+
     const pomodoro = new PomodoroModel({
       kindeId: userId,
       ...body,
