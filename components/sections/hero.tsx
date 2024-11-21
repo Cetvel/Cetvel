@@ -15,7 +15,7 @@ const Hero: React.FC = () => {
       <Navigation />
       <div className='flex flex-col gap-8 max-w-3xl md:items-center px-4 z-10 md:-mt-32 text-center relative'>
         <div className='bg-primary text-primary-foreground px-3 py-1.5 rounded-full absolute -top-8 text-sm md:text-base right-2 md:-top-2 md:-right-12 xl:-top-4 xl:-right-16 rotate-12 select-none'>
-          Beta sürümü
+          Erken erişim
         </div>
         <TextGenerateEffect
           words='Yapay zeka destekli,
