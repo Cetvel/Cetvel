@@ -121,18 +121,22 @@ const Navbar: React.FC = () => {
                   ))}
                 </div>
                 <SignedInClient>
-                  <Link href='/dashboard'>
-                    <Button variant='default' size={'sm'}>
+                  <Link href='/dashboard' className='mt-4 w-full'>
+                    <Button variant='default' size={'sm'} className='w-full'>
                       Panele git
                     </Button>
                   </Link>
                 </SignedInClient>
                 <SignedOutClient>
-                  <LoginLink>
-                    <Button variant='outline'>Giriş Yap</Button>
+                  <LoginLink className='mt-4'>
+                    <Button variant='outline' className='w-full'>
+                      Giriş Yap
+                    </Button>
                   </LoginLink>
-                  <RegisterLink>
-                    <Button variant='default'>Kayıt Ol</Button>
+                  <RegisterLink className='mt-4'>
+                    <Button variant='default' className='w-full'>
+                      Kayıt Ol
+                    </Button>
                   </RegisterLink>
                 </SignedOutClient>
               </nav>

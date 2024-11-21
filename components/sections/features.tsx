@@ -3,15 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import {
-  Flashlight,
-  Timer,
-  Brain,
-  Star,
-  Target,
-  Zap,
-  Bell,
-} from 'lucide-react';
+import { Flashlight, Timer, Brain, Star, Target } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { SectionWrapper } from '@/app/_components';
 import { slideIn } from '@/lib/motion';

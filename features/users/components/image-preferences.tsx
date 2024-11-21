@@ -15,7 +15,7 @@ export const ImagePreferences = ({ user }: { user: User }) => {
   };
 
   return (
-    <div className='grid grid-cols-2 gap-4'>
+    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
       <ImageUploader
         onChange={(url) => onImageChange(url, 'cover')}
         value={user?.cover_picture || '/image/banner_default.jpg'}
