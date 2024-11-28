@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'Panel',
-  description: 'Cetvel',
+  description: 'Mihver',
 };
 
 export default async function RootLayout({

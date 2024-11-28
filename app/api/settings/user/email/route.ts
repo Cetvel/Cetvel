@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-   import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import connectDB from '@/lib/config/connectDB';
 import getM2MToken from '@/lib/m2m_token';
 import { Users, init } from '@kinde/management-api-js';
@@ -32,8 +32,8 @@ export async function PUT(req: NextRequest) {
     });
     const identityId = response.identity?.id;
     const accessToken = await getM2MToken();
-    console.log("accessToken", accessToken)
-    await fetch(`https://cetvel.kinde.com/api/v1/identities/${identityId}`, {
+    console.log('accessToken', accessToken);
+    await fetch(`https://Mihver.kinde.com/api/v1/identities/${identityId}`, {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
@@ -41,7 +41,7 @@ export async function PUT(req: NextRequest) {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    await connectDB()
+    await connectDB();
     await User.findOneAndUpdate({ kindeId: user.id }, { email: email });
     return NextResponse.json({ status: 200 });
   } catch (error: any) {

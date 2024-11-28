@@ -17,7 +17,7 @@ const About: React.FC = () => {
           variants={textVariant(0)}
           className='text-4xl xl:text-6xl font-bold mb-4 text-gradient'
         >
-          Cetvel Hakkında
+          Mihver Hakkında
         </motion.h2>
         <motion.p
           variants={textVariant(0.2)}
@@ -36,7 +36,7 @@ const About: React.FC = () => {
           <p className='text-lg mb-12 text-muted-foreground'>
             Yapay zeka destekli ders programı oluşturma ve görev önceliklendirme
             özelliklerimiz, daha etkili ve verimli çalışmanıza yardımcı olur.
-            Cetvel&apos;in akıllı çalışma asistanı ile yeni bir verimlilik
+            Mihver&apos;in akıllı çalışma asistanı ile yeni bir verimlilik
             seviyesi deneyimleyin.
           </p>
           <Image
@@ -53,7 +53,7 @@ const About: React.FC = () => {
             Kişiselleştirilmiş Öğrenme Deneyimi
           </h3>
           <p className='text-lg mb-12 text-muted-foreground'>
-            Cetvel&apos;in kişiselleştirme özellikleri, öğrenme sürecinizi size
+            Mihver&apos;in kişiselleştirme özellikleri, öğrenme sürecinizi size
             özel hale getirir. Zayıf yönlerinizi belirleyin, ilerlemenizi takip
             edin ve AI destekli önerilerle performansınızı artırın. Kendi
             hızınızda, daha etkili öğrenin.

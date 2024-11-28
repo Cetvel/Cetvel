@@ -62,7 +62,7 @@ const ContactSection = () => {
             <h3 className='text-lg font-semibold text-primary-foreground'>
               Email Gönder
             </h3>
-            <p className='text-primary-foreground/80'>cetvelapp@gmail.com</p>
+            <p className='text-primary-foreground/80'>Mihverapp@gmail.com</p>
           </div>
         </motion.div>
       </div>

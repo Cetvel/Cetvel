@@ -8,12 +8,12 @@ import {
   AccordionTrigger,
 } from '../ui/accordion';
 import { motion } from 'framer-motion';
-import { fadeIn, slideIn, textVariant } from '@/lib/motion';
+import { fadeIn, textVariant } from '@/lib/motion';
 import { SectionWrapper } from '@/app/_components';
 
 const questions = [
   {
-    question: "Hangi Öğrenciler Cetvel'den  Faydalanabilir?",
+    question: "Hangi Öğrenciler Mihver'den  Faydalanabilir?",
     answer:
       'Uygulamamız tüm öğrencilere hizmet verebilmek amacı ile geliştirilmiştir. İlkokul, Ortaokul, Lise ve Üniversite öğrencileri uygulamamızı kullanabilirler.',
   },
@@ -23,7 +23,7 @@ const questions = [
       'Sınav öğrencileri için özel net hesaplama aracı bulunmaktadır. Öğrenciler dilerlerse girdikleri denemeyi kaydedebilirler ve ilerlemelerini takip edebilirler.',
   },
   {
-    question: 'Cetvel platformlarda kullanılabilir?',
+    question: 'Mihver platformlarda kullanılabilir?',
     answer:
       'Uygulamamız web üzerinden hizmet vermektedir. Çok yakında mobil uygulamamız ile de hizmet vermeye başlayacağız!',
   },
@@ -38,9 +38,9 @@ const questions = [
       'Kullanıcı verilerinizin güvenliği bizim için çok önemlidir. Verileriniz güvenli sunucularda saklanmakta ve üçüncü şahıslarla paylaşılmamaktadır. Veri güvenliği sözleşmemizi okuyabilirsiniz.',
   },
   {
-    question: "Cetvel'a Nasıl Üye Olabilirim?",
+    question: "Mihver'e Nasıl Üye Olabilirim?",
     answer:
-      "Cetvel'a üye olmak için platformumuzu ziyaret edin ve 'Kayıt Ol' butonuna tıklayın. Gerekli bilgileri doldurarak üyeliğinizi oluşturabilirsiniz. Üyelik ücretsizdir.",
+      "Mihver'a üye olmak için platformumuzu ziyaret edin ve 'Kayıt Ol' butonuna tıklayın. Gerekli bilgileri doldurarak üyeliğinizi oluşturabilirsiniz. Üyelik ücretsizdir.",
   },
   {
     question: 'Teknik destek nasıl alabilirim?',

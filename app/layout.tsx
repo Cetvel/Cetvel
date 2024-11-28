@@ -9,9 +9,9 @@ import { EdgeStoreProvider } from '../lib/edgestore';
 const dm_sans = DM_Sans({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Cetvel - Zamanı yönet, başarıyı yakala!',
+  title: 'Mihver - Zamanı yönet, başarıyı yakala!',
   description:
-    'Cetvel, Ders çalışma sürecinizi kolaylaştıran ve akademik başarınızı optimize eden güçlü bir yardımcıdır.',
+    'Mihver, Ders çalışma sürecinizi kolaylaştıran ve akademik başarınızı optimize eden güçlü bir yardımcıdır.',
 };
 
 export default function RootLayout({

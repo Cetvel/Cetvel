@@ -100,7 +100,7 @@ const PageHeader = ({ title }: Props) => {
             </SheetTrigger>
             <SheetContent>
               <SheetHeader>
-                <h2 className='text-2xl font-semibold select-none'>Cetvel</h2>
+                <h2 className='text-2xl font-semibold select-none'>Mihver</h2>
               </SheetHeader>
 
               <nav className='flex flex-col gap-2 mt-10'>
