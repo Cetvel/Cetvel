@@ -14,7 +14,7 @@ const FocusTimer = () => {
   return (
     <>
       <div
-        className='relative rounded-xl lg:col-span-2 shadow-sm p-6 h-[300px] flex flex-col md:h-full justify-between items-stretch'
+        className='relative rounded-lg lg:col-span-2 shadow-sm p-6 h-[300px] flex flex-col md:h-full justify-between items-stretch'
         style={{
           backgroundImage: `url(${user?.timer_picture || '/image/timer_default.jpg'})`,
           backgroundSize: 'cover',

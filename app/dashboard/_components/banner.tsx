@@ -7,7 +7,7 @@ const Banner = () => {
 
   return (
     <div
-      className='relative rounded-xl shadow-sm lg:col-span-5 h-[250px] p-3 md:p-6 gap-6 md:gap-0 flex flex-col justify-between'
+      className='relative rounded-lg shadow-sm lg:col-span-5 h-[250px] p-3 md:p-6 gap-6 md:gap-0 flex flex-col justify-between'
       style={{
         backgroundImage: `url(${user?.cover_picture || '/image/banner_default.jpg'})`,
         backgroundSize: 'cover',
