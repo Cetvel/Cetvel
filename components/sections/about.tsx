@@ -34,10 +34,9 @@ const About: React.FC = () => {
             Akıllı Çalışma Asistanı
           </h3>
           <p className='text-lg mb-12 text-muted-foreground'>
-            Yapay zeka destekli ders programı oluşturma ve görev önceliklendirme
-            özelliklerimiz, daha etkili ve verimli çalışmanıza yardımcı olur.
-            Mihver&apos;in akıllı çalışma asistanı ile yeni bir verimlilik
-            seviyesi deneyimleyin.
+            Yapay zeka destekli görev yönetimi ve analiz özelliğimiz, daha
+            etkili ve verimli çalışmanıza yardımcı olur. Mihver&apos;in akıllı
+            çalışma asistanı ile yeni bir verimlilik seviyesi deneyimleyin.
           </p>
           <Image
             src='/image/work.svg'
