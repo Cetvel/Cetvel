@@ -16,13 +16,10 @@ export async function PUT(req: NextRequest) {
         { status: 401 }
       );
     }
-    console.log('user', user);
     const { email } = await req.json();
-
     const data = (await Users.getUserIdentities({
       userId: user?.id,
     })) as any;
-    console.log(data);
     const response = await Users.createUserIdentity({
       userId: user.id,
       requestBody: {
@@ -32,8 +29,7 @@ export async function PUT(req: NextRequest) {
     });
     const identityId = response.identity?.id;
     const accessToken = await getM2MToken();
-    console.log('accessToken', accessToken);
-    await fetch(`https://Mihver.kinde.com/api/v1/identities/${identityId}`, {
+    await fetch(`https://mihver.kinde.com/api/v1/identities/${identityId}`, {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
